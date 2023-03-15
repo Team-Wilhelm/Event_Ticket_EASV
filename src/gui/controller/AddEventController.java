@@ -2,7 +2,6 @@ package gui.controller;
 
 import be.Event;
 import gui.model.Model;
-import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
@@ -21,11 +20,11 @@ public class AddEventController implements Initializable {
     private boolean isEditing = false;
     private int eventToEditId;
     @FXML
-    private MFXDatePicker dateStartDate;
+    private MFXDatePicker dateStartDate, dateEndDate;
     @FXML
     private TextArea txtAreaNotes;
     @FXML
-    private MFXTextField txtEventName, txtLocation, txtStartTime;
+    private MFXTextField txtEventName, txtLocation, txtStartTime, txtEndTime, txtLocationGuidance;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -37,9 +36,9 @@ public class AddEventController implements Initializable {
         eventToEditId = event.getId();
         txtEventName.setText(event.getEventName());
         txtLocation.setText(event.getLocation());
-        txtStartTime.setText(event.getStartingTime().toString());
+        txtStartTime.setText(event.getStartTime().toString());
         txtAreaNotes.setText(event.getNotes());
-        dateStartDate.setValue(event.getStartingDate().toLocalDate());
+        dateStartDate.setValue(event.getStartDate().toLocalDate());
     }
 
     public void cancelAction(ActionEvent actionEvent) {
@@ -49,23 +48,29 @@ public class AddEventController implements Initializable {
     public void saveAction(ActionEvent actionEvent) {
         String eventName = txtEventName.getText();
         String location = txtLocation.getText();
-        Time startingTime = Time.valueOf(txtStartTime.getText());
         String notes = txtAreaNotes.getText();
-        Date startingDate = Date.valueOf(dateStartDate.getValue());
+        String locationGuidance = txtLocationGuidance.getText();
+
+        //Check if the field has a value, if not, set it to null, otherwise, an exception will be thrown
+        Time startingTime = !txtStartTime.getText().isEmpty() ? Time.valueOf(txtStartTime.getText()) : null;
+        Date startingDate = dateStartDate.getValue() != null ? Date.valueOf(dateStartDate.getValue()) : null;
+        Date endDate = dateEndDate.getValue() != null ? Date.valueOf(dateEndDate.getValue()) : null;
+        Time endTime = !txtEndTime.getText().isEmpty() ? Time.valueOf(txtEndTime.getText()) : null;
+
         if (eventName.isEmpty() || location.isEmpty() || txtStartTime.getText().isEmpty()
                 || dateStartDate.getValue() == null) {
-            txtEventName.setPromptText("Please enter a name");
-            txtLocation.setPromptText("Please enter a location");
-            txtStartTime.setPromptText("Please enter a starting time");
-            dateStartDate.setPromptText("Please choose a starting date");
+            txtEventName.setPromptText("Field cannot be empty, please enter a name");
+            txtLocation.setPromptText("Field cannot be empty, please enter a location");
+            txtStartTime.setPromptText("Field cannot be empty, please enter a starting time");
+            dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
         }
         else {
             if(!isEditing) {
-                model.saveEvent(new Event(eventName, startingDate, startingTime, location, notes));
+                model.saveEvent(new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
                 ((Node) actionEvent.getSource()).getScene().getWindow().hide();
             }
             else {
-                model.updateEvent(new Event(eventToEditId, eventName, startingDate, startingTime, location, notes));
+                model.updateEvent(new Event(eventToEditId, eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
                 ((Node) actionEvent.getSource()).getScene().getWindow().hide();
             }
         }

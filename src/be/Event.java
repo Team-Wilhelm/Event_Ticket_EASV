@@ -6,50 +6,46 @@ import java.sql.Time;
 public class Event {
     //Required information
     int id;
-    Date startingDate;
-    Time startingTime;
+    Date startDate;
+    Time startTime;
     String eventName, location, notes;
 
 
     //Optional information
-    Date endingDate;
-    Time endingTime;
+    Date endDate;
+    Time endTime;
     String locationGuidance;
 
-    public Event(int id, String eventName, Date startingDate, Time startingTime, String location, String notes) {
-        this(eventName, startingDate, startingTime, location, notes);
-        this.id = id;
-    }
-
-    public Event(String eventName, Date startingDate, Time startingTime, String location, String notes) {
+    public Event(String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
         this.eventName = eventName;
-        this.startingDate = startingDate;
-        this.startingTime = startingTime;
+        this.startDate = startDate;
+        this.startTime = startTime;
         this.location = location;
         this.notes = notes;
-    }
-
-    public Event(String eventName, Date startingDate, Time startingTime, String location, String notes, Date endingDate, Time endingTime, String locationGuidance){
-        this(eventName, startingDate, startingTime, location, notes);
-        this.endingDate = endingDate;
-        this.endingTime = endingTime;
+        this.endDate = endDate;
+        this.endTime = endTime;
         this.locationGuidance = locationGuidance;
     }
 
-    public Date getStartingDate() {
-        return startingDate;
+    public Event(int id, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
+        this(eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+        this.id = id;
     }
 
-    public void setStartingDate(Date startingDate) {
-        this.startingDate = startingDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public Time getStartingTime() {
-        return startingTime;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public void setStartingTime(Time startingTime) {
-        this.startingTime = startingTime;
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Time startingTime) {
+        this.startTime = startingTime;
     }
 
     public String getLocation() {
@@ -68,20 +64,20 @@ public class Event {
         this.notes = notes;
     }
 
-    public Date getEndingDate() {
-        return endingDate;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEndingDate(Date endingDate) {
-        this.endingDate = endingDate;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
-    public Time getEndingTime() {
-        return endingTime;
+    public Time getEndTime() {
+        return endTime;
     }
 
-    public void setEndingTime(Time endingTime) {
-        this.endingTime = endingTime;
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
     }
 
     public String getLocationGuidance() {
@@ -102,5 +98,9 @@ public class Event {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

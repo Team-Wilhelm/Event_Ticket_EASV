@@ -1,13 +1,13 @@
 package gui.controller;
 
 import be.Event;
-import com.sun.tools.javac.Main;
 import gui.model.Model;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,7 +23,6 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -37,10 +33,8 @@ public class MainViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Platform.runLater(() -> {
-            setUpTableView();
-        });
-        eventTableView.getItems().add(new Event("Test", Date.valueOf("2023-04-01"), new Time(14, 0, 0), "EASV", "No notes"));
+        setUpTableView();
+        eventTableView.setItems(FXCollections.observableArrayList(model.getAllEvents()));
     }
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
@@ -68,7 +62,7 @@ public class MainViewController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK){
                 model.deleteEvent(event);
-                eventTableView.getItems().remove(event);
+                refreshTableView();
             }
         }
     }
@@ -81,21 +75,37 @@ public class MainViewController implements Initializable {
         stage.setTitle("EASV Ticket System");
         stage.centerOnScreen();
         stage.show();
+        stage.setOnHiding(event -> refreshTableView());
         return fxmlLoader;
     }
 
     private void setUpTableView() {
+        //Required information
         MFXTableColumn<Event> eventName = new MFXTableColumn<>("Event name", true);
         MFXTableColumn<Event> location = new MFXTableColumn<>("Location", true);
-        MFXTableColumn<Event> startingDate = new MFXTableColumn<>("Starting date", true, Comparator.comparing(Event::getStartingDate));
-        MFXTableColumn<Event> startingTime = new MFXTableColumn<>("Starting time", true);
+        MFXTableColumn<Event> startDate = new MFXTableColumn<>("Start date", true, Comparator.comparing(Event::getStartDate));
+        MFXTableColumn<Event> startTime = new MFXTableColumn<>("Start time", true);
 
         eventName.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getEventName));
         location.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getLocation));
-        startingDate.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getStartingDate));
-        startingTime.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getStartingTime));
+        startDate.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getStartDate));
+        startTime.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getStartTime));
 
-        eventTableView.getTableColumns().addAll(eventName, location, startingDate, startingTime);
+        //Optional information
+        MFXTableColumn<Event> endDate = new MFXTableColumn<>("End date", true);
+        MFXTableColumn<Event> endTime = new MFXTableColumn<>("End time", true);
+        MFXTableColumn<Event> locationGuidance = new MFXTableColumn<>("Location guidance", true);
+
+        endDate.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getEndDate));
+        endTime.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getEndTime));
+        locationGuidance.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getLocationGuidance));
+
+        eventTableView.getTableColumns().addAll(eventName, location, startDate, startTime, endDate, endTime, locationGuidance);
         eventTableView.autosizeColumns();
+    }
+
+    private void refreshTableView() {
+        eventTableView.getItems().clear();
+        eventTableView.getItems().addAll(model.getAllEvents());
     }
 }
