@@ -1,0 +1,25 @@
+package dal;
+
+import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+
+import java.sql.Connection;
+
+public class DBConnection {
+    private final SQLServerDataSource ds = new SQLServerDataSource();
+
+    public DBConnection() {
+        //TODO database name
+        ds.setServerName("10.176.111.34");
+        ds.setDatabaseName("");
+        ds.setPortNumber(1433);
+        ds.setUser("CSe2022B_e_13");
+        ds.setPassword("CSe2022BE13#");
+        ds.setTrustServerCertificate(true);
+    }
+
+    public Connection getConnection() throws SQLServerException {
+        return ds.getConnection();
+    }
+
+}

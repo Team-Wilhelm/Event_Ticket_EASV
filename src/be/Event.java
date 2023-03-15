@@ -5,6 +5,7 @@ import java.sql.Time;
 
 public class Event {
     //Required information
+    int id;
     Date startingDate;
     Time startingTime;
     String eventName, location, notes;
@@ -14,6 +15,11 @@ public class Event {
     Date endingDate;
     Time endingTime;
     String locationGuidance;
+
+    public Event(int id, String eventName, Date startingDate, Time startingTime, String location, String notes) {
+        this(eventName, startingDate, startingTime, location, notes);
+        this.id = id;
+    }
 
     public Event(String eventName, Date startingDate, Time startingTime, String location, String notes) {
         this.eventName = eventName;
@@ -84,5 +90,17 @@ public class Event {
 
     public void setLocationGuidance(String locationGuidance) {
         this.locationGuidance = locationGuidance;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public int getId() {
+        return id;
     }
 }
