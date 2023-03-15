@@ -14,7 +14,17 @@ public class Model {
     private List<Event> allEvents = new ArrayList<>();
 
     public Model() {
-        allEvents.add(new Event(1,"Test", Date.valueOf("2023-04-01"), new Time(14, 0, 0), "EASV", "No notes", null, null, null));
+        allEvents.add(new Event(1,"UTTT Tournament!", Date.valueOf("2023-04-01"), new Time(7, 0, 0),
+                "Innovatorium", "Attendees are all losers", Date.valueOf("2023-04-08"),
+                new Time(24, 30, 0), "Use your god damn feet!"));
+
+        allEvents.add(new Event(2,"RPS Tournament!", Date.valueOf("2023-12-24"), new Time(9, 0, 0),
+                "EASV Bar", "No notes", Date.valueOf("2023-12-24"),
+                new Time(17, 45, 0), "Private jet to the moon"));
+
+        allEvents.add(new Event(3,"Ornithology 101", Date.valueOf("2012-12-20"), new Time(12, 12, 12),
+                "Basement restroom", "Oh my god Beckeighhh", Date.valueOf("9999-08-01"),
+                new Time(22, 22, 22), "Don't forget to bring your best ears :)"));
     }
 
     public void saveEvent(Event eventToSave) {
