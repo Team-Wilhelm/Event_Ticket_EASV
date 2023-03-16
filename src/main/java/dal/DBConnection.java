@@ -9,12 +9,11 @@ public class DBConnection {
     private final SQLServerDataSource ds = new SQLServerDataSource();
 
     public DBConnection() {
-        //TODO database name
         ds.setServerName("10.176.111.34");
-        ds.setDatabaseName("");
+        ds.setDatabaseName("CSe22B_Wilhelm_EventTicket");
         ds.setPortNumber(1433);
-        ds.setUser("CSe2022B_e_13");
-        ds.setPassword("CSe2022BE13#");
+        ds.setUser(" CSe2022B_e_16");
+        ds.setPassword("CSe2022BE16#");
         ds.setTrustServerCertificate(true);
     }
 
