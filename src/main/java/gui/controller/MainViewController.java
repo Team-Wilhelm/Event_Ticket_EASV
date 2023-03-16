@@ -6,9 +6,7 @@ import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.enums.SortState;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,8 +20,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
-import java.sql.Time;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -84,16 +80,19 @@ public class MainViewController implements Initializable {
 
     private void setUpTableView() {
         eventTableView.autosizeColumns();
+
         //Required information
         MFXTableColumn<Event> eventName = new MFXTableColumn<>("Event name", true, Comparator.comparing(Event::getEventName));
         MFXTableColumn<Event> location = new MFXTableColumn<>("Location", true, Comparator.comparing(Event::getLocation));
         MFXTableColumn<Event> startDate = new MFXTableColumn<>("Start date", true, Comparator.comparing(Event::getStartDate));
         MFXTableColumn<Event> startTime = new MFXTableColumn<>("Start time", true, Comparator.comparing(Event::getStartTime));
+        MFXTableColumn<Event> notes = new MFXTableColumn<>("Notes", true, Comparator.comparing(Event::getNotes));
 
         eventName.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getEventName));
         location.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getLocation));
         startDate.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getStartDate));
         startTime.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getStartTime));
+        notes.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getNotes));
 
         //Optional information
         MFXTableColumn<Event> endDate = new MFXTableColumn<>("End date", true, Comparator.comparing(Event::getEndDate));
@@ -104,7 +103,7 @@ public class MainViewController implements Initializable {
         endTime.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getEndTime));
         locationGuidance.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getLocationGuidance));
 
-        eventTableView.getTableColumns().addAll(eventName, location, startDate, startTime, endDate, endTime, locationGuidance);
+        eventTableView.getTableColumns().addAll(eventName, location, startDate, startTime, endDate, endTime, locationGuidance, notes);
         eventTableView.footerVisibleProperty().set(false);
 
         //Sort by start date, to show the next event first
@@ -114,5 +113,6 @@ public class MainViewController implements Initializable {
     private void refreshTableView() {
         eventTableView.getItems().clear();
         eventTableView.getItems().addAll(model.getAllEvents());
+
     }
 }
