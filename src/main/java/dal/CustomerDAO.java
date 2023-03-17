@@ -1,8 +1,6 @@
 package dal;
 
 import be.Customer;
-import be.Event;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -28,5 +26,16 @@ public class CustomerDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Customer getCustomer(int customerID) {
+        String sql = "SELECT * FROM Customer WHERE id=?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setInt(1, customerID);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

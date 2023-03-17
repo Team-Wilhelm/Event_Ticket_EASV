@@ -1,7 +1,6 @@
 package dal;
 
 import be.Event;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,5 +77,16 @@ public class EventDAO {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Event getEvent(int eventID) {
+        String sql = "SELECT * FROM Event WHERE id=?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setInt(1, eventID);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
