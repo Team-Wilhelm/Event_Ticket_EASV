@@ -1,12 +1,14 @@
 package gui.controller;
 
 import be.Event;
+import be.EventView;
 import gui.model.Model;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.enums.SortState;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,12 +30,19 @@ import java.util.ResourceBundle;
 public class MainViewController implements Initializable {
     @FXML
     private MFXTableView<Event> eventTableView;
+    @FXML
+    private FlowPane eventFlowPane;
+    private ObservableList<EventView> eventViews = FXCollections.observableArrayList();
     private final Model model = new Model();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setUpTableView();
         eventTableView.setItems(FXCollections.observableArrayList(model.getAllEvents()));
+        eventViews.addAll(model.getAllEvents().stream().map(EventView::new).toList());
+        eventFlowPane.getChildren().addAll(eventViews);
+        eventFlowPane.setHgap(10);
+        eventFlowPane.setVgap(20);
     }
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
