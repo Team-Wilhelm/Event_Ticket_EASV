@@ -39,6 +39,9 @@ public class LogicManager {
     public void addTicket(Ticket ticketToAdd) {
         ticketDAO.addTicket(ticketToAdd);
     }
+    public void addMultipleTickets(List<Ticket> tickets, Customer customer) {
+        ticketDAO.addMultipleTickets(tickets, customer);
+    }
     public Ticket getTicket(UUID id) {
         return ticketDAO.getTicket(id);
     }

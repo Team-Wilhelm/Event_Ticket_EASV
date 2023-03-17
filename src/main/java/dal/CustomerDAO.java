@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class CustomerDAO {
+    //TODO maybe this class should be merged with TicketDAO?
     private final DBConnection dbConnection = new DBConnection();
 
     public void addCustomer(Customer customer) {
@@ -29,7 +30,7 @@ public class CustomerDAO {
     }
 
     public Customer getCustomer(int customerID) {
-        String sql = "SELECT * FROM Customer WHERE id=?;";
+        String sql = "SELECT * FROM Customer WHERE Id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, customerID);
             statement.execute();

@@ -24,6 +24,24 @@ public class TicketDAO {
         }
     }
 
+    public void addMultipleTickets(List<Ticket> tickets, Customer customer){
+        int customerId = customer.getId();
+        String sql = "INSERT INTO Ticket (eventID, customerID, ticketType, ticketQR) VALUES (?,?,?,?);";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+            for (Ticket ticket : tickets) {
+                statement.setInt(1, ticket.getEvent().getId());
+                statement.setInt(2, customerId);
+                statement.setString(3, ticket.getTicketType());
+                statement.setString(4, ticket.getTicketQR());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteTicket(Ticket ticket){
         String sql = "DELETE FROM Ticket WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
