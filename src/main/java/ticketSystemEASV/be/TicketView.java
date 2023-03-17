@@ -1,16 +1,21 @@
 package ticketSystemEASV.be;
 
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.VBox;
@@ -19,15 +24,13 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class TicketView {
     private Ticket ticket;
 
-    public void constructTicketView(Ticket ticket) {
+    /*public void constructTicketView(Ticket ticket) {
         File file = new File("src/main/resources/images/test.png");
         Image i = new Image("file:C:\\ticket.png");
         BufferedImage bufferedImage = new BufferedImage(250, 100, BufferedImage.TYPE_INT_ARGB);
@@ -54,7 +57,7 @@ public class TicketView {
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-    }
+    }*/
 
     public void generateTicket(Ticket ticket){
         try {
@@ -69,10 +72,16 @@ public class TicketView {
             table.setSpacingAfter(10f); // Set spacing after the table
 
             // Add a title to the PDF file
-            Paragraph title = new Paragraph(ticket.getEvent().getEventName(), new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
+            Paragraph title = new Paragraph("Whadup suckers", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
             title.setAlignment(Element.ALIGN_CENTER);
             title.setSpacingAfter(20f);
             doc.add(title);
+
+            // Add the QR code to the ticket
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(generateQRCode(ticket, 150), "png", baos);
+            com.itextpdf.text.Image iTextImage = com.itextpdf.text.Image.getInstance(baos.toByteArray());
+            doc.add(iTextImage);
 
             // Add a table containing ticket information to the PDF file
             table.addCell("Ticket ID");
@@ -110,7 +119,7 @@ public class TicketView {
 
             // Add a header to the PDF file
             PdfContentByte cb = writer.getDirectContent();
-            Phrase header = new Phrase("Concert Ticket", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD));
+            Phrase header = new Phrase( ticket.getEvent().getEventName() + " Ticket", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD));
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, header, (doc.right() - doc.left()) / 2 + doc.leftMargin(), doc.top() + 10, 0);
 
             // Add a footer to the PDF file
@@ -122,5 +131,14 @@ public class TicketView {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private BufferedImage generateQRCode(Ticket ticket, int size) throws WriterException {
+        //The BitMatrix class represents the 2D matrix of bits
+        BitMatrix matrix = new MultiFormatWriter().encode(
+                new String((ticket.getEvent().getEventName() + " " + ticket.getCustomer().getName()).getBytes(StandardCharsets.UTF_8),
+                        StandardCharsets.UTF_8), BarcodeFormat.QR_CODE, size, size);
+        return MatrixToImageWriter.toBufferedImage(matrix);
+        //MultiFormatWriter is a factory class that finds the appropriate Writer subclass for the BarcodeFormat requested and encodes the barcode with the supplied contents.
     }
 }
