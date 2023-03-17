@@ -1,6 +1,5 @@
 package dal;
 
-import be.Event;
 import be.EventCoordinator;
 
 import java.sql.*;
@@ -28,6 +27,29 @@ public class EventCoordinatorDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void addEventCoordinator(EventCoordinator eventCoordinator) {
+        String sql = "INSERT INTO Event_Coordinator (coordinatorName, userName, coordinatorPassword) " +
+                "VALUES (?,?,?,?);";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, eventCoordinator.getName());
+            statement.setString(2, eventCoordinator.getUsername());
+            statement.setString(3, eventCoordinator.getPassword());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteEventCoordinator(EventCoordinator eventCoordinator){
+        String sql = "UPDATE Event_Coordinator SET deleted=1 WHERE id=?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, eventCoordinator.getId().toString());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

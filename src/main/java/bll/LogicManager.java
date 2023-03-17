@@ -31,6 +31,14 @@ public class LogicManager {
         return eventDAO.getAllEvents();
     }
 
+    public void createEventCoordinator(EventCoordinator eventCoordinatorToCreate){
+        eventCoordinatorDAO.addEventCoordinator(eventCoordinatorToCreate);
+    }
+
+    public void deleteEventCoordinator(EventCoordinator eventCoordinatorToDelete){
+        eventCoordinatorDAO.deleteEventCoordinator(eventCoordinatorToDelete);
+    }
+
     public Collection<EventCoordinator> getAllEventCoordinators(){
         return eventCoordinatorDAO.getAllEventCoordinators();
     }

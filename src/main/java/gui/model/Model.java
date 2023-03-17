@@ -44,18 +44,6 @@ public class Model {
     }
 
     public void updateEvent(Event eventToUpdate) {
-
-        /*//Temporary to reflect changes in the tableview
-        Event event = allEvents.stream().filter(e -> e.getId() == eventToUpdate.getId()).findFirst().orElse(null);
-        event.setEventName(eventToUpdate.getEventName());
-        event.setStartDate(eventToUpdate.getStartDate());
-        event.setStartTime(eventToUpdate.getStartTime());
-        event.setLocation(eventToUpdate.getLocation());
-        event.setNotes(eventToUpdate.getNotes());
-        event.setEndDate(eventToUpdate.getEndDate());
-        event.setEndTime(eventToUpdate.getEndTime());
-        event.setLocationGuidance(eventToUpdate.getLocationGuidance());*/
-
         bll.updateEvent(eventToUpdate);
     }
 

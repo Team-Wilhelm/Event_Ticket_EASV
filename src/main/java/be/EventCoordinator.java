@@ -6,11 +6,15 @@ public class EventCoordinator {
     private UUID id;
     private String name, username, password;
 
-    public EventCoordinator(UUID id, String name, String username, String password) {
-        this.id = id;
+    public EventCoordinator(String name, String username, String password) {
         this.name = name;
         this.username = username;
         this.password = password;
+    }
+
+    public EventCoordinator(UUID id, String name, String username, String password) {
+        this(name, username, password);
+        this.id = id;
     }
 
     public UUID getId() {

@@ -34,7 +34,6 @@ public class EventDAO {
     }
 
     public void deleteEvent(Event eventToDelete) {
-        //TODO constraints with other tables
         String sql = "UPDATE Event SET deleted=1 WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, eventToDelete.getId());
