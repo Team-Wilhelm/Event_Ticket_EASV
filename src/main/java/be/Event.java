@@ -2,21 +2,24 @@ package be;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.UUID;
 
 public class Event {
     //Required information
     int id;
-    Date startDate;
-    Time startTime;
-    String eventName, location, notes;
+    private UUID coordinatorId;
+    private Date startDate;
+    private Time startTime;
+    private String eventName, location, notes;
 
 
     //Optional information
-    Date endDate;
-    Time endTime;
-    String locationGuidance;
+    private Date endDate;
+    private Time endTime;
+    private String locationGuidance;
 
-    public Event(String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
+    public Event(UUID coordinatorId, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
+        this.coordinatorId = coordinatorId;
         this.eventName = eventName;
         this.startDate = startDate;
         this.startTime = startTime;
@@ -27,8 +30,8 @@ public class Event {
         this.locationGuidance = locationGuidance;
     }
 
-    public Event(int id, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
-        this(eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+    public Event(int id, UUID coordinatorId, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
+        this(coordinatorId, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
         this.id = id;
     }
 
@@ -102,5 +105,13 @@ public class Event {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public UUID getCoordinatorId() {
+        return coordinatorId;
+    }
+
+    public void setCoordinatorId(UUID coordinatorId) {
+        this.coordinatorId = coordinatorId;
     }
 }
