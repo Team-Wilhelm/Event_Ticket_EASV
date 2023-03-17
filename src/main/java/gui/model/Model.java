@@ -60,8 +60,7 @@ public class Model {
     }
 
     public void deleteEvent(Event eventToDelete) {
-        allEvents.remove(eventToDelete);
-        //bll.deleteEvent(eventToDelete);
+        bll.deleteEvent(eventToDelete);
     }
 
     public ObservableList<Event> getAllEvents() {

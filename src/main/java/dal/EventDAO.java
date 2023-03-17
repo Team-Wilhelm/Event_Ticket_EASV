@@ -35,7 +35,7 @@ public class EventDAO {
 
     public void deleteEvent(Event eventToDelete) {
         //TODO constraints with other tables
-        String sql = "DELETE FROM Event WHERE id=?;";
+        String sql = "UPDATE Event SET deleted=1 WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, eventToDelete.getId());
             statement.execute();
@@ -58,7 +58,7 @@ public class EventDAO {
 
     public Collection<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM Event;";
+        String sql = "SELECT * FROM Event WHERE deleted=0;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
