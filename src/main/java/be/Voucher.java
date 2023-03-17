@@ -2,13 +2,14 @@ package be;
 
 public class Voucher {
     private int id;
-    private String restrictions, voucherType;
+    private String restrictions, voucherType, voucherQR;
     private boolean redeemed;
 
-    public Voucher(int id, String restrictions, String voucherType, boolean redeemed) {
+    public Voucher(int id, String restrictions, String voucherType, String voucherQR, boolean redeemed) {
         this.id = id;
         this.restrictions = restrictions;
         this.voucherType = voucherType;
+        this.voucherQR = voucherQR;
         this.redeemed = redeemed;
     }
 
@@ -30,6 +31,14 @@ public class Voucher {
 
     public void setVoucherType(String voucherType) {
         this.voucherType = voucherType;
+    }
+
+    public String getVoucherQR() {
+        return voucherQR;
+    }
+
+    public void setVoucherQR(String voucherQR) {
+        this.voucherQR = voucherQR;
     }
 
     public boolean isRedeemed() {
