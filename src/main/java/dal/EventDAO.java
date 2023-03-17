@@ -26,7 +26,7 @@ public class EventDAO {
         String sql = "UPDATE Event SET coordinatorId=?, startDate=?, startTime=?, eventName=?, eventLocation=?, notes=?, endDate=?, endTime=?, locationGuidance=? WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(event, statement);
-            statement.setInt(9, event.getId());
+            statement.setInt(10, event.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -40,6 +40,9 @@ public class AddEventController implements Initializable {
         txtStartTime.setText(event.getStartTime().toString());
         txtAreaNotes.setText(event.getNotes());
         dateStartDate.setValue(event.getStartDate().toLocalDate());
+        dateEndDate.setValue(event.getEndDate().toLocalDate());
+        txtEndTime.setText(event.getEndTime().toString());
+        txtLocationGuidance.setText(event.getLocationGuidance());
     }
 
     public void cancelAction(ActionEvent actionEvent) {

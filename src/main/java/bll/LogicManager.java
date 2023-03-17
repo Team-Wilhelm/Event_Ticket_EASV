@@ -27,6 +27,10 @@ public class LogicManager {
         eventDAO.deleteEvent(eventToDelete);
     }
 
+    public Collection<Event> getAllEvents() {
+        return eventDAO.getAllEvents();
+    }
+
     public Collection<EventCoordinator> getAllEventCoordinators(){
         return eventCoordinatorDAO.getAllEventCoordinators();
     }

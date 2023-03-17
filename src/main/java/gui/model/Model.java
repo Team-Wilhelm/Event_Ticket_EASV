@@ -3,6 +3,8 @@ package gui.model;
 import be.Event;
 import be.EventCoordinator;
 import bll.LogicManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +12,12 @@ import java.util.List;
 public class Model {
     private final LogicManager bll = new LogicManager();
     private final List<EventCoordinator> allEventCoordinators = new ArrayList<>();
-    private List<Event> allEvents = new ArrayList<>();
+    private ObservableList<Event> allEvents = FXCollections.observableArrayList();
 
     public Model() {
         allEventCoordinators.addAll(bll.getAllEventCoordinators());
+        allEvents.addAll(bll.getAllEvents());
+
         /*saveEvent(new Event(allEventCoordinators.get(0).getId(), "UTTT Tournament!", Date.valueOf("2023-04-01"), new Time(7, 0, 0),
                 "Innovatorium", "Attendees are all losers", Date.valueOf("2023-04-08"),
                 new Time(24, 30, 0), "Use your god damn feet!"));
@@ -40,7 +44,8 @@ public class Model {
     }
 
     public void updateEvent(Event eventToUpdate) {
-        //Temporary to reflect changes in the tableview
+
+        /*//Temporary to reflect changes in the tableview
         Event event = allEvents.stream().filter(e -> e.getId() == eventToUpdate.getId()).findFirst().orElse(null);
         event.setEventName(eventToUpdate.getEventName());
         event.setStartDate(eventToUpdate.getStartDate());
@@ -49,9 +54,9 @@ public class Model {
         event.setNotes(eventToUpdate.getNotes());
         event.setEndDate(eventToUpdate.getEndDate());
         event.setEndTime(eventToUpdate.getEndTime());
-        event.setLocationGuidance(eventToUpdate.getLocationGuidance());
+        event.setLocationGuidance(eventToUpdate.getLocationGuidance());*/
 
-        //bll.updateEvent(eventToUpdate);
+        bll.updateEvent(eventToUpdate);
     }
 
     public void deleteEvent(Event eventToDelete) {
@@ -59,7 +64,8 @@ public class Model {
         //bll.deleteEvent(eventToDelete);
     }
 
-    public List<Event> getAllEvents() {
+    public ObservableList<Event> getAllEvents() {
+        allEvents.setAll(bll.getAllEvents());
         return allEvents;
     }
 
