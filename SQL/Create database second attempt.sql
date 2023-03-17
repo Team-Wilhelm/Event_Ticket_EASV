@@ -1,0 +1,69 @@
+DROP DATABASE CSe22B_Wilhelm_EventTicket;
+
+-- Creation of database
+IF NOT EXISTS (
+    SELECT [name]
+        FROM sys.databases
+        WHERE [name] = 'CSe22B_Wilhelm_EventTicket'
+)
+CREATE DATABASE CSe22B_Wilhelm_EventTicket
+GO
+
+USE CSe22B_Wilhelm_EventTicket;
+
+-- Creation of tables
+
+CREATE TABLE Event_Coordinator(
+  Id UNIQUEIDENTIFIER DEFAULT newID() NOT NULL PRIMARY KEY,
+  CoordinatorName NVARCHAR(255) NOT NULL,
+  UserName NVARCHAR(50) NOT NULL,
+  CoordinatorPassword NVARCHAR(50) NOT NULL
+);
+
+
+
+CREATE TABLE Event(
+  Id INT NOT NULL PRIMARY KEY IDENTITY,
+  CoordinatorId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES Event_Coordinator(Id),
+  StartDate DATE NOT NULL,
+  StartTime TIME NOT NULL,
+  EventName NVARCHAR(255) NOT NULL,
+  EventLocation NVARCHAR(255) NOT NULL,
+  Notes NVARCHAR(255),
+  EndDate DATE,
+  EndTime TIME,
+  LocationGuidance NVARCHAR(255)
+);
+
+
+
+CREATE TABLE Customer(
+  Id INT NOT NULL PRIMARY KEY IDENTITY,
+  CustomerName NVARCHAR(255) NOT NULL,
+  Email NVARCHAR(255) NOT NULL
+);
+
+
+
+CREATE TABLE Ticket(
+  Id INT NOT NULL PRIMARY KEY IDENTITY,
+  EventId INT NOT NULL FOREIGN KEY REFERENCES Event(Id),
+  CustomerId INT NOT NULL FOREIGN KEY REFERENCES Customer(Id),
+  TicketType NVARCHAR(255)
+);
+
+
+
+CREATE TABLE Admin(
+  Id INT NOT NULL PRIMARY KEY IDENTITY,
+  UserName NVARCHAR(50) NOT NULL,
+  AdminPassword NVARCHAR(50) NOT NULL
+);
+
+
+
+CREATE TABLE Voucher(
+  Id INT NOT NULL PRIMARY KEY IDENTITY,
+  VoucherType NVARCHAR(255) NOT NULL,
+  Restrictions NVARCHAR(255)
+);

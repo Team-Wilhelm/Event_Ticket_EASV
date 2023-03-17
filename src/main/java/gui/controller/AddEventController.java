@@ -14,11 +14,12 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class AddEventController implements Initializable {
     private Model model;
     private boolean isEditing = false;
-    private int eventToEditId;
+    private Event eventToEdit;
     @FXML
     private MFXDatePicker dateStartDate, dateEndDate;
     @FXML
@@ -33,12 +34,15 @@ public class AddEventController implements Initializable {
 
     public void setIsEditing(Event event) {
         isEditing = true;
-        eventToEditId = event.getId();
+        eventToEdit = event;
         txtEventName.setText(event.getEventName());
         txtLocation.setText(event.getLocation());
         txtStartTime.setText(event.getStartTime().toString());
         txtAreaNotes.setText(event.getNotes());
         dateStartDate.setValue(event.getStartDate().toLocalDate());
+        dateEndDate.setValue(event.getEndDate().toLocalDate());
+        txtEndTime.setText(event.getEndTime().toString());
+        txtLocationGuidance.setText(event.getLocationGuidance());
     }
 
     public void cancelAction(ActionEvent actionEvent) {
@@ -65,12 +69,13 @@ public class AddEventController implements Initializable {
             dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
         }
         else {
+            //TODO coordinatorID should be set to the logged in user (or admin can assign a coordinator)
             if(!isEditing) {
-                model.saveEvent(new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
+                model.saveEvent(new Event(model.getAllEventCoordinators().get(0).getId(),eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
                 ((Node) actionEvent.getSource()).getScene().getWindow().hide();
             }
             else {
-                model.updateEvent(new Event(eventToEditId, eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
+                model.updateEvent(new Event(eventToEdit.getId(), eventToEdit.getCoordinatorId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
                 ((Node) actionEvent.getSource()).getScene().getWindow().hide();
             }
         }
