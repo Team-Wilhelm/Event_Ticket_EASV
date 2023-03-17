@@ -1,4 +1,4 @@
-package be;
+package ticketSystemEASV.be;
 
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;

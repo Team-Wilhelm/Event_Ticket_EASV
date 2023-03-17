@@ -1,6 +1,6 @@
-package dal;
+package ticketSystemEASV.dal;
 
-import be.Event;
+import ticketSystemEASV.be.Event;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;

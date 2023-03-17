@@ -1,11 +1,11 @@
-package dal;
+package ticketSystemEASV.dal;
 
-import be.Customer;
+import ticketSystemEASV.be.Customer;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class CustomerDAO {
-    //TODO maybe this class should be merged with TicketDAO?
+    //TODO maybe this class should ticketSystemEASV.be merged with TicketDAO?
     private final DBConnection dbConnection = new DBConnection();
 
     public void addCustomer(Customer customer) {

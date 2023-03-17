@@ -1,7 +1,8 @@
-package bll;
+package ticketSystemEASV.bll;
 
-import be.*;
-import dal.*;
+
+import ticketSystemEASV.be.*;
+import ticketSystemEASV.dal.*;
 
 import java.util.Collection;
 import java.util.List;

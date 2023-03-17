@@ -1,6 +1,6 @@
-package dal;
+package ticketSystemEASV.dal;
 
-import be.EventCoordinator;
+import ticketSystemEASV.be.EventCoordinator;
 
 import java.sql.*;
 import java.util.ArrayList;

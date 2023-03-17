@@ -1,4 +1,4 @@
-package be;
+package ticketSystemEASV.be;
 
 public class Customer {
     private int id;

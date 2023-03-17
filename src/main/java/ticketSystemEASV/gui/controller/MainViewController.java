@@ -1,8 +1,8 @@
-package gui.controller;
+package ticketSystemEASV.gui.controller;
 
-import be.Event;
-import be.EventView;
-import gui.model.Model;
+import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.EventView;
+import ticketSystemEASV.gui.model.Model;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
@@ -16,7 +16,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;

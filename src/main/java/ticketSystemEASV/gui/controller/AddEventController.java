@@ -1,7 +1,7 @@
-package gui.controller;
+package ticketSystemEASV.gui.controller;
 
-import be.Event;
-import gui.model.Model;
+import ticketSystemEASV.be.Event;
+import ticketSystemEASV.gui.model.Model;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
@@ -14,7 +14,6 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class AddEventController implements Initializable {
     private Model model;
@@ -55,7 +54,7 @@ public class AddEventController implements Initializable {
         String notes = txtAreaNotes.getText();
         String locationGuidance = txtLocationGuidance.getText();
 
-        //Check if the field has a value, if not, set it to null, otherwise, an exception will be thrown
+        //Check if the field has a value, if not, set it to null, otherwise, an exception will ticketSystemEASV.be thrown
         Time startingTime = !txtStartTime.getText().isEmpty() ? Time.valueOf(txtStartTime.getText()) : null;
         Date startingDate = dateStartDate.getValue() != null ? Date.valueOf(dateStartDate.getValue()) : null;
         Date endDate = dateEndDate.getValue() != null ? Date.valueOf(dateEndDate.getValue()) : null;
@@ -63,13 +62,13 @@ public class AddEventController implements Initializable {
 
         if (eventName.isEmpty() || location.isEmpty() || txtStartTime.getText().isEmpty()
                 || dateStartDate.getValue() == null) {
-            txtEventName.setPromptText("Field cannot be empty, please enter a name");
-            txtLocation.setPromptText("Field cannot be empty, please enter a location");
-            txtStartTime.setPromptText("Field cannot be empty, please enter a starting time");
-            dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
+            txtEventName.setPromptText("Field cannot ticketSystemEASV.be empty, please enter a name");
+            txtLocation.setPromptText("Field cannot ticketSystemEASV.be empty, please enter a location");
+            txtStartTime.setPromptText("Field cannot ticketSystemEASV.be empty, please enter a starting time");
+            dateStartDate.setPromptText("Field cannot ticketSystemEASV.be empty, please choose a starting date");
         }
         else {
-            //TODO coordinatorID should be set to the logged in user (or admin can assign a coordinator)
+            //TODO coordinatorID should ticketSystemEASV.be set to the logged in user (or admin can assign a coordinator)
             if(!isEditing) {
                 model.saveEvent(new Event(model.getAllEventCoordinators().get(0).getId(),eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
                 ((Node) actionEvent.getSource()).getScene().getWindow().hide();

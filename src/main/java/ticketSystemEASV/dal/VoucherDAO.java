@@ -1,6 +1,6 @@
-package dal;
+package ticketSystemEASV.dal;
 
-import be.Voucher;
+import ticketSystemEASV.be.Voucher;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

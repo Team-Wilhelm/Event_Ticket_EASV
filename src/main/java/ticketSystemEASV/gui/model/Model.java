@@ -1,13 +1,13 @@
-package gui.model;
+package ticketSystemEASV.gui.model;
 
-import be.Event;
-import be.EventCoordinator;
-import bll.LogicManager;
+import ticketSystemEASV.be.*;
+import ticketSystemEASV.bll.LogicManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Model {
     private final LogicManager bll = new LogicManager();
@@ -29,6 +29,10 @@ public class Model {
         saveEvent(new Event(allEventCoordinators.get(0).getId(),"Ornithology 101", Date.valueOf("2012-12-20"), new Time(12, 12, 12),
                 "Basement restroom", "Oh my god Beckeighhh", Date.valueOf("9999-08-01"),
                 new Time(22, 22, 22), "Don't forget to bring your best ears :)"));*/
+
+        Ticket ticket = new Ticket(UUID.randomUUID() , allEvents.get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
+        TicketView ticketView = new TicketView();
+        ticketView.generateTicket(ticket);
     }
 
     public void saveEvent(Event eventToSave) {
@@ -37,9 +41,7 @@ public class Model {
         allEvents.sort(Comparator.comparingInt(Event::getId));
         eventToSave.setId(allEvents.get(allEvents.size() - 1).getId() + 1);
         allEvents.add(eventToSave);
-
          */
-
         bll.saveEvent(eventToSave);
     }
 

@@ -1,4 +1,4 @@
-package be;
+package ticketSystemEASV.be;
 
 public class Voucher {
     private int id;
