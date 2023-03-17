@@ -1,13 +1,7 @@
 package bll;
 
-import be.Customer;
-import be.Event;
-import be.EventCoordinator;
-import be.Ticket;
-import dal.CustomerDAO;
-import dal.EventCoordinatorDAO;
-import dal.EventDAO;
-import dal.TicketDAO;
+import be.*;
+import dal.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +10,7 @@ import java.util.UUID;
 public class LogicManager {
     private final EventDAO eventDAO = new EventDAO();
     private final TicketDAO ticketDAO = new TicketDAO();
+    private final VoucherDAO voucherDAO = new VoucherDAO();
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final EventCoordinatorDAO eventCoordinatorDAO = new EventCoordinatorDAO();
 
@@ -55,6 +50,15 @@ public class LogicManager {
         ticketDAO.deleteTicket(ticketToDelete);
     }
 
+    public void addVoucher(Voucher voucherToAdd) {
+        voucherDAO.addVoucher(voucherToAdd);
+    }
+    public void deleteVoucher(Voucher voucherToDelete) {
+        voucherDAO.deleteVoucher(voucherToDelete);
+    }
+    public void addMultipleVouchers(List<Voucher> vouchers) {
+        voucherDAO.addMultipleVouchers(vouchers);
+    }
 
     public void createEventCoordinator(EventCoordinator eventCoordinatorToCreate){
         eventCoordinatorDAO.addEventCoordinator(eventCoordinatorToCreate);
