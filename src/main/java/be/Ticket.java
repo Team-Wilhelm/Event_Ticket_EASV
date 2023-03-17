@@ -15,7 +15,7 @@ public class Ticket {
         this.ticketQR = ticketQR;
     }
 
-    public Ticket(Event event, Customer customer, String ticketType, String ticketQR, UUID id) {
+    public Ticket(UUID id, Event event, Customer customer, String ticketType, String ticketQR) {
         this(event, customer, ticketType, ticketQR);
         this.id = id;
     }
