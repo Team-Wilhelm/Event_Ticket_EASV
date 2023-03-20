@@ -2,10 +2,11 @@ package dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import dal.Interfaces.IDBConnection;
 
 import java.sql.Connection;
 
-public class DBConnection {
+public class DBConnection implements IDBConnection {
     private final SQLServerDataSource ds = new SQLServerDataSource();
 
     public DBConnection() {
