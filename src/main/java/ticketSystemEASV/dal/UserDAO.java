@@ -14,13 +14,13 @@ public class UserDAO implements IUserDAO {
     private DBConnection dbConnection = new DBConnection();
 
     public User getUser(int userID) {
-        String sql = "SELECT * FROM User WHERE Id=?;";
+        String sql = "SELECT * FROM [User] WHERE Id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, userID);
             statement.execute();
             return new User(statement.getResultSet().getString("Id"),
                     statement.getResultSet().getString("Name"),
-                    statement.getResultSet().getString("Email"),
+                    statement.getResultSet().getString("UserName"),
                     statement.getResultSet().getString("Password"));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,7 +45,7 @@ public class UserDAO implements IUserDAO {
     }
 
     public boolean logIn(String name, String password) {
-        String sql = "SELECT * FROM User WHERE Name=? AND Password=?";
+        String sql = "SELECT * FROM [User] WHERE UserName=? AND Password=?";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)){
             statement.setString(1, name);
             statement.setString(2, password);
@@ -59,7 +59,7 @@ public class UserDAO implements IUserDAO {
     }
 
     public void signUp(User user,String role){
-        String sql = "INSERT INTO User (Name, Email, Password) VALUES (?,?,?);";
+        String sql = "INSERT INTO [User] (Name, UserName, Password) VALUES (?,?,?);";
         var userId = 0;
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)){
             statement.setString(1, user.getName());
