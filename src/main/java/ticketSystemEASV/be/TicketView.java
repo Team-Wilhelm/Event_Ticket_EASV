@@ -8,10 +8,8 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -26,6 +24,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 
 public class TicketView {
     private Ticket ticket;
@@ -66,10 +65,12 @@ public class TicketView {
             PdfWriter writer = PdfWriter.getInstance(doc, fos);
             doc.open();
 
-            PdfPTable table = new PdfPTable(2); // 2 columns
-            table.setWidthPercentage(100); // Set table width to 100%
-            table.setSpacingBefore(10f); // Set spacing before the table
-            table.setSpacingAfter(10f); // Set spacing after the table
+            PdfPTable mainTable = new PdfPTable(2); // 2 columns
+            mainTable.setWidthPercentage(100); // Set table width to 100%
+            mainTable.setSpacingBefore(10f); // Set spacing before the table
+            mainTable.setSpacingAfter(10f); // Set spacing after the table
+            mainTable.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
+            mainTable.completeRow();
 
             // Add a title to the PDF file
             Paragraph title = new Paragraph("Whadup suckers", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
@@ -79,28 +80,24 @@ public class TicketView {
 
             // Add the QR code to the ticket
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(generateQRCode(ticket, 150), "png", baos);
+            ImageIO.write(generateQRCode(ticket, 100), "png", baos);
             com.itextpdf.text.Image iTextImage = com.itextpdf.text.Image.getInstance(baos.toByteArray());
-            doc.add(iTextImage);
 
             // Add a table containing ticket information to the PDF file
-            table.addCell("Ticket ID");
-            table.addCell(ticket.getId().toString());
+            mainTable.addCell(iTextImage);
 
-            table.addCell("Event");
-            table.addCell(ticket.getEvent().getEventName());
+            PdfPTable table = new PdfPTable(1);
+
+            table.addCell(new Paragraph(ticket.getEvent().getEventName(), new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD)));
+
+            table.addCell(new Paragraph(new SimpleDateFormat("dd.MM.yyyy").format(ticket.getEvent().getStartDate()) + " "
+                    + new SimpleDateFormat("hh:mm").format(ticket.getEvent().getStartTime()), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD)));
+            table.addCell(ticket.getEvent().getLocation());
+
+            table.addCell(new Paragraph("Ticket ID: " + ticket.getId().toString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD)));
 
             table.addCell("Email");
             table.addCell(ticket.getCustomer().getEmail());
-
-            table.addCell("Start date");
-            table.addCell(ticket.getEvent().getStartDate().toString());
-
-            table.addCell("Start time");
-            table.addCell(ticket.getEvent().getStartTime().toString());
-
-            table.addCell("Location");
-            table.addCell(ticket.getEvent().getLocation());
 
             if (ticket.getEvent().getEndDate() != null) {
                 table.addCell("End date");
@@ -126,7 +123,8 @@ public class TicketView {
             Phrase footer = new Phrase("Thank you for your purchase!", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.ITALIC));
             ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, footer, (doc.right() - doc.left()) / 2 + doc.leftMargin(), doc.bottom() - 10, 0);
 
-            doc.add(table);
+            mainTable.addCell(table);
+            doc.add(mainTable);
             doc.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,8 +134,10 @@ public class TicketView {
     private BufferedImage generateQRCode(Ticket ticket, int size) throws WriterException {
         //The BitMatrix class represents the 2D matrix of bits
         BitMatrix matrix = new MultiFormatWriter().encode(
-                new String((ticket.getEvent().getEventName() + " " + ticket.getCustomer().getName()).getBytes(StandardCharsets.UTF_8),
-                        StandardCharsets.UTF_8), BarcodeFormat.QR_CODE, size, size);
+                new String((ticket.getEvent().getEventName()
+                        + " " + ticket.getCustomer().getName()
+                        + " " + ticket.getId()).getBytes(StandardCharsets.UTF_8)),
+                BarcodeFormat.QR_CODE, size, size);
         return MatrixToImageWriter.toBufferedImage(matrix);
         //MultiFormatWriter is a factory class that finds the appropriate Writer subclass for the BarcodeFormat requested and encodes the barcode with the supplied contents.
     }
