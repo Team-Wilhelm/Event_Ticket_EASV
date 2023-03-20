@@ -6,7 +6,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controller.LoginViewController">
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
+<BorderPane minHeight="400.0" minWidth="600.0"
+            prefHeight="600.0" prefWidth="900.0"
+            stylesheets="/css/style.css"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.LoginViewController">
    <center>
       <HBox>
          <children>
@@ -16,15 +20,15 @@
                      <children>
                         <VBox alignment="CENTER" prefHeight="123.0" prefWidth="219.0" spacing="10.0">
                            <children>
-                              <MFXTextField floatingText="Email" prefHeight="40.0" prefWidth="200.0" />
-                              <MFXTextField floatingText="Password" prefHeight="40.0" prefWidth="200.0" />
-                              <MFXButton prefWidth="200.0" />
+                              <MFXTextField fx:id="emailInput" floatingText="Email" prefHeight="40.0" prefWidth="200.0" />
+                              <MFXPasswordField fx:id="passwordInput" floatingText="Password" prefHeight="40.0" prefWidth="200.0" />
+                              <MFXButton prefWidth="200.0" onAction="#loginUser"/>
                            </children></VBox>
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #EFEFEF;" HBox.hgrow="ALWAYS" />
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="loginHalf" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </center>
