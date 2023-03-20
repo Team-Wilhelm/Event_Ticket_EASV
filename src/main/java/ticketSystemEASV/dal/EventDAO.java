@@ -1,6 +1,9 @@
 package ticketSystemEASV.dal;
 
+import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.EventCoordinator;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,17 +63,7 @@ public class EventDAO {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
-                int id = resultSet.getInt("id");
-                UUID coordinatorId = (UUID.fromString(resultSet.getString("coordinatorId")));
-                String eventName = resultSet.getString("eventName");
-                Date startDate = resultSet.getDate("startDate");
-                Time startTime = resultSet.getTime("startTime");
-                String location = resultSet.getString("eventLocation");
-                String notes = resultSet.getString("notes");
-                Date endDate = resultSet.getDate("endDate");
-                Time endTime = resultSet.getTime("endTime");
-                String locationGuidance = resultSet.getString("locationGuidance");
-                events.add(new Event(id, coordinatorId, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance));
+                events.add(constructEvent(resultSet));
             }
             return events;
         } catch (SQLException e) {
@@ -84,9 +77,42 @@ public class EventDAO {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, eventID);
             statement.execute();
+            ResultSet resultSet = statement.getResultSet();
+            while (resultSet.next()) {
+                return constructEvent(resultSet);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void getEventsAssignedToEventCoordinator(EventCoordinator eventCoordinator){
+        String sql = "SELECT eventID FROM Event_Coordinator_Link WHERE coordinatorID=?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, eventCoordinator.getId().toString());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                int eventID = resultSet.getInt("eventID");
+                Event event = getEvent(eventID);
+                eventCoordinator.getAssignedEvents().add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Event constructEvent(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        UUID coordinatorId = (UUID.fromString(resultSet.getString("coordinatorId")));
+        String eventName = resultSet.getString("eventName");
+        Date startDate = resultSet.getDate("startDate");
+        Time startTime = resultSet.getTime("startTime");
+        String location = resultSet.getString("eventLocation");
+        String notes = resultSet.getString("notes");
+        Date endDate = resultSet.getDate("endDate");
+        Time endTime = resultSet.getTime("endTime");
+        String locationGuidance = resultSet.getString("locationGuidance");
+        return new Event(id, coordinatorId, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
     }
 }

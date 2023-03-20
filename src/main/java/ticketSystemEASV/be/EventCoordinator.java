@@ -1,15 +1,20 @@
 package ticketSystemEASV.be;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class EventCoordinator {
     private UUID id;
     private String name, username, password;
+    private List<Event> assignedEvents;
 
     public EventCoordinator(String name, String username, String password) {
         this.name = name;
         this.username = username;
         this.password = password;
+        assignedEvents = new ArrayList<>();
     }
 
     public EventCoordinator(UUID id, String name, String username, String password) {
@@ -47,5 +52,9 @@ public class EventCoordinator {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Collection<Event> getAssignedEvents() {
+        return assignedEvents;
     }
 }

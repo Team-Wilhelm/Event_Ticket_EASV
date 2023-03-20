@@ -1,5 +1,6 @@
 package ticketSystemEASV.dal;
 
+import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.EventCoordinator;
 
 import java.sql.*;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 public class EventCoordinatorDAO {
     private final DBConnection dbConnection = new DBConnection();
+    EventDAO eventDAO = new EventDAO();
 
     public Collection<EventCoordinator> getAllEventCoordinators() {
         List<EventCoordinator> eventCoordinators = new ArrayList<>();
@@ -21,7 +23,9 @@ public class EventCoordinatorDAO {
                 String name = resultSet.getString("coordinatorName");
                 String username = resultSet.getString("userName");
                 String password = resultSet.getString("coordinatorPassword");
-                eventCoordinators.add(new EventCoordinator(id, name, username, password));
+                EventCoordinator coordinator = new EventCoordinator(id, name, username, password);
+                eventDAO.getEventsAssignedToEventCoordinator(coordinator);
+                eventCoordinators.add(coordinator);
             }
             return eventCoordinators;
         } catch (SQLException e) {
