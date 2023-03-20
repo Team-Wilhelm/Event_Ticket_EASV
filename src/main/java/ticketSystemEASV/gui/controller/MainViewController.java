@@ -49,7 +49,9 @@ public class MainViewController extends MotherController implements Initializabl
     }
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
-        ((AddEventController) openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL).getController()).setModel(model);
+        AddEventController addEventController = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL).getController();
+        addEventController.setModel(model);
+        addEventController.setMainViewController(this);
     }
 
     public void editEventAction(ActionEvent actionEvent) throws IOException {
@@ -60,6 +62,7 @@ public class MainViewController extends MotherController implements Initializabl
             AddEventController addEventController = fxmlLoader.getController();
             addEventController.setModel(model);
             addEventController.setIsEditing(lastFocusedEvent.getEvent());
+            addEventController.setMainViewController(this);
         }
     }
 
@@ -93,6 +96,9 @@ public class MainViewController extends MotherController implements Initializabl
             });
 
             eventView.setOnMouseClicked(event -> {
+                if (!eventView.isFocused())
+                    eventView.requestFocus();
+
                 if (event.getClickCount() == 2) {
                     try {
                         lastFocusedEvent = eventView;

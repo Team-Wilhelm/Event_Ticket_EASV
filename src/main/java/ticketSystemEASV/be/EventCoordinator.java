@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class EventCoordinator {
     private UUID id;
-    private String name, username, password;
+    private String name, username, password, profilePicture;
     private List<Event> assignedEvents;
 
     public EventCoordinator(String name, String username, String password) {
@@ -56,5 +56,13 @@ public class EventCoordinator {
 
     public Collection<Event> getAssignedEvents() {
         return assignedEvents;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

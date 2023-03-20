@@ -3,6 +3,7 @@ package ticketSystemEASV.gui.controller.addController;
 import javafx.scene.control.Alert;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.gui.controller.MainViewController;
 import ticketSystemEASV.gui.model.Model;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -19,6 +20,7 @@ import java.util.ResourceBundle;
 
 public class AddEventController implements Initializable {
     private Model model;
+    private MainViewController mainViewController;
     private boolean isEditing = false;
     private Event eventToEdit;
     @FXML
@@ -74,19 +76,23 @@ public class AddEventController implements Initializable {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
         }
         else {
-            //TODO coordinatorID should be set to the logged in user (or admin can assign a coordinator)
+            //TODO coordinatorID should be set to the logged-in user (or admin can assign a coordinator)
             if(!isEditing) {
                 model.saveEvent(new Event(model.getAllEventCoordinators().get(0).getId(),eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
-                ((Node) actionEvent.getSource()).getScene().getWindow().hide();
             }
             else {
                 model.updateEvent(new Event(eventToEdit.getId(), eventToEdit.getCoordinatorId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
-                ((Node) actionEvent.getSource()).getScene().getWindow().hide();
             }
+            mainViewController.refreshItems();
+            ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         }
     }
 
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    public void setMainViewController(MainViewController mainViewController) {
+        this.mainViewController = mainViewController;
     }
 }

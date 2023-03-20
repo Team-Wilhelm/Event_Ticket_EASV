@@ -1,6 +1,5 @@
 package ticketSystemEASV;
 
-import ticketSystemEASV.dal.UserDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

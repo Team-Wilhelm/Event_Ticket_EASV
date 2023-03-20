@@ -40,7 +40,9 @@ public class ManageCoordinatorsController extends MotherController implements In
     }
 
     public void addCoordinatorAction(ActionEvent actionEvent) throws IOException {
-        ((AddCoordinatorController) openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController()).setModel(model);
+        AddCoordinatorController addCoordinatorController = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController();
+        addCoordinatorController.setModel(model);
+        addCoordinatorController.setManageCoordinatorsController(this);
     }
 
     public void editCoordinatorAction(ActionEvent actionEvent) throws IOException {
@@ -51,6 +53,7 @@ public class ManageCoordinatorsController extends MotherController implements In
             AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
             addCoordinatorController.setModel(model);
             addCoordinatorController.setIsEditing(lastFocusedCoordinator.getCoordinator());
+            addCoordinatorController.setManageCoordinatorsController(this);
         }
     }
 
@@ -84,8 +87,12 @@ public class ManageCoordinatorsController extends MotherController implements In
             });
 
             coordinatorView.setOnMouseClicked(event -> {
+                if (!coordinatorView.isFocused())
+                    coordinatorView.requestFocus();
+
                 if (event.getClickCount() == 2) {
                     try {
+                        coordinatorView.requestFocus();
                         lastFocusedCoordinator = coordinatorView;
                         editCoordinatorAction(null);
                     } catch (IOException e) {

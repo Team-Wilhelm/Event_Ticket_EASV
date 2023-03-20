@@ -19,7 +19,6 @@ public abstract class MotherController {
         stage.centerOnScreen();
         stage.initModality(modalityType);
         stage.show();
-        stage.setOnHiding(event -> refreshItems());
         return fxmlLoader;
     }
 }

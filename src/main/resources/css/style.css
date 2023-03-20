@@ -1,11 +1,17 @@
 .event-view {
-    -fx-border-radius: 5px;
+    -fx-border-radius: 10px;
     -fx-padding: 10px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
 }
 
+/*TODO: Make pretty*/
+.event-view:focused {
+    -fx-border-color: #00bfff;
+    -fx-border-width: 2px;
+}
+
 .coordinator-view {
-    -fx-border-radius: 5px;
+    -fx-border-radius: 10px;
     -fx-padding: 10px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
 }
@@ -14,4 +20,18 @@
     -fx-scale-x: 105%;
     -fx-scale-y: 105%;
     -fx-scale-z: 105%;
+}
+
+.coordinator-information .label {
+    -fx-font-size: 10;
+    -fx-text-fill: gray;
+}
+
+.coordinator-information .info-label {
+    -fx-font-size: 16;
+    -fx-text-fill: black;
+}
+
+.button {
+    -fx-background-color: TRANSPARENT;
 }
