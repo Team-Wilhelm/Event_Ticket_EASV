@@ -10,7 +10,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.MainViewController">
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.ScrollPane?>
+<GridPane stylesheets="/css/style.css"
+          maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+          minHeight="400.0" minWidth="600.0"
+          prefHeight="600.0" prefWidth="900.0"
+          xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="gui.controller.MainViewController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
   </columnConstraints>
@@ -33,7 +40,7 @@
                   <Insets left="5.0" right="5.0" />
                </padding>
             </MFXTableView>
-            <FlowPane fx:id="eventFlowPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <ScrollPane fx:id="eventScrollPane" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </children>
