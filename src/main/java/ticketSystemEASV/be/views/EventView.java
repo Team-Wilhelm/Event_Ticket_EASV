@@ -45,6 +45,11 @@ public class EventView extends VBox {
 
         // Add all the elements to the VBox
         this.getChildren().addAll(imageView,vBox);
+
+        this.setOnMouseClicked(e -> {
+            if (!this.isFocused())
+                this.requestFocus();
+        });
     }
 
     public Event getEvent() {

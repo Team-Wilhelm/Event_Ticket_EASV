@@ -41,8 +41,11 @@ public class AddEventController implements Initializable {
         txtStartTime.setText(event.getStartTime().toString());
         txtAreaNotes.setText(event.getNotes());
         dateStartDate.setValue(event.getStartDate().toLocalDate());
-        dateEndDate.setValue(event.getEndDate().toLocalDate());
-        txtEndTime.setText(event.getEndTime().toString());
+
+        if (event.getEndDate() != null)
+            dateEndDate.setValue(event.getEndDate().toLocalDate());
+        if (event.getEndTime() != null)
+            txtEndTime.setText(event.getEndTime().toString());
         txtLocationGuidance.setText(event.getLocationGuidance());
     }
 
@@ -71,7 +74,7 @@ public class AddEventController implements Initializable {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
         }
         else {
-            //TODO coordinatorID should ticketSystemEASV.be set to the logged in user (or admin can assign a coordinator)
+            //TODO coordinatorID should be set to the logged in user (or admin can assign a coordinator)
             if(!isEditing) {
                 model.saveEvent(new Event(model.getAllEventCoordinators().get(0).getId(),eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
                 ((Node) actionEvent.getSource()).getScene().getWindow().hide();
