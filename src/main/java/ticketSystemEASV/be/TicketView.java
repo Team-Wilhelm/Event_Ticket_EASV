@@ -87,6 +87,7 @@ public class TicketView {
             mainTable.addCell(iTextImage);
 
             PdfPTable table = new PdfPTable(1);
+            table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
 
             table.addCell(new Paragraph(ticket.getEvent().getEventName(), new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD)));
 
@@ -94,24 +95,19 @@ public class TicketView {
                     + new SimpleDateFormat("hh:mm").format(ticket.getEvent().getStartTime()), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD)));
             table.addCell(ticket.getEvent().getLocation());
 
-            table.addCell(new Paragraph("Ticket ID: " + ticket.getId().toString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD)));
+            table.addCell(new Paragraph("Ticket ID: " + ticket.getId().toString(), new Font(Font.FontFamily.TIMES_ROMAN, 12)));
 
-            table.addCell("Email");
-            table.addCell(ticket.getCustomer().getEmail());
 
             if (ticket.getEvent().getEndDate() != null) {
-                table.addCell("End date");
                 table.addCell(ticket.getEvent().getEndDate().toString());
             }
 
             if (ticket.getEvent().getEndTime() != null) {
-                table.addCell("End time");
                 table.addCell(ticket.getEvent().getEndTime().toString());
             }
 
             if (ticket.getEvent().getLocationGuidance() != null) {
-                table.addCell("Location guidance");
-                table.addCell(ticket.getEvent().getLocationGuidance());
+                table.addCell(new Paragraph("Location guidance" + " " + ticket.getEvent().getLocationGuidance(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD)));
             }
 
             // Add a header to the PDF file

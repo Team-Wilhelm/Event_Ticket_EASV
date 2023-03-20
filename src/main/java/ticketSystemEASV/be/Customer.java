@@ -9,6 +9,11 @@ public class Customer {
         this.email = email;
     }
 
+    public Customer(int id, String name, String email) {
+        this(name, email);
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

@@ -34,6 +34,12 @@ public class CustomerDAO {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, customerID);
             statement.execute();
+            while (statement.getResultSet().next()) {
+                int id = statement.getResultSet().getInt("id");
+                String name = statement.getResultSet().getString("customerName");
+                String email = statement.getResultSet().getString("email");
+                return new Customer(id, name, email);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
