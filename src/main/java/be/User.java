@@ -10,9 +10,9 @@ public class User {
         this.username = username;
         this.password = password;
     }
-    public User(UUID id, String name, String username, String password) {
+    public User(String id, String name, String username, String password) {
         this(name, username, password);
-        this.id = id;
+        this.id = UUID.fromString(id);
     }
     public UUID getId() {
         return id;
