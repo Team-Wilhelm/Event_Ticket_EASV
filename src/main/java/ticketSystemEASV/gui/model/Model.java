@@ -59,6 +59,17 @@ public class Model {
         return allEvents;
     }
 
+    public void addCoordinator(EventCoordinator coordinatorToSave) {
+        bll.addCoordinator(coordinatorToSave);
+    }
+
+    public void updateCoordinator(EventCoordinator coordinatorToUpdate) {
+        bll.updateCoordinator(coordinatorToUpdate);
+    }
+    public void deleteCoordinator(EventCoordinator coordinatorToDelete) {
+        bll.deleteCoordinator(coordinatorToDelete);
+    }
+
     public List<EventCoordinator> getAllEventCoordinators() {
         return allEventCoordinators;
     }

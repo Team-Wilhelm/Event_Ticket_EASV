@@ -1,6 +1,8 @@
 package ticketSystemEASV.gui.controller;
 
+import javafx.scene.control.Alert;
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.model.Model;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -62,10 +64,11 @@ public class AddEventController implements Initializable {
 
         if (eventName.isEmpty() || location.isEmpty() || txtStartTime.getText().isEmpty()
                 || dateStartDate.getValue() == null) {
-            txtEventName.setPromptText("Field cannot ticketSystemEASV.be empty, please enter a name");
-            txtLocation.setPromptText("Field cannot ticketSystemEASV.be empty, please enter a location");
-            txtStartTime.setPromptText("Field cannot ticketSystemEASV.be empty, please enter a starting time");
-            dateStartDate.setPromptText("Field cannot ticketSystemEASV.be empty, please choose a starting date");
+            txtEventName.setPromptText("Field cannot be empty, please enter a name");
+            txtLocation.setPromptText("Field cannot be empty, please enter a location");
+            txtStartTime.setPromptText("Field cannot be empty, please enter a starting time");
+            dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
         }
         else {
             //TODO coordinatorID should ticketSystemEASV.be set to the logged in user (or admin can assign a coordinator)

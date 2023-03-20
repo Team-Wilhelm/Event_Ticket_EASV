@@ -1,13 +1,11 @@
 package ticketSystemEASV.be.views;
 
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import ticketSystemEASV.be.EventCoordinator;
 import ticketSystemEASV.bll.CropImageToCircle;
@@ -28,13 +26,12 @@ public class CoordinatorView extends HBox {
 
         // Coordinator information
         Label nameLabel = new Label(coordinator.getName());
-        Label usernameLabel = new Label(coordinator.getUsername());
-        Label idLabel = new Label(String.valueOf(coordinator.getId()));
+        Label usernameLabel = new Label("Username: " + coordinator.getUsername());
+        Label idLabel = new Label("ID: " + coordinator.getId());
 
         // Store all the information in a VBox
         VBox information = new VBox(10);
         information.getChildren().addAll(imageView, nameLabel, usernameLabel, idLabel);
-        information.setPadding(new Insets(10,10,10,10));
 
         // Events assigned to this coordinator
         VBox events = new VBox(10, new Label("Assigned events:"));
@@ -44,7 +41,23 @@ public class CoordinatorView extends HBox {
         }
 
         // Add all the elements to the VBox
+        this.setPadding(new Insets(15,15,15,15));
         this.getChildren().addAll(information, events);
-        this.backgroundProperty().set(new Background(new BackgroundFill(javafx.scene.paint.Color.WHITE,null,null)));
+
+        // When vbox is clicked focus on it
+        this.setOnMouseClicked(event -> {
+            if (!this.isFocused())
+                this.requestFocus();
+        });
+
+        // Use different backgrounds for focused and unfocused states
+        this.backgroundProperty().bind(Bindings
+                .when(this.focusedProperty())
+                .then(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)))
+                .otherwise(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))));
+    }
+
+    public EventCoordinator getCoordinator() {
+        return coordinator;
     }
 }

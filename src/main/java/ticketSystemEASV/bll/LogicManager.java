@@ -31,19 +31,22 @@ public class LogicManager {
         return eventDAO.getAllEvents();
     }
 
-
     public void addTicket(Ticket ticketToAdd) {
         ticketDAO.addTicket(ticketToAdd);
     }
+
     public void addMultipleTickets(List<Ticket> tickets, Customer customer) {
         ticketDAO.addMultipleTickets(tickets, customer);
     }
+
     public Ticket getTicket(UUID id) {
         return ticketDAO.getTicket(id);
     }
+
     public List<Ticket> getAllTicketsForEvent(Event event) {
         return ticketDAO.getAllTicketsForEvent(event);
     }
+
     public List<Ticket> getAllTicketsForCustomer(Customer customer) {
         return ticketDAO.getAllTicketsForCustomer(customer);
     }
@@ -61,12 +64,17 @@ public class LogicManager {
         voucherDAO.addMultipleVouchers(vouchers);
     }
 
-    public void createEventCoordinator(EventCoordinator eventCoordinatorToCreate){
-        eventCoordinatorDAO.addEventCoordinator(eventCoordinatorToCreate);
+
+    public void addCoordinator(EventCoordinator coordinatorToSave) {
+        eventCoordinatorDAO.addEventCoordinator(coordinatorToSave);
     }
 
-    public void deleteEventCoordinator(EventCoordinator eventCoordinatorToDelete){
-        eventCoordinatorDAO.deleteEventCoordinator(eventCoordinatorToDelete);
+    public void updateCoordinator(EventCoordinator coordinatorToUpdate) {
+        eventCoordinatorDAO.updateEventCoordinator(coordinatorToUpdate);
+    }
+
+    public void deleteCoordinator(EventCoordinator coordinatorToDelete) {
+        eventCoordinatorDAO.deleteEventCoordinator(coordinatorToDelete);
     }
 
     public Collection<EventCoordinator> getAllEventCoordinators(){

@@ -36,11 +36,24 @@ public class EventCoordinatorDAO {
 
     public void addEventCoordinator(EventCoordinator eventCoordinator) {
         String sql = "INSERT INTO Event_Coordinator (coordinatorName, userName, coordinatorPassword) " +
-                "VALUES (?,?,?,?);";
+                "VALUES (?,?,?);";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getName());
             statement.setString(2, eventCoordinator.getUsername());
             statement.setString(3, eventCoordinator.getPassword());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateEventCoordinator(EventCoordinator eventCoordinator){
+        String sql = "UPDATE Event_Coordinator SET coordinatorName=?, userName=?, coordinatorPassword=? WHERE id=?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, eventCoordinator.getName());
+            statement.setString(2, eventCoordinator.getUsername());
+            statement.setString(3, eventCoordinator.getPassword());
+            statement.setString(4, eventCoordinator.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

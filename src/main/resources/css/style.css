@@ -9,3 +9,9 @@
     -fx-padding: 10px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
 }
+
+.coordinator-view:hover, .event-view:hover {
+    -fx-scale-x: 105%;
+    -fx-scale-y: 105%;
+    -fx-scale-z: 105%;
+}
