@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
@@ -31,7 +32,8 @@ public class MainViewController implements Initializable {
     @FXML
     private MFXTableView<Event> eventTableView;
     @FXML
-    private FlowPane eventFlowPane;
+    private ScrollPane eventScrollPane;
+    private FlowPane eventFlowPane = new FlowPane();
     private ObservableList<EventView> eventViews = FXCollections.observableArrayList();
     private final Model model = new Model();
 
@@ -40,7 +42,14 @@ public class MainViewController implements Initializable {
         setUpTableView();
         eventTableView.setItems(FXCollections.observableArrayList(model.getAllEvents()));
         eventViews.addAll(model.getAllEvents().stream().map(EventView::new).toList());
+
+        eventScrollPane.setContent(eventFlowPane);
+        eventScrollPane.setFitToHeight(true);
+        eventScrollPane.setFitToWidth(true);
+
         eventFlowPane.getChildren().addAll(eventViews);
+        eventFlowPane.prefHeightProperty().bind(eventScrollPane.heightProperty());
+        eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
         eventFlowPane.setHgap(10);
         eventFlowPane.setVgap(20);
     }
