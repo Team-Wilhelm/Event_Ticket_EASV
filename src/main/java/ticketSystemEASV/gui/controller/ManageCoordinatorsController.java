@@ -72,15 +72,6 @@ public class ManageCoordinatorsController extends MotherController implements In
         refreshItems();
     }
 
-    private CoordinatorView getFocusedCoordinator() {
-        for (CoordinatorView coordinatorView : coordinatorViews) {
-            if (coordinatorView.isFocused()) {
-                return coordinatorView;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void refreshItems() {
         //TODO optimize

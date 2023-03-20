@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 public class UserDAO implements IUserDAO {
     private DBConnection dbConnection = new DBConnection();
+
     public User getUser(int userID) {
         String sql = "SELECT * FROM User WHERE Id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
@@ -26,6 +27,7 @@ public class UserDAO implements IUserDAO {
         }
         return null;
     }
+
     public boolean isInRole(int userID, String role) {
         String sql = "SELECT * FROM UserRole\n" +
                 "JOIN Role ON UserRole.RoleId = Role.Id\n" +
@@ -55,6 +57,7 @@ public class UserDAO implements IUserDAO {
         }
         return false;
     }
+
     public void signUp(User user,String role){
         String sql = "INSERT INTO User (Name, Email, Password) VALUES (?,?,?);";
         var userId = 0;
@@ -78,6 +81,7 @@ public class UserDAO implements IUserDAO {
             e.printStackTrace();
         }
     }
+
     public String getRoleId(String role){
         String sql = "SELECT Id FROM Role WHERE Name=?";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)){
@@ -90,5 +94,4 @@ public class UserDAO implements IUserDAO {
         }
         return null;
     }
-
 }

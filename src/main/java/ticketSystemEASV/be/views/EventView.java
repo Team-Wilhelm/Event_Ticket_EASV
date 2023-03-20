@@ -7,6 +7,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.EventCoordinator;
 
 public class EventView extends VBox {
     private Event event;
@@ -44,5 +45,9 @@ public class EventView extends VBox {
 
         // Add all the elements to the VBox
         this.getChildren().addAll(imageView,vBox);
+    }
+
+    public Event getEvent() {
+        return event;
     }
 }

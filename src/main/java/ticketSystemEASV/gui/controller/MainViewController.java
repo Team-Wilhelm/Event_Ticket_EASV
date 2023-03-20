@@ -1,6 +1,8 @@
 package ticketSystemEASV.gui.controller;
 
 import javafx.beans.binding.Bindings;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import ticketSystemEASV.be.views.EventView;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
@@ -17,6 +19,7 @@ import javafx.stage.Modality;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainViewController extends MotherController implements Initializable {
@@ -41,6 +44,8 @@ public class MainViewController extends MotherController implements Initializabl
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
         eventFlowPane.setHgap(10);
         eventFlowPane.setVgap(20);
+
+        refreshItems();
     }
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
@@ -48,9 +53,27 @@ public class MainViewController extends MotherController implements Initializabl
     }
 
     public void editEventAction(ActionEvent actionEvent) throws IOException {
+        if (lastFocusedEvent == null)
+            alertManager.getAlert(Alert.AlertType.ERROR, "No event selected!", actionEvent).showAndWait();
+        else {
+            FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL);
+            AddEventController addEventController = fxmlLoader.getController();
+            addEventController.setModel(model);
+            addEventController.setIsEditing(lastFocusedEvent.getEvent());
+        }
     }
 
     public void deleteEventAction(ActionEvent actionEvent) {
+        if (lastFocusedEvent == null)
+            alertManager.getAlert(Alert.AlertType.ERROR, "No event selected!", actionEvent).showAndWait();
+        else {
+            Alert alert = alertManager.getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK){
+                model.deleteEvent(lastFocusedEvent.getEvent());
+                refreshItems();
+            }
+        }
     }
 
     public void manageCoordinatorsAction(ActionEvent actionEvent) throws IOException {
