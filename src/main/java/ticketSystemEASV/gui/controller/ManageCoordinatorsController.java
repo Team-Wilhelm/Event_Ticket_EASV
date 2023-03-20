@@ -82,6 +82,17 @@ public class ManageCoordinatorsController extends MotherController implements In
             coordinatorView.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) lastFocusedCoordinator = coordinatorView;
             });
+
+            coordinatorView.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    try {
+                        lastFocusedCoordinator = coordinatorView;
+                        editCoordinatorAction(null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 }

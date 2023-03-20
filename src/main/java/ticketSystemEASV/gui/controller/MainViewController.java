@@ -91,6 +91,17 @@ public class MainViewController extends MotherController implements Initializabl
             eventView.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) lastFocusedEvent = eventView;
             });
+
+            eventView.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    try {
+                        lastFocusedEvent = eventView;
+                        editEventAction(null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 }

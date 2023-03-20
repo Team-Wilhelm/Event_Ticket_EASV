@@ -20,10 +20,12 @@ public class AlertManager {
         alert.setAlertType(type);
         alert.setContentText(text);
 
-        Node node = (Node) actionEvent.getSource();
-        Window window = node.getScene().getWindow();
-        if (alert.getOwner() == null)
-            alert.initOwner(window);
+        if (actionEvent != null){
+            Node node = (Node) actionEvent.getSource();
+            Window window = node.getScene().getWindow();
+            if (alert.getOwner() == null)
+                alert.initOwner(window);
+        }
         return alert;
     }
 
