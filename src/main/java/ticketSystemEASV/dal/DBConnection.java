@@ -2,7 +2,7 @@ package ticketSystemEASV.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dal.Interfaces.IDBConnection;
+import ticketSystemEASV.dal.Interfaces.IDBConnection;
 
 import java.sql.Connection;
 

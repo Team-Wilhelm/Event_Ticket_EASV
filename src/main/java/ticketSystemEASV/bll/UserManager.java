@@ -1,8 +1,8 @@
-package bll;
+package ticketSystemEASV.bll;
 
-import be.User;
-import dal.Interfaces.IUserDAO;
-import dal.UserDAO;
+import ticketSystemEASV.be.User;
+import ticketSystemEASV.dal.Interfaces.IUserDAO;
+import ticketSystemEASV.dal.UserDAO;
 
 public class UserManager {
     private final IUserDAO userDAO = new UserDAO();

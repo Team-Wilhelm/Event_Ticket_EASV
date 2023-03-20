@@ -1,4 +1,4 @@
-package be;
+package ticketSystemEASV.be;
 
 import java.util.UUID;
 

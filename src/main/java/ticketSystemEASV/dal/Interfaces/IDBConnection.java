@@ -1,4 +1,4 @@
-package dal.Interfaces;
+package ticketSystemEASV.dal.Interfaces;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 

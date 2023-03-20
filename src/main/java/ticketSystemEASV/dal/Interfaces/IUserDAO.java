@@ -1,6 +1,6 @@
-package dal.Interfaces;
+package ticketSystemEASV.dal.Interfaces;
 
-import be.User;
+import ticketSystemEASV.be.User;
 
 public interface IUserDAO {
     boolean isInRole(int userID, String role);

@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.model;
 
 import ticketSystemEASV.be.*;
+import ticketSystemEASV.be.views.TicketView;
 import ticketSystemEASV.bll.LogicManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

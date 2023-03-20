@@ -1,12 +1,12 @@
-package ticketSystemEASV.be;
+package ticketSystemEASV.be.views;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import ticketSystemEASV.be.Event;
 
 public class EventView extends VBox {
     private Event event;

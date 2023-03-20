@@ -1,6 +1,6 @@
-package gui.controller;
+package ticketSystemEASV.gui.controller;
 
-import gui.model.UserModel;
+import ticketSystemEASV.gui.model.UserModel;
 import javafx.fxml.Initializable;
 
 import java.net.URL;

@@ -1,10 +1,11 @@
-package dal;
+package ticketSystemEASV.dal;
 
-import be.Customer;
-import be.User;
-import com.google.inject.Inject;
+import ticketSystemEASV.be.User;
+import ticketSystemEASV.be.Customer;
+import ticketSystemEASV.be.User;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dal.Interfaces.IUserDAO;
+import ticketSystemEASV.dal.Interfaces.IUserDAO;
+import ticketSystemEASV.dal.DBConnection;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -40,6 +41,7 @@ public class UserDAO implements IUserDAO {
         }
         return false;
     }
+
     public boolean logIn(String name, String password) {
         String sql = "SELECT * FROM User WHERE Name=? AND Password=?";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)){

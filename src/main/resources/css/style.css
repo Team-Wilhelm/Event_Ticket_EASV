@@ -3,3 +3,14 @@
     -fx-padding: 10px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
 }
+
+.coordinator-view {
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
+}
+
+.user-image-view {
+    -fx-image: url(/images/userIcon.png);
+    -fx-border-radius: 50%;
+}

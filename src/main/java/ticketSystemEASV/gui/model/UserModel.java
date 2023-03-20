@@ -1,7 +1,7 @@
-package gui.model;
+package ticketSystemEASV.gui.model;
 
-import be.User;
-import bll.UserManager;
+import ticketSystemEASV.be.User;
+import ticketSystemEASV.bll.UserManager;
 
 public class UserModel {
     private final UserManager userManager = new UserManager();
