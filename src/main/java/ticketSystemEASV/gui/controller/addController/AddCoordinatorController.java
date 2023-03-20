@@ -1,4 +1,4 @@
-package ticketSystemEASV.gui.controller;
+package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
@@ -65,6 +65,7 @@ public class AddCoordinatorController {
     }
 
     private String createRandomPassword(){
+        //TODO maybe change this
         PasswordGenerator gen = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
         CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);

@@ -15,7 +15,7 @@ public class EventCoordinatorDAO {
 
     public Collection<EventCoordinator> getAllEventCoordinators() {
         List<EventCoordinator> eventCoordinators = new ArrayList<>();
-        String sql = "SELECT * FROM Event_Coordinator;";
+        String sql = "SELECT * FROM Event_Coordinator WHERE deleted=0;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

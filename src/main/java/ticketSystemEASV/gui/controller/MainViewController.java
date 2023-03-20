@@ -2,6 +2,8 @@ package ticketSystemEASV.gui.controller;
 
 import javafx.beans.binding.Bindings;
 import ticketSystemEASV.be.views.EventView;
+import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +24,9 @@ public class MainViewController extends MotherController implements Initializabl
     private ScrollPane eventScrollPane;
     private final FlowPane eventFlowPane = new FlowPane();
     private final ObservableList<EventView> eventViews = FXCollections.observableArrayList();
+    private final AlertManager alertManager = AlertManager.getInstance();
     private final Model model = new Model();
+    private EventView lastFocusedEvent;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,5 +63,11 @@ public class MainViewController extends MotherController implements Initializabl
     public void refreshItems() {
         eventViews.clear();
         eventViews.addAll(model.getAllEvents().stream().map(EventView::new).toList());
+
+        for (var eventView : eventViews) {
+            eventView.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) lastFocusedEvent = eventView;
+            });
+        }
     }
 }

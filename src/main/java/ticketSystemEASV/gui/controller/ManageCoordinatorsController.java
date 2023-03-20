@@ -14,6 +14,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import ticketSystemEASV.be.views.CoordinatorView;
 import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.model.Model;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class ManageCoordinatorsController extends MotherController implements In
     private final ObservableList<CoordinatorView> coordinatorViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private Model model;
+    private CoordinatorView lastFocusedCoordinator;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -42,24 +44,24 @@ public class ManageCoordinatorsController extends MotherController implements In
     }
 
     public void editCoordinatorAction(ActionEvent actionEvent) throws IOException {
-        if (getFocusedCoordinator() == null)
+        if (lastFocusedCoordinator == null)
             alertManager.getAlert(Alert.AlertType.ERROR, "No coordinator selected!", actionEvent).showAndWait();
         else {
-            FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL);
+            FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL);
             AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
             addCoordinatorController.setModel(model);
-            addCoordinatorController.setIsEditing(getFocusedCoordinator().getCoordinator());
+            addCoordinatorController.setIsEditing(lastFocusedCoordinator.getCoordinator());
         }
     }
 
     public void deleteCoordinatorAction(ActionEvent actionEvent) {
-         if (getFocusedCoordinator() == null)
+         if (lastFocusedCoordinator == null)
              alertManager.getAlert(Alert.AlertType.ERROR, "No coordinator selected!", actionEvent).showAndWait();
         else {
-             Alert alert = alertManager.getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
+             Alert alert = alertManager.getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this coordinator?", actionEvent);
              Optional<ButtonType> result = alert.showAndWait();
              if (result.isPresent() && result.get() == ButtonType.OK){
-                 model.deleteCoordinator(getFocusedCoordinator().getCoordinator());
+                 model.deleteCoordinator(lastFocusedCoordinator.getCoordinator());
                  refreshItems();
              }
         }
@@ -67,7 +69,7 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void setModel(Model model) {
         this.model = model;
-        coordinatorViews.addAll(model.getAllEventCoordinators().stream().map(CoordinatorView::new).toList());
+        refreshItems();
     }
 
     private CoordinatorView getFocusedCoordinator() {
@@ -84,5 +86,11 @@ public class ManageCoordinatorsController extends MotherController implements In
         //TODO optimize
         coordinatorViews.clear();
         coordinatorViews.addAll(model.getAllEventCoordinators().stream().map(CoordinatorView::new).toList());
+
+        for (var coordinatorView : coordinatorViews) {
+            coordinatorView.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) lastFocusedCoordinator = coordinatorView;
+            });
+        }
     }
 }

@@ -1,4 +1,4 @@
-package ticketSystemEASV.gui.controller;
+package ticketSystemEASV.gui.controller.addController;
 
 import javafx.scene.control.Alert;
 import ticketSystemEASV.be.Event;
