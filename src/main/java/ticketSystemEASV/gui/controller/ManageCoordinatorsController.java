@@ -38,14 +38,14 @@ public class ManageCoordinatorsController extends MotherController implements In
     }
 
     public void addCoordinatorAction(ActionEvent actionEvent) throws IOException {
-        ((AddCoordinatorController) openNewWindow("/views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController()).setModel(model);
+        ((AddCoordinatorController) openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController()).setModel(model);
     }
 
     public void editCoordinatorAction(ActionEvent actionEvent) throws IOException {
         if (getFocusedCoordinator() == null)
             alertManager.getAlert(Alert.AlertType.ERROR, "No coordinator selected!", actionEvent).showAndWait();
         else {
-            FXMLLoader fxmlLoader = openNewWindow("/views/AddEventView.fxml", Modality.WINDOW_MODAL);
+            FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL);
             AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
             addCoordinatorController.setModel(model);
             addCoordinatorController.setIsEditing(getFocusedCoordinator().getCoordinator());
@@ -81,8 +81,8 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     @Override
     public void refreshItems() {
+        //TODO optimize
         coordinatorViews.clear();
-        System.out.println(model.getAllEventCoordinators());
         coordinatorViews.addAll(model.getAllEventCoordinators().stream().map(CoordinatorView::new).toList());
     }
 }

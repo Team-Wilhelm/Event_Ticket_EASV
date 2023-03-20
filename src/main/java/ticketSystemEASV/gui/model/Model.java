@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Model {
     private final LogicManager bll = new LogicManager();
-    private final List<EventCoordinator> allEventCoordinators = new ArrayList<>();
+    private final ObservableList<EventCoordinator> allEventCoordinators = FXCollections.observableArrayList();
     private ObservableList<Event> allEvents = FXCollections.observableArrayList();
 
     public Model() {
@@ -36,6 +36,7 @@ public class Model {
         ticketView.generateTicket(ticket);
     }
 
+    //region Event CRUD
     public void saveEvent(Event eventToSave) {
         /*
         //In order to get the proper id (temporary)
@@ -58,7 +59,9 @@ public class Model {
         allEvents.setAll(bll.getAllEvents());
         return allEvents;
     }
+    //endregion
 
+    //region EventCoordinator CRUD
     public void addCoordinator(EventCoordinator coordinatorToSave) {
         bll.addCoordinator(coordinatorToSave);
     }
@@ -71,6 +74,8 @@ public class Model {
     }
 
     public List<EventCoordinator> getAllEventCoordinators() {
+        allEventCoordinators.setAll(bll.getAllEventCoordinators());
         return allEventCoordinators;
     }
+    //endregion
 }

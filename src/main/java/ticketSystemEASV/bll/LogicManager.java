@@ -1,6 +1,5 @@
 package ticketSystemEASV.bll;
 
-
 import ticketSystemEASV.be.*;
 import ticketSystemEASV.dal.*;
 
@@ -15,6 +14,7 @@ public class LogicManager {
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final EventCoordinatorDAO eventCoordinatorDAO = new EventCoordinatorDAO();
 
+    //region Event CRUD
     public void saveEvent(Event eventToSave) {
         eventDAO.addEvent(eventToSave);
     }
@@ -30,6 +30,25 @@ public class LogicManager {
     public Collection<Event> getAllEvents() {
         return eventDAO.getAllEvents();
     }
+    //endregion
+
+    //region EventCoordinator CRUD
+    public void addCoordinator(EventCoordinator coordinatorToSave) {
+        eventCoordinatorDAO.addEventCoordinator(coordinatorToSave);
+    }
+
+    public void updateCoordinator(EventCoordinator coordinatorToUpdate) {
+        eventCoordinatorDAO.updateEventCoordinator(coordinatorToUpdate);
+    }
+
+    public void deleteCoordinator(EventCoordinator coordinatorToDelete) {
+        eventCoordinatorDAO.deleteEventCoordinator(coordinatorToDelete);
+    }
+
+    public Collection<EventCoordinator> getAllEventCoordinators(){
+        return eventCoordinatorDAO.getAllEventCoordinators();
+    }
+    //endregion
 
     public void addTicket(Ticket ticketToAdd) {
         ticketDAO.addTicket(ticketToAdd);
@@ -50,6 +69,7 @@ public class LogicManager {
     public List<Ticket> getAllTicketsForCustomer(Customer customer) {
         return ticketDAO.getAllTicketsForCustomer(customer);
     }
+
     public void deleteTicket(Ticket ticketToDelete) {
         ticketDAO.deleteTicket(ticketToDelete);
     }
@@ -57,27 +77,12 @@ public class LogicManager {
     public void addVoucher(Voucher voucherToAdd) {
         voucherDAO.addVoucher(voucherToAdd);
     }
+
     public void deleteVoucher(Voucher voucherToDelete) {
         voucherDAO.deleteVoucher(voucherToDelete);
     }
+
     public void addMultipleVouchers(List<Voucher> vouchers) {
         voucherDAO.addMultipleVouchers(vouchers);
-    }
-
-
-    public void addCoordinator(EventCoordinator coordinatorToSave) {
-        eventCoordinatorDAO.addEventCoordinator(coordinatorToSave);
-    }
-
-    public void updateCoordinator(EventCoordinator coordinatorToUpdate) {
-        eventCoordinatorDAO.updateEventCoordinator(coordinatorToUpdate);
-    }
-
-    public void deleteCoordinator(EventCoordinator coordinatorToDelete) {
-        eventCoordinatorDAO.deleteEventCoordinator(coordinatorToDelete);
-    }
-
-    public Collection<EventCoordinator> getAllEventCoordinators(){
-        return eventCoordinatorDAO.getAllEventCoordinators();
     }
 }

@@ -40,33 +40,13 @@ public class MainViewController extends MotherController implements Initializabl
     }
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
-        ((AddEventController) openNewWindow("/views/AddEventView.fxml", Modality.WINDOW_MODAL).getController()).setModel(model);
+        ((AddEventController) openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL).getController()).setModel(model);
     }
 
     public void editEventAction(ActionEvent actionEvent) throws IOException {
-        /*if (eventTableView.getSelectionModel().getSelectedValues().size() == 0)
-            new Alert(Alert.AlertType.ERROR, "No event selected!").showAndWait();
-        else {
-            FXMLLoader fxmlLoader = openNewWindow("/views/AddEventView.fxml");
-            AddEventController addEventController = fxmlLoader.getController();
-            addEventController.setModel(model);
-            addEventController.setIsEditing(eventTableView.getSelectionModel().getSelectedValues().get(0));
-        }*/
     }
 
     public void deleteEventAction(ActionEvent actionEvent) {
-        /*if (eventTableView.getSelectionModel().getSelectedValues().size() == 0)
-            new Alert(Alert.AlertType.ERROR, "No event selected!").showAndWait();
-        else {
-            Event event = eventTableView.getSelectionModel().getSelectedValues().get(0);
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Are you sure you want to delete this event?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK){
-                model.deleteEvent(event);
-                refreshTableView();
-            }
-        }*/
     }
 
     public void manageCoordinatorsAction(ActionEvent actionEvent) throws IOException {
