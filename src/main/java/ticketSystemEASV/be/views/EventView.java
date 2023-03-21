@@ -1,14 +1,21 @@
 package ticketSystemEASV.be.views;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import ticketSystemEASV.be.Event;
 
+import java.util.Objects;
 
 public class EventView extends VBox {
     private Event event;
+    private final Image mapPin = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/map-pin.png")));
+    private final Image calendar = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/calendar.png")));
+    private final Image clock = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/clock.png")));
+
 
     public EventView(Event event) {
         super();
@@ -22,23 +29,51 @@ public class EventView extends VBox {
         top.setPrefHeight(100);
 
         // Name of the event
-        Label nameLabel = new Label("Event: " + event.getEventName());
+        ImageView nameIV = new ImageView();
+        Label nameLabel = new Label(event.getEventName());
+        nameIV.setPreserveRatio(true);
+        nameIV.setSmooth(true);
+        nameIV.fitHeightProperty().bind(nameLabel.heightProperty());
+
+        HBox nameBox = new HBox(5, nameIV, nameLabel);
+        nameBox.alignmentProperty().set(Pos.CENTER_LEFT);
 
         // Date of the event
-        Label dateLabel = new Label("Date: " + event.getStartDate().toString());
+        ImageView calendarIV = new ImageView(calendar);
+        Label dateLabel = new Label(event.getStartDate().toString());
+        calendarIV.setPreserveRatio(true);
+        calendarIV.setSmooth(true);
+        calendarIV.fitHeightProperty().bind(dateLabel.heightProperty());
+
+        HBox dateBox = new HBox(5, calendarIV, dateLabel);
+        dateBox.alignmentProperty().set(Pos.CENTER_LEFT);
 
         // Time of the event
-        Label timeLabel = new Label("Time: " + event.getStartTime().toString());
+        ImageView timeIV = new ImageView(clock);
+        Label timeLabel = new Label(event.getStartTime().toString());
+        timeIV.setPreserveRatio(true);
+        timeIV.setSmooth(true);
+        timeIV.fitHeightProperty().bind(timeLabel.heightProperty());
+
+        HBox timeBox = new HBox(5, timeIV, timeLabel);
+        timeBox.alignmentProperty().set(Pos.CENTER_LEFT);
 
         // Location of the event
-        Label locationLabel = new Label("Location: " + event.getLocation());
+        ImageView locationIV = new ImageView(mapPin);
+        Label locationLabel = new Label(event.getLocation());
+        locationIV.setPreserveRatio(true);
+        locationIV.setSmooth(true);
+        locationIV.fitHeightProperty().bind(locationLabel.heightProperty());
+
+        HBox locationBox = new HBox(5, locationIV, locationLabel);
+        locationBox.alignmentProperty().set(Pos.CENTER_LEFT);
 
         // All the information about the event
         VBox vBox = new VBox(10);
-        vBox.getChildren().add(nameLabel);
-        vBox.getChildren().add(dateLabel);
-        vBox.getChildren().add(timeLabel);
-        vBox.getChildren().add(locationLabel);
+        vBox.getChildren().add(nameBox);
+        vBox.getChildren().add(dateBox);
+        vBox.getChildren().add(timeBox);
+        vBox.getChildren().add(locationBox);
 
         vBox.setPadding(new Insets(10,10,10,10));
         vBox.backgroundProperty().set(new Background(new BackgroundFill(javafx.scene.paint.Color.WHITE,null,null)));

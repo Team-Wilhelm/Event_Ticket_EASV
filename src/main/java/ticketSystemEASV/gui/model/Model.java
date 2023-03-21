@@ -33,7 +33,7 @@ public class Model {
         Ticket ticket1 = new Ticket(UUID.randomUUID() , allEvents.get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
         Ticket ticket2 = new Ticket(UUID.randomUUID(), allEvents.get(4), new Customer("Ashghhleigh", "real@mail.com"), "I'm a winner", "No QR");
         TicketView ticketView = new TicketView();
-        ticketView.generateTicket(ticket2);
+        //ticketView.generateTicket(ticket2);
     }
 
     //region Event CRUD
