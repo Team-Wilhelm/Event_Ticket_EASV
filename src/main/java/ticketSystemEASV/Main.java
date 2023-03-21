@@ -18,10 +18,10 @@ public class Main extends Application {
             root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/Root.fxml")));
         else
             root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoginView.fxml")));
+
         primaryStage.setTitle("EASV Ticket System");
         primaryStage.setScene(new Scene(root));
-        primaryStage.getIcons().add(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("/images/EASVLogo.png"))));
-        //perfectly squished logo
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("/images/icons/chicken.jpg"))));
         primaryStage.show();
     }
 

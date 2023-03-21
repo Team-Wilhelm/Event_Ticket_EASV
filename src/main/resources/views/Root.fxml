@@ -9,10 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-
-<BorderPane fx:controller="ticketSystemEASV.gui.controller.RootController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.RootController">
    <top>
-      <HBox fx:id="menuBar" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox fx:id="menuBar" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="70.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="30.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -33,6 +32,6 @@
       </HBox>
    </top>
    <center>
-      <fx:include source="MainView.fxml" fx:id="mainView"> </fx:include>
+      <fx:include fx:id="mainView" source="MainView.fxml"> </fx:include>
    </center>
 </BorderPane>

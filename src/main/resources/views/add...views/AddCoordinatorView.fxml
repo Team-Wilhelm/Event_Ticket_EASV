@@ -24,7 +24,7 @@
          <graphic>
             <ImageView fx:id="btnGoBack" fitHeight="25.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../images/arrow-left.png" />
+                  <Image url="@../../images/icons/arrow-left.png" />
                </image>
             </ImageView>
          </graphic>

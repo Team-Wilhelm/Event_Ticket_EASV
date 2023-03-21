@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import ticketSystemEASV.gui.model.Model;
 
 import java.net.URL;
@@ -14,6 +16,8 @@ import java.util.ResourceBundle;
 public class RootController implements Initializable {
     @FXML
     private MainViewController mainViewController;
+    @FXML
+    private BorderPane borderPane;
     @FXML
     private MFXTextField searchBar;
     @FXML
@@ -28,5 +32,9 @@ public class RootController implements Initializable {
 
     public void searchEvents(String query) {
         mainViewController.setFilteredEvents(model.searchEvents(query));
+    }
+
+    public void setWindow(Node node) {
+        borderPane.setCenter(node);
     }
 }
