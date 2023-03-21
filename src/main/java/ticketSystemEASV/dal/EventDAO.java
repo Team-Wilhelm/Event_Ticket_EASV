@@ -115,4 +115,21 @@ public class EventDAO {
         String locationGuidance = resultSet.getString("locationGuidance");
         return new Event(id, coordinatorId, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
     }
+
+    public List<Event> searchEvents(String query) {
+        List<Event> events = new ArrayList<>();
+        String sql = "SELECT * FROM Event WHERE eventName LIKE ? OR eventLocation LIKE ?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, "%" + query + "%");
+            statement.setString(2, "%" + query + "%");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                events.add(constructEvent(resultSet));
+            }
+            return events;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

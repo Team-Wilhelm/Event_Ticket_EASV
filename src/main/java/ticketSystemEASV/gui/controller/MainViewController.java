@@ -3,6 +3,7 @@ package ticketSystemEASV.gui.controller;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventView;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
@@ -19,6 +20,7 @@ import javafx.stage.Modality;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -28,12 +30,11 @@ public class MainViewController extends MotherController implements Initializabl
     private final FlowPane eventFlowPane = new FlowPane();
     private final ObservableList<EventView> eventViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
-    private final Model model = new Model();
+    private Model model;
     private EventView lastFocusedEvent;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        eventViews.addAll(model.getAllEvents().stream().map(EventView::new).toList());
         Bindings.bindContent(eventFlowPane.getChildren(), eventViews);
 
         eventScrollPane.setContent(eventFlowPane);
@@ -44,8 +45,6 @@ public class MainViewController extends MotherController implements Initializabl
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
         eventFlowPane.setHgap(10);
         eventFlowPane.setVgap(20);
-
-        refreshItems();
     }
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
@@ -109,5 +108,15 @@ public class MainViewController extends MotherController implements Initializabl
                 }
             });
         }
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
+        refreshItems();
+    }
+
+    public void setFilteredEvents(List<Event> searchEvents) {
+        eventViews.clear();
+        eventViews.addAll(searchEvents.stream().map(EventView::new).toList());
     }
 }

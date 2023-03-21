@@ -85,4 +85,8 @@ public class LogicManager {
     public void addMultipleVouchers(List<Voucher> vouchers) {
         voucherDAO.addMultipleVouchers(vouchers);
     }
+
+    public List<Event> searchEvents(String query) {
+        return eventDAO.searchEvents(query);
+    }
 }

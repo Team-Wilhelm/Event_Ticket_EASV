@@ -15,7 +15,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root;
         if(true) // TODO: Remove this if
-            root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/MainView.fxml")));
+            root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/Root.fxml")));
         else
             root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoginView.fxml")));
         primaryStage.setTitle("EASV Ticket System");

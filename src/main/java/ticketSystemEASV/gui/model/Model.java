@@ -77,5 +77,9 @@ public class Model {
         allEventCoordinators.setAll(bll.getAllEventCoordinators());
         return allEventCoordinators;
     }
+
+    public List<Event> searchEvents(String query) {
+        return bll.searchEvents(query);
+    }
     //endregion
 }
