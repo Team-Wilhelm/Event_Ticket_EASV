@@ -6,7 +6,6 @@ import ticketSystemEASV.bll.LogicManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,9 +30,10 @@ public class Model {
                 "Basement restroom", "Oh my god Beckeighhh", Date.valueOf("9999-08-01"),
                 new Time(22, 22, 22), "Don't forget to bring your best ears :)"));*/
 
-        Ticket ticket = new Ticket(UUID.randomUUID() , allEvents.get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
+        Ticket ticket1 = new Ticket(UUID.randomUUID() , allEvents.get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
+        Ticket ticket2 = new Ticket(UUID.randomUUID(), allEvents.get(4), new Customer("Ashghhleigh", "real@mail.com"), "I'm a winner", "No QR");
         TicketView ticketView = new TicketView();
-        ticketView.generateTicket(ticket);
+        ticketView.generateTicket(ticket2);
     }
 
     //region Event CRUD

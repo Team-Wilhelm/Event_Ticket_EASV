@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.controller.addController;
 
 import javafx.scene.control.Alert;
+import javafx.scene.layout.VBox;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.MainViewController;
@@ -29,10 +30,13 @@ public class AddEventController implements Initializable {
     private TextArea txtAreaNotes;
     @FXML
     private MFXTextField txtEventName, txtLocation, txtStartTime, txtEndTime, txtLocationGuidance;
+    @FXML
+    private VBox leftVBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEditing = false;
+        //TODO: Add a time picker
     }
 
     public void setIsEditing(Event event) {

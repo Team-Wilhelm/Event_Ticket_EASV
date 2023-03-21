@@ -13,15 +13,14 @@ import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.Style;
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 import ticketSystemEASV.be.Ticket;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.StyleConstants;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,59 +29,87 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TicketView {
+    private static PdfFont FONT;
+    private static final int FONT_SIZE = 14;
 
     public void generateTicket(Ticket ticket){
         try {
             int rows = 0;
+            FONT = PdfFontFactory.createFont(FontConstants.HELVETICA);
+            //TODO choose a font
 
             // Open a new PDF document
-            PdfWriter writer = new PdfWriter("src/main/resources/test.pdf");
+            PdfWriter writer = new PdfWriter("src/main/resources/" + ticket.getId() + ".pdf");
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
 
-            Table mainTable = new Table(new float[] {1, 2}); // 2 columns
+            Table mainTable = new Table(UnitValue.createPercentArray(new float[] {30, 70})); // 2 columns
             mainTable.setWidthPercent(100); // Set table width to 100%
 
             // Add the event information
             Table table = new Table(1);
-            table.addCell(new Paragraph(ticket.getEvent().getEventName())); // Event name
+            table.setMarginTop(10);
+            table.setMarginLeft(10);
+
+            Cell eventName = new Cell(1, 1);
+            eventName.add(new Paragraph(new Text(ticket.getEvent().getEventName()).setBold())).setFontSize(FONT_SIZE+4);
             rows++;
 
-            table.addCell(new Paragraph(new SimpleDateFormat("dd.MM.yyyy").format(ticket.getEvent().getStartDate()) + " "
-                    + new SimpleDateFormat("hh:mm").format(ticket.getEvent().getStartTime()))); // Event date and time
+            Cell eventDateAndTime = new Cell(1, 1);
+            eventDateAndTime.add(new Paragraph(
+                    new Text(new SimpleDateFormat("dd.MM.yyyy").format(ticket.getEvent().getStartDate()) + " "
+                            + new SimpleDateFormat("hh:mm").format(ticket.getEvent().getStartTime())).setBold()))
+                    .setFontSize(FONT_SIZE+2); // Event date and time
             rows++;
 
-            table.addCell(new Paragraph(ticket.getEvent().getLocation())); // Event location
+            Cell eventLocation = new Cell(1, 1);
+            eventLocation.add(new Paragraph(ticket.getEvent().getLocation())).setFontSize(FONT_SIZE+2); // Event location
             rows++;
 
-            if (ticket.getEvent().getLocationGuidance() != null) {
-                table.addCell(new Paragraph("Location guidance: " + ticket.getEvent().getLocationGuidance())); // Event location guidance
+            Cell locationGuidance = null;
+            if (!ticket.getEvent().getLocationGuidance().isEmpty()) {
+                locationGuidance= new Cell(1, 1);
+                locationGuidance.add(new Paragraph("Location guidance: " + ticket.getEvent().getLocationGuidance())).setFontSize(FONT_SIZE); // Event location guidance
                 rows++;
             }
 
             // If an event has an end date and/or time, add it to the ticket
+            Cell endDateAndTime = null;
             Paragraph endDateTime = new Paragraph();
             if (ticket.getEvent().getEndDate() != null)
                 endDateTime.add(new SimpleDateFormat("dd.MM.yyyy").format(ticket.getEvent().getEndDate())); // Event end date
             if (ticket.getEvent().getEndTime() != null)
                 endDateTime.add(" " + new SimpleDateFormat("hh:mm").format(ticket.getEvent().getEndTime())); // Event end time
             if (!endDateTime.isEmpty()){
-                table.addCell(endDateTime);
+                endDateAndTime = new Cell(1, 1);
+                endDateAndTime.add(new Paragraph("End time: ").add(endDateTime)).setFontSize(FONT_SIZE);
                 rows++;
             }
             removeBorder(table);
 
             // Add the QR code to the ticket
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(generateQRCode(ticket, 100), "png", baos);
+            ImageIO.write(generateQRCode(ticket, 150), "png", baos);
             Image qrCode = new Image(ImageDataFactory.create(baos.toByteArray()));
             qrCode.setHorizontalAlignment(HorizontalAlignment.CENTER);
             qrCode.setAutoScale(true);
 
-            mainTable.addCell(qrCode);
-            mainTable.addCell(table);
+            Cell qrCell = new Cell(rows, 1);
+            qrCell.add(qrCode);
+            qrCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
+            qrCell.setVerticalAlignment(VerticalAlignment.MIDDLE);
+
+            mainTable.addCell(qrCell);
+            mainTable.addCell(eventName);
+            mainTable.addCell(eventDateAndTime);
+            mainTable.addCell(eventLocation);
+            if (locationGuidance != null)
+                mainTable.addCell(locationGuidance);
+            if (endDateAndTime != null)
+                mainTable.addCell(endDateAndTime);
+
             Cell cell = new Cell(1, 2); // Ticket ID
-            cell.add(new Paragraph("Ticket ID: " + ticket.getId()));
+            cell.add(new Paragraph("Ticket ID: " + ticket.getId())).setFontSize(FONT_SIZE);
             mainTable.addCell(cell);
 
             doc.add(mainTable);
@@ -106,7 +133,7 @@ public class TicketView {
         //MultiFormatWriter is a factory class that finds the appropriate Writer subclass for the BarcodeFormat requested and encodes the barcode with the supplied contents.
     }
 
-    private static void removeBorder(Table table) {
+    private void removeBorder(Table table) {
         for (IElement iElement : table.getChildren()) {
             ((Cell)iElement).setBorder(Border.NO_BORDER);
         }
