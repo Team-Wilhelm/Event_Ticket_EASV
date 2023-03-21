@@ -14,7 +14,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root;
-        if(true)
+        if(true) // TODO: Remove this if
             root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/MainView.fxml")));
         else
             root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoginView.fxml")));

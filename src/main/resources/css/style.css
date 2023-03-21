@@ -32,6 +32,26 @@
     -fx-text-fill: black;
 }
 
-.button {
+.backButton {
     -fx-background-color: TRANSPARENT;
+}
+
+.eventHalf{
+    -fx-background-image: url("/images/EditEvent.jpg");
+    -fx-background-size: 800 auto cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.loginHalf{
+    -fx-background-image: url("/images/Login.jpg");
+    -fx-background-size: 1000 auto cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.event-view-top {
+    -fx-background-image: url("/images/Event.jpg");
+    -fx-background-size: 300 auto cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
 }
