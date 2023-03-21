@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import ticketSystemEASV.be.Event;
 
+
 public class EventView extends VBox {
     private Event event;
 

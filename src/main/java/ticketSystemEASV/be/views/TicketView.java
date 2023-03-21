@@ -6,9 +6,15 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.itextpdf.text.*;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
 import ticketSystemEASV.be.Ticket;
 
 import javax.imageio.ImageIO;
@@ -24,16 +30,16 @@ public class TicketView {
     public void generateTicket(Ticket ticket){
         try {
             FileOutputStream fos = new FileOutputStream("src/main/resources/test.pdf");
-            Document doc = new Document();
-            PdfWriter writer = PdfWriter.getInstance(doc, fos);
-            doc.open();
+            PdfWriter writer = new PdfWriter("src/main/resources/test.pdf");
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
 
-            PdfPTable mainTable = new PdfPTable(2); // 2 columns
-            mainTable.setWidthPercentage(100); // Set table width to 100%
-            mainTable.setSpacingBefore(10f); // Set spacing before the table
-            mainTable.setSpacingAfter(10f); // Set spacing after the table
+            Table mainTable = new Table(new float[] {1, 2}); // 2 columns
+            mainTable.setWidthPercent(100); // Set table width to 100%
+            //mainTable.setSpacingBefore(10f); // Set spacing before the table
+            //mainTable.setSpacingAfter(10f); // Set spacing after the table
             //mainTable.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
-            mainTable.completeRow();
+            //mainTable.completeRow();
 
             /*// Add a title to the PDF file
             Paragraph title = new Paragraph("Whadup suckers", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
@@ -43,26 +49,26 @@ public class TicketView {
 
             // Add the QR code to the ticket
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(generateQRCode(ticket, 50), "png", baos);
-            com.itextpdf.text.Image qrCode = com.itextpdf.text.Image.getInstance(baos.toByteArray());
+            ImageIO.write(generateQRCode(ticket, 100), "png", baos);
+            Image qrCode = new Image(ImageDataFactory.create(baos.toByteArray()));
 
             // Add a table containing ticket information to the PDF file
-            var cell = new PdfPCell(qrCode, true);
+            var cell = new Cell();
+            cell.add(qrCode);
             //cell.setBorder(PdfPCell.NO_BORDER);
-            mainTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_TOP);
             mainTable.addCell(cell);
 
-            PdfPTable table = new PdfPTable(1);
+            Table table = new Table(1);
             //table.getDefaultCell().setBorder(PdfPCell.NO_BORDER);
 
-            table.addCell(new Paragraph(ticket.getEvent().getEventName(), new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD)));
+            table.addCell(new Paragraph(ticket.getEvent().getEventName()));
 
             table.addCell(new Paragraph(new SimpleDateFormat("dd.MM.yyyy").format(ticket.getEvent().getStartDate()) + " "
-                    + new SimpleDateFormat("hh:mm").format(ticket.getEvent().getStartTime()), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD)));
+                    + new SimpleDateFormat("hh:mm").format(ticket.getEvent().getStartTime())));
             table.addCell(ticket.getEvent().getLocation());
             table.addCell(" ");
 
-            table.addCell(new Paragraph("Ticket ID: " + ticket.getId().toString(), new Font(Font.FontFamily.TIMES_ROMAN, 12)));
+            table.addCell(new Paragraph("Ticket ID: " + ticket.getId().toString()));
 
 
             if (ticket.getEvent().getEndDate() != null) {
@@ -74,7 +80,7 @@ public class TicketView {
             }
 
             if (ticket.getEvent().getLocationGuidance() != null) {
-                table.addCell(new Paragraph("Location guidance: " + ticket.getEvent().getLocationGuidance(), new Font(Font.FontFamily.TIMES_ROMAN, 12)));
+                table.addCell(new Paragraph("Location guidance: " + ticket.getEvent().getLocationGuidance()));
             }
 
             table.addCell(" ");
