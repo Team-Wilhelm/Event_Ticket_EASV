@@ -57,7 +57,7 @@ public class MainViewController extends MotherController implements Initializabl
         if (lastFocusedEvent == null)
             alertManager.getAlert(Alert.AlertType.ERROR, "No event selected!", actionEvent).showAndWait();
         else {
-            FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL);
+            FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.APPLICATION_MODAL);
             AddEventController addEventController = fxmlLoader.getController();
             addEventController.setModel(model);
             addEventController.setIsEditing(lastFocusedEvent.getEvent());
