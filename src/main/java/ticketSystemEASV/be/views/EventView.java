@@ -3,11 +3,13 @@ package ticketSystemEASV.be.views;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import ticketSystemEASV.be.Event;
 
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 public class EventView extends VBox {
@@ -31,6 +33,9 @@ public class EventView extends VBox {
         // Name of the event
         ImageView nameIV = new ImageView();
         Label nameLabel = new Label(event.getEventName());
+        nameLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
+        nameLabel.maxWidthProperty().bind(top.prefWidthProperty());
+
         nameIV.setPreserveRatio(true);
         nameIV.setSmooth(true);
         nameIV.fitHeightProperty().bind(nameLabel.heightProperty());
@@ -40,7 +45,7 @@ public class EventView extends VBox {
 
         // Date of the event
         ImageView calendarIV = new ImageView(calendar);
-        Label dateLabel = new Label(event.getStartDate().toString());
+        Label dateLabel = new Label(new SimpleDateFormat("dd.MM.yyyy").format(event.getStartDate()));
         calendarIV.setPreserveRatio(true);
         calendarIV.setSmooth(true);
         calendarIV.fitHeightProperty().bind(dateLabel.heightProperty());
@@ -50,7 +55,7 @@ public class EventView extends VBox {
 
         // Time of the event
         ImageView timeIV = new ImageView(clock);
-        Label timeLabel = new Label(event.getStartTime().toString());
+        Label timeLabel = new Label(new SimpleDateFormat("HH:mm").format(event.getStartTime()));
         timeIV.setPreserveRatio(true);
         timeIV.setSmooth(true);
         timeIV.fitHeightProperty().bind(timeLabel.heightProperty());
@@ -61,6 +66,10 @@ public class EventView extends VBox {
         // Location of the event
         ImageView locationIV = new ImageView(mapPin);
         Label locationLabel = new Label(event.getLocation());
+
+        locationLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
+        locationLabel.maxWidthProperty().bind(top.prefWidthProperty());
+
         locationIV.setPreserveRatio(true);
         locationIV.setSmooth(true);
         locationIV.fitHeightProperty().bind(locationLabel.heightProperty());

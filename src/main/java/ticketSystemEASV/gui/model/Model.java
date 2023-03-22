@@ -34,6 +34,7 @@ public class Model {
         Ticket ticket2 = new Ticket(UUID.randomUUID(), allEvents.get(4), new Customer("Ashghhleigh", "real@mail.com"), "I'm a winner", "No QR");
         TicketView ticketView = new TicketView();
         //ticketView.generateTicket(ticket2);
+        //ticketView.generateTicket(ticket1);
     }
 
     //region Event CRUD
