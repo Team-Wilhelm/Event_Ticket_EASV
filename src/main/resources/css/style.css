@@ -38,20 +38,17 @@
 
 .eventHalf{
     -fx-background-image: url("/images/EditEvent.jpg");
-    -fx-background-size: 800 auto cover;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+    -fx-background-size: cover;
+    -fx-background-position-x: center;
 }
 
 .loginHalf{
     -fx-background-image: url("/images/Login.jpg");
-    -fx-background-size: 1000 auto cover;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+    -fx-background-size: cover;
+    -fx-background-position-x: center;
 }
 .event-view-top {
     -fx-background-image: url("/images/Event.jpg");
-    -fx-background-size: 300 auto cover;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+    -fx-background-size: cover;
+    -fx-background-position-x: center;
 }
