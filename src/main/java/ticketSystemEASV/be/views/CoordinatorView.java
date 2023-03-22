@@ -46,8 +46,9 @@ public class CoordinatorView extends VBox {
         information.getStyleClass().add("coordinator-information");
         information.getChildren().addAll(
                 new VBox(new Label("Name"), nameLabel),
-                new VBox(new Label("Username"), usernameLabel),
-                new VBox(new Label("Most recent event"), mostRecentEvent));
+                new VBox(new Label("Username"), usernameLabel)//,
+                //new VBox(new Label("Most recent event"), mostRecentEvent)
+        );
         information.setAlignment(Pos.CENTER_LEFT);
 
         // Events assigned to this coordinator
