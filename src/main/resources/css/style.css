@@ -6,7 +6,7 @@
 
 /*TODO: Make pretty*/
 .event-view:focused {
-    -fx-border-color: #00bfff;
+    -fx-border-color: #CC201A;
     -fx-border-width: 2px;
 }
 
