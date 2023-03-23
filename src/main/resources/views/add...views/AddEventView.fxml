@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
@@ -8,16 +9,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="463.0" prefWidth="600.0" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddEventController">
+<HBox prefHeight="463.0" prefWidth="600.0" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddEventController">
    <children>
       <VBox fx:id="leftVBox" prefWidth="300.0" spacing="10.0" HBox.hgrow="ALWAYS">
          <children>
             <MFXTextField fx:id="txtEventName" floatMode="BORDER" floatingText="Event name" maxWidth="1.7976931348623157E308" />
             <MFXTextField fx:id="txtLocation" floatMode="BORDER" floatingText="Location" maxWidth="1.7976931348623157E308" />
             <MFXDatePicker fx:id="dateStartDate" floatMode="BORDER" floatingText="Start date" maxWidth="1.7976931348623157E308" />
-            <MFXTextField fx:id="txtStartTime" floatMode="BORDER" floatingText="Start time" maxWidth="1.7976931348623157E308" />
+            <MFXComboBox fx:id="comboStartTime" floatMode="BORDER" floatingText="Start time" maxWidth="1.7976931348623157E308" />
             <MFXDatePicker fx:id="dateEndDate" floatMode="BORDER" floatingText="End date (optional)" maxWidth="1.7976931348623157E308" />
-            <MFXTextField fx:id="txtEndTime" floatMode="BORDER" floatingText="End time (optional)" maxWidth="1.7976931348623157E308" />
+            <MFXComboBox fx:id="comboEndTime" floatMode="BORDER" floatingText="End time (optional)" maxWidth="1.7976931348623157E308" />
             <TextArea fx:id="txtAreaNotes" prefHeight="200.0" prefWidth="200.0" promptText="Notes" />
             <MFXTextField fx:id="txtLocationGuidance" floatMode="BORDER" floatingText="Location guidance (optional)" maxWidth="1.7976931348623157E308" />
             <HBox alignment="CENTER" spacing="10.0">
