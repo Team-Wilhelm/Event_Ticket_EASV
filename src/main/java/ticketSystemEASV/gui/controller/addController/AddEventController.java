@@ -42,9 +42,8 @@ public class AddEventController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEditing = false;
-        //Platform.runLater(() ->leftVBox.getChildren().add(new JFXTimePicker()));
-        //Platform.runLater(() ->leftVBox.getChildren().add(new TimeTextField()));
 
+        //Populating the time ComboBoxes
         comboStartTime.setValue(formatTime(Time.valueOf(LocalTime.now())));
         for (int i = 0; i < 24; i++) {
             for (int j = 0; j < 60; j += 30) {
@@ -52,8 +51,6 @@ public class AddEventController implements Initializable {
                 comboEndTime.getItems().add(formatTime(i + ":" + j + ":00"));
             }
         }
-
-        //TODO: Add a time picker
     }
 
     public void setIsEditing(Event event) {
