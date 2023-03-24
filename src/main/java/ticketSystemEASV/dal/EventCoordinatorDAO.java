@@ -26,8 +26,8 @@ public class EventCoordinatorDAO {
                 String username = resultSet.getString("UserName");
                 String password = resultSet.getString("Password");
                 EventCoordinator coordinator = new EventCoordinator(id, name, username, password);
-                System.out.println(coordinator);
                 eventDAO.getEventsAssignedToEventCoordinator(coordinator);
+                System.out.println(coordinator);
                 eventCoordinators.add(coordinator);
             }
             return eventCoordinators;
@@ -38,12 +38,17 @@ public class EventCoordinatorDAO {
     }
 
     public void addEventCoordinator(EventCoordinator eventCoordinator) {
-        String sql = "INSERT INTO Event_Coordinator (coordinatorName, userName, coordinatorPassword) " +
-                "VALUES (?,?,?);";
+        String sql = "DECLARE @UserID uniqueidentifier;" +
+                "INSERT INTO [User] (name, userName, Password)" +
+                "VALUES (?, ?, ?)" +
+                "SET @UserID = (SELECT ID FROM [User] WHERE UserName = ?)" +
+                "INSERT INTO UserRole (UserID, RoleID)" +
+                "VALUES (@UserID,(SELECT Id FROM Role WHERE NAME LIKE 'EventCoordinator'));";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getName());
             statement.setString(2, eventCoordinator.getUsername());
             statement.setString(3, eventCoordinator.getPassword());
+            statement.setString(4, eventCoordinator.getUsername());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

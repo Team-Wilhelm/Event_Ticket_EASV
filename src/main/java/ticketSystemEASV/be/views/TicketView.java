@@ -85,7 +85,6 @@ public class TicketView {
                 endDateAndTime.add(new Paragraph("End time: ").add(endDateTime)).setFontSize(FONT_SIZE);
                 rows++;
             }
-            removeBorder(table);
 
             // Add the QR code to the ticket
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -128,7 +127,7 @@ public class TicketView {
                 new String((ticket.getEvent().getEventName()
                         + " " + ticket.getCustomer().getName()
                         + " " + ticket.getId()).getBytes(StandardCharsets.UTF_8)),
-                BarcodeFormat.QR_CODE, size, size, hintMap);
+                BarcodeFormat.QR_CODE, 1, 1, hintMap);
         return MatrixToImageWriter.toBufferedImage(matrix);
         //MultiFormatWriter is a factory class that finds the appropriate Writer subclass for the BarcodeFormat requested and encodes the barcode with the supplied contents.
     }

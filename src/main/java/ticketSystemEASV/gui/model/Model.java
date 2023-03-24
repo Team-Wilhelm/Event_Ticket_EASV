@@ -29,22 +29,10 @@ public class Model {
         saveEvent(new Event(allEventCoordinators.get(0).getId(),"Ornithology 101", Date.valueOf("2012-12-20"), new Time(12, 12, 12),
                 "Basement restroom", "Oh my god Beckeighhh", Date.valueOf("9999-08-01"),
                 new Time(22, 22, 22), "Don't forget to bring your best ears :)"));*/
-
-        Ticket ticket1 = new Ticket(UUID.randomUUID() , allEvents.get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
-        Ticket ticket2 = new Ticket(UUID.randomUUID(), allEvents.get(4), new Customer("Ashghhleigh", "real@mail.com"), "I'm a winner", "No QR");
-        TicketView ticketView = new TicketView();
-        //ticketView.generateTicket(ticket2);
-        //ticketView.generateTicket(ticket1);
     }
 
     //region Event CRUD
     public void saveEvent(Event eventToSave) {
-        /*
-        //In order to get the proper id (temporary)
-        allEvents.sort(Comparator.comparingInt(Event::getId));
-        eventToSave.setId(allEvents.get(allEvents.size() - 1).getId() + 1);
-        allEvents.add(eventToSave);
-         */
         bll.saveEvent(eventToSave);
     }
 

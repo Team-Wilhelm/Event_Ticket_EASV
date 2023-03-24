@@ -7,8 +7,10 @@ import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
+import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.model.UserModel;
 import javafx.fxml.Initializable;
 
@@ -37,7 +39,7 @@ public class LoginViewController implements Initializable {
             stage.show();
         }
         else
-            System.out.println("Failed to log in");
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Invalid username or password.", event);
     }
 
     private void setEnterKeyAction() {
