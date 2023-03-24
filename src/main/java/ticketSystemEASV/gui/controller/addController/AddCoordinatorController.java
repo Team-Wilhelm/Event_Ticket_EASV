@@ -85,7 +85,7 @@ public class AddCoordinatorController implements Initializable{
         String coordinatorName = txtCoordinatorName.getText();
         String username = txtUsername.getText();
         final String[] password = {txtPassword.getText()};
-        System.out.println(profilePicturePath);
+        //System.out.println(profilePicturePath);
 
         if (coordinatorName.isEmpty() || username.isEmpty()) {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill out all required fields!", actionEvent).showAndWait();

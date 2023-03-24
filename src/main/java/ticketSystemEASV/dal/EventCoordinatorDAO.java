@@ -27,7 +27,6 @@ public class EventCoordinatorDAO {
                 String password = resultSet.getString("Password");
                 EventCoordinator coordinator = new EventCoordinator(id, name, username, password);
                 eventDAO.getEventsAssignedToEventCoordinator(coordinator);
-                System.out.println(coordinator);
                 eventCoordinators.add(coordinator);
             }
             return eventCoordinators;
@@ -56,7 +55,7 @@ public class EventCoordinatorDAO {
     }
 
     public void updateEventCoordinator(EventCoordinator eventCoordinator){
-        String sql = "UPDATE Event_Coordinator SET coordinatorName=?, userName=?, coordinatorPassword=? WHERE id=?;";
+        String sql = "UPDATE [User] SET name=?, userName=?, password=? WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getName());
             statement.setString(2, eventCoordinator.getUsername());
@@ -69,7 +68,7 @@ public class EventCoordinatorDAO {
     }
 
     public void deleteEventCoordinator(EventCoordinator eventCoordinator){
-        String sql = "UPDATE Event_Coordinator SET deleted=1 WHERE id=?;";
+        String sql = "UPDATE [User] SET deleted=1 WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getId().toString());
             statement.execute();
