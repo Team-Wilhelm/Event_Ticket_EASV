@@ -2,12 +2,14 @@ package ticketSystemEASV.be;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Event {
     //Required information
     int id;
-    private UUID coordinatorId;
+    private List<UUID> coordinatorIdList;
     private Date startDate;
     private Time startTime;
     private String eventName, location, notes;
@@ -18,8 +20,8 @@ public class Event {
     private Time endTime;
     private String locationGuidance;
 
-    public Event(UUID coordinatorId, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
-        this.coordinatorId = coordinatorId;
+    public Event(String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
+        this.coordinatorIdList = new ArrayList<>();
         this.eventName = eventName;
         this.startDate = startDate;
         this.startTime = startTime;
@@ -30,8 +32,8 @@ public class Event {
         this.locationGuidance = locationGuidance;
     }
 
-    public Event(int id, UUID coordinatorId, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
-        this(coordinatorId, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+    public Event(int id, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
+        this(eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
         this.id = id;
     }
 
@@ -107,11 +109,7 @@ public class Event {
         this.id = id;
     }
 
-    public UUID getCoordinatorId() {
-        return coordinatorId;
-    }
-
-    public void setCoordinatorId(UUID coordinatorId) {
-        this.coordinatorId = coordinatorId;
+    public List<UUID> getCoordinatorIdList() {
+        return coordinatorIdList;
     }
 }

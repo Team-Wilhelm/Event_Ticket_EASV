@@ -4,6 +4,7 @@ import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,8 +24,8 @@ import static javafx.scene.input.KeyCode.ENTER;
 
 public class LoginViewController implements Initializable {
     private final UserModel userModel = new UserModel();
-    public MFXTextField emailInput;
-    public MFXPasswordField passwordInput;
+    @FXML private MFXTextField emailInput;
+    @FXML private MFXPasswordField passwordInput;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -33,6 +34,7 @@ public class LoginViewController implements Initializable {
 
     public void loginUser(Event event) throws IOException {
         if(userModel.logIn(emailInput.getText(), passwordInput.getText())) {
+            userModel.setLoggedInUser(userModel.getUserByEmail());
             Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/Root.fxml")));
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));

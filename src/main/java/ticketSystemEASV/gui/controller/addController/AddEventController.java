@@ -94,12 +94,11 @@ public class AddEventController implements Initializable {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
         }
         else {
-            //TODO coordinatorID should be set to the logged-in user (or admin can assign a coordinator)
             if(!isEditing) {
-                model.saveEvent(new Event(model.getAllEventCoordinators().get(0).getId(),eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
+                model.saveEvent(new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
             }
             else {
-                model.updateEvent(new Event(eventToEdit.getId(), eventToEdit.getCoordinatorId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
+                model.updateEvent(new Event(eventToEdit.getId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
             }
             mainViewController.refreshItems();
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();

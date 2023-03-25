@@ -10,4 +10,6 @@ public interface IUserDAO {
     boolean logIn(String name, String password);
 
     User getUser(int userID);
+
+    User getUserByEmail();
 }

@@ -1,8 +1,8 @@
 package ticketSystemEASV.dal;
 
-import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.EventCoordinator;
+import ticketSystemEASV.gui.model.UserModel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,12 +12,20 @@ import java.util.UUID;
 
 public class EventDAO {
     private final DBConnection dbConnection = new DBConnection();
+    private UserModel userModel = new UserModel();
 
     public void addEvent(Event event) {
-        String sql = "INSERT INTO Event (coordinatorId, startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance) " +
-                "VALUES (?,?,?,?,?,?,?,?,?);";
+        //TODO unique Event names?
+        //TODO be able to add multiple coordinators for one event (fucking pain in the ass, i think, respectfully)
+        String sql = "DECLARE @EventID int;" +
+                "INSERT INTO Event (startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance) " +
+                "VALUES (?,?,?,?,?,?,?,?) " +
+                "SET @EventID = (SELECT ID FROM Event WHERE EventName = ?)" +
+                "INSERT INTO User_Event_Link (UserID, EventId)" +
+                "VALUES (?, @EventID);";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(event, statement);
+            statement.setString(10, userModel.getLoggedInUser().getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,7 +54,6 @@ public class EventDAO {
     }
 
     private void fillPreparedStatement(Event event, PreparedStatement statement) throws SQLException {
-        statement.setString(1, event.getCoordinatorId().toString());
         statement.setDate(2, event.getStartDate());
         statement.setTime(3, event.getStartTime());
         statement.setString(4, event.getEventName());
@@ -87,24 +94,26 @@ public class EventDAO {
         return null;
     }
 
-    public void getEventsAssignedToEventCoordinator(EventCoordinator eventCoordinator){
-        String sql = "SELECT eventID FROM Event_Coordinator_Link WHERE coordinatorID=?;";
+    public Collection<EventCoordinator> getCoordinatorsAssignedToEvent(int eventID) {
+        EventCoordinatorDAO eventCoordinatorDAO = new EventCoordinatorDAO();
+        List<EventCoordinator> eventCoordinators = new ArrayList<>();
+        String sql = "SELECT * FROM User_Event_Link WHERE EventID=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, eventCoordinator.getId().toString());
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
-                int eventID = resultSet.getInt("eventID");
-                Event event = getEvent(eventID);
-                eventCoordinator.getAssignedEvents().add(event);
+            statement.setInt(1, eventID);
+            statement.execute();
+            ResultSet resultSet = statement.getResultSet();
+            while (resultSet.next()) {
+                eventCoordinators.add(eventCoordinatorDAO.getEventCoordinator(UUID.fromString(resultSet.getString("UserID"))));
             }
+            return eventCoordinators;
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
     private Event constructEvent(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
-        UUID coordinatorId = (UUID.fromString(resultSet.getString("coordinatorId")));
         String eventName = resultSet.getString("eventName");
         Date startDate = resultSet.getDate("startDate");
         Time startTime = resultSet.getTime("startTime");
@@ -113,7 +122,7 @@ public class EventDAO {
         Date endDate = resultSet.getDate("endDate");
         Time endTime = resultSet.getTime("endTime");
         String locationGuidance = resultSet.getString("locationGuidance");
-        return new Event(id, coordinatorId, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+        return new Event(id, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
     }
 
     public List<Event> searchEvents(String query) {
