@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.RootController">
+<BorderPane fx:id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.RootController">
    <top>
       <HBox fx:id="menuBar" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" BorderPane.alignment="CENTER">
          <children>
@@ -27,14 +27,14 @@
             <Insets />
          </opaqueInsets>
          <BorderPane.margin>
-            <Insets left="10.0" right="10.0" />
+            <Insets />
          </BorderPane.margin>
       </HBox>
    </top>
    <center>
-      <fx:include fx:id="mainView" source="MainView.fxml"> </fx:include>
+      <fx:include fx:id="mainView" source="MainView.fxml" BorderPane.alignment="TOP_CENTER"> </fx:include>
    </center>
    <padding>
-      <Insets left="10.0" right="10.0" top="20.0" />
+      <Insets bottom="10.0" left="15.0" right="15.0" top="20.0" />
    </padding>
 </BorderPane>

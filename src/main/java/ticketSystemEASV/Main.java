@@ -6,8 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import ticketSystemEASV.be.Customer;
+import ticketSystemEASV.be.Ticket;
+import ticketSystemEASV.be.views.TicketView;
+import ticketSystemEASV.gui.model.Model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Main extends Application {
 
@@ -27,6 +32,16 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         //StartUp.configure();
+        //generateTicketsTest();
         launch(args);
+    }
+
+    private static void generateTicketsTest() {
+        Model model = new Model();
+        Ticket ticket1 = new Ticket(UUID.randomUUID() , model.getAllEvents().get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
+        Ticket ticket2 = new Ticket(UUID.randomUUID(), model.getAllEvents().get(5), new Customer("Ashghhleigh", "real@mail.com"), "I'm a winner", "No QR");
+        TicketView ticketView = new TicketView();
+        ticketView.generateTicket(ticket2);
+        ticketView.generateTicket(ticket1);
     }
 }

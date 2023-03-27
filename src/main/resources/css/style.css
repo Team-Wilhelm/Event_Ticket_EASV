@@ -1,3 +1,14 @@
+* {
+    -fx-red: #CC201A;
+    -fx-yellow: #FFBD50;
+    -fx-blue: #00AAEB;
+    -fx-black: #241F20;
+}
+
+.root {
+    -fx-accent: derive(-fx-red, 130%);
+}
+
 .event-view {
     -fx-border-radius: 10px;
     -fx-padding: 10px;
@@ -6,7 +17,7 @@
 
 /*TODO: Make pretty*/
 .event-view:focused {
-    -fx-border-color: #CC201A;
+    -fx-border-color: -fx-red;
     -fx-border-width: 2px;
 }
 
@@ -47,8 +58,60 @@
     -fx-background-size: cover;
     -fx-background-position-x: center;
 }
+
 .event-view-top {
     -fx-background-image: url("/images/Event.jpg");
     -fx-background-size: cover;
     -fx-background-position-x: center;
 }
+
+/******************************************************/
+/*Styling of text fields, date pickers and combo-boxes*/
+/******************************************************/
+
+.mfx-text-field:focus-within {
+    -fx-border-color: -fx-red;
+}
+
+.mfx-text-field .text-field {
+    -fx-highlight-fill: derive(-fx-red, 110%);
+}
+
+.mfx-text-field:focus-within .floating-text,
+.mfx-date-picker .date-picker-popup .months-combo:focus-within,
+.mfx-date-picker .date-picker-popup .years-combo:focus-within {
+    -fx-text-fill: -fx-red;
+}
+
+.mfx-date-picker:focus-within .icon,
+.mfx-combo-box:focus-within .caret .mfx-font-icon {
+    -mfx-color: -fx-red;
+}
+
+.mfx-date-picker .date-picker-popup .left-arrow .mfx-ripple-generator,
+.mfx-date-picker .date-picker-popup .right-arrow .mfx-ripple-generator{
+    -mfx-ripple-color: derive(-fx-red, 130%);
+}
+
+.mfx-date-picker .date-picker-popup .mfx-date-cell:selected {
+    -fx-background-color:-fx-red;
+}
+
+.mfx-date-picker .date-picker-popup .mfx-date-cell:current {
+    -fx-background-color: derive(-fx-red, 130%);
+    -fx-text-fill: -fx-red;
+}
+
+.mfx-combo-box .virtual-flow .mfx-combo-box-cell:hover,
+.mfx-combo-box .virtual-flow .mfx-combo-box-cell:selected {
+    -fx-background-color: derive(-fx-red, 110%);
+}
+
+.mfx-combo-box:focus-within .caret .mfx-ripple-generator {
+    -mfx-ripple-color: derive(-fx-red, 130%);
+}
+
+/******************************************************/
+/************************SLUT**************************/
+/******************************************************/
+

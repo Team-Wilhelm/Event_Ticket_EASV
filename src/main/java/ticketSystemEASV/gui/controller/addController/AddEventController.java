@@ -31,9 +31,8 @@ public class AddEventController implements Initializable {
     @FXML
     private MFXDatePicker dateStartDate, dateEndDate;
     @FXML
-    private TextArea txtAreaNotes;
-    @FXML
-    private MFXTextField txtEventName, txtLocation, txtLocationGuidance;
+    private MFXTextField txtEventName, txtLocation, txtLocationGuidance, txtNotes;
+    //TODO Notes as TextArea-ish
     @FXML
     private VBox leftVBox;
     @FXML
@@ -59,7 +58,7 @@ public class AddEventController implements Initializable {
         txtEventName.setText(event.getEventName());
         txtLocation.setText(event.getLocation());
         comboStartTime.setValue(formatTime(event.getStartTime()));
-        txtAreaNotes.setText(event.getNotes());
+        txtNotes.setText(event.getNotes());
         dateStartDate.setValue(event.getStartDate().toLocalDate());
 
         if (event.getEndDate() != null)
@@ -76,7 +75,7 @@ public class AddEventController implements Initializable {
     public void saveAction(ActionEvent actionEvent) {
         String eventName = txtEventName.getText();
         String location = txtLocation.getText();
-        String notes = txtAreaNotes.getText();
+        String notes = txtNotes.getText();
         String locationGuidance = txtLocationGuidance.getText();
 
         //Check if the field has a value, if not, set it to null, otherwise, an exception will ticketSystemEASV.be thrown
