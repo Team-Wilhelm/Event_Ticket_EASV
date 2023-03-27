@@ -110,9 +110,10 @@ public class AddEventController implements Initializable {
         if (isEditing){
             Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK)
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 model.deleteEvent(eventToEdit);
-            mainViewController.refreshItems();
+                mainViewController.refreshItems();
+            }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }

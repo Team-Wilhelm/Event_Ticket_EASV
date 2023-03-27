@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <GridPane fx:id="gridPane" hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/css/style.css" vgap="10.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddCoordinatorController">
@@ -41,6 +42,8 @@
       <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#generatePassword" text="Generate password" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
       <HBox alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>
+            <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#deleteCoordinatorAction" text="Delete" />
+            <Region HBox.hgrow="ALWAYS" />
             <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#cancelAction" text="Cancel" />
             <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#saveAction" text="Save" />
          </children>

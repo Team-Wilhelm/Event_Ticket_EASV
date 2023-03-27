@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -31,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
@@ -104,6 +106,18 @@ public class AddCoordinatorController implements Initializable{
             Platform.runLater(() -> manageCoordinatorsController.refreshItems());
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         }
+    }
+
+    public void deleteCoordinatorAction(ActionEvent actionEvent) {
+        if (isEditing){
+            Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this coordinator?", actionEvent);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                model.deleteCoordinator(coordinatorToEdit);
+                manageCoordinatorsController.refreshItems();
+            }
+        }
+        ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
     public void setIsEditing(EventCoordinator coordinator) {

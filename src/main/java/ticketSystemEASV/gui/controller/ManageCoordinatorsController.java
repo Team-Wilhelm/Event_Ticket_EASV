@@ -57,19 +57,6 @@ public class ManageCoordinatorsController extends MotherController implements In
         }
     }
 
-    public void deleteCoordinatorAction(ActionEvent actionEvent) {
-         if (lastFocusedCoordinator == null)
-             alertManager.getAlert(Alert.AlertType.ERROR, "No coordinator selected!", actionEvent).showAndWait();
-        else {
-             Alert alert = alertManager.getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this coordinator?", actionEvent);
-             Optional<ButtonType> result = alert.showAndWait();
-             if (result.isPresent() && result.get() == ButtonType.OK){
-                 model.deleteCoordinator(lastFocusedCoordinator.getCoordinator());
-                 refreshItems();
-             }
-        }
-    }
-
     public void setModel(Model model) {
         this.model = model;
         refreshItems();
