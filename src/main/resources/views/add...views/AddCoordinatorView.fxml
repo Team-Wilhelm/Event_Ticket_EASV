@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="gridPane" hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/css/style.css" vgap="10.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddCoordinatorController">
+<GridPane fx:id="gridPane" hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/css/style.css" vgap="10.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddCoordinatorController">
   <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="300.0" minWidth="10.0" percentWidth="40.0" />
     <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="60.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints minHeight="10.0" percentHeight="10.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" percentHeight="50.0" vgrow="ALWAYS" />
-      <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="10.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="10.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="10.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" percentHeight="40.0" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="15.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="15.0" vgrow="NEVER" />
+    <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="15.0" vgrow="NEVER" />
       <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Button mnemonicParsing="false" onAction="#cancelAction" GridPane.halignment="LEFT" styleClass="backButton">
+      <Button mnemonicParsing="false" onAction="#cancelAction" styleClass="backButton" GridPane.halignment="LEFT">
          <graphic>
             <ImageView fx:id="btnGoBack" fitHeight="25.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -29,9 +35,9 @@
             </ImageView>
          </graphic>
       </Button>
-      <MFXTextField fx:id="txtCoordinatorName" floatMode="DISABLED" maxWidth="1.7976931348623157E308" promptText="Coordinator name" GridPane.rowIndex="2" />
-      <MFXTextField fx:id="txtUsername" floatMode="DISABLED" maxWidth="1.7976931348623157E308" promptText="Username" GridPane.rowIndex="3" />
-      <MFXTextField fx:id="txtPassword" floatMode="DISABLED" maxWidth="1.7976931348623157E308" promptText="Password (optional)" GridPane.rowIndex="4" />
+      <MFXTextField fx:id="txtCoordinatorName" floatMode="BORDER" floatingText="Coordinator name" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2" />
+      <MFXTextField fx:id="txtUsername" floatMode="BORDER" floatingText="Username" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+      <MFXTextField fx:id="txtPassword" floatMode="BORDER" floatingText="Password (optional)" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
       <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#generatePassword" text="Generate password" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
       <HBox alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>

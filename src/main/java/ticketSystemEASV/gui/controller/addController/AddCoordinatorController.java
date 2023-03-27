@@ -56,7 +56,7 @@ public class AddCoordinatorController implements Initializable{
         int IMAGE_SIZE = 500;
         Image userIcon = new Image("images/userProfilePictures/userIcon.png", IMAGE_SIZE, IMAGE_SIZE, false, true);
         imgViewProfilePicture = new ImageView(CropImageToCircle.getRoundedImage(userIcon,IMAGE_SIZE/2));
-        imgViewProfilePicture.fitWidthProperty().bind(txtCoordinatorName.widthProperty().subtract(txtCoordinatorName.widthProperty().divide(2.5)));
+        imgViewProfilePicture.fitWidthProperty().bind(txtCoordinatorName.widthProperty().subtract(txtCoordinatorName.widthProperty().divide(2)));
         imgViewProfilePicture.fitHeightProperty().bind(imgViewProfilePicture.fitWidthProperty());
         imgViewProfilePicture.preserveRatioProperty().setValue(false);
         gridPane.add(imgViewProfilePicture, 0,1);
