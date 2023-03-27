@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.controller;
 
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -29,6 +30,8 @@ public class MainViewController extends MotherController implements Initializabl
     private ScrollPane eventScrollPane;
     @FXML
     private FlowPane eventFlowPane;
+    @FXML
+    private MFXTextField searchBar;
     private final ObservableList<EventView> eventViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private Model model;
@@ -37,6 +40,9 @@ public class MainViewController extends MotherController implements Initializabl
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Bindings.bindContent(eventFlowPane.getChildren(), eventViews);
+
+        searchBar.textProperty().addListener((observable, oldValue, newValue) ->
+                setFilteredEvents(model.searchEvents(searchBar.getText().trim().toLowerCase())));
 
         eventFlowPane.prefHeightProperty().bind(eventScrollPane.heightProperty());
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
@@ -58,12 +64,6 @@ public class MainViewController extends MotherController implements Initializabl
             addEventController.setIsEditing(lastFocusedEvent.getEvent());
             addEventController.setMainViewController(this);
         }
-    }
-
-    public void manageCoordinatorsAction(ActionEvent actionEvent) throws IOException {
-        FXMLLoader fxmlLoader = openNewWindow("/views/ManageCoordinatorsView.fxml", Modality.NONE);
-        ManageCoordinatorsController manageCoordinatorsController = fxmlLoader.getController();
-        manageCoordinatorsController.setModel(model);
     }
 
     @Override

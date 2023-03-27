@@ -114,6 +114,8 @@
 /************************SLUT**************************/
 /******************************************************/
 
-.mfx-button {
-    -fx-background-color: derive(-fx-blue, 100%);
+.mfx-button{
+    -fx-background-color: white;
+    -fx-border-color: derive(-fx-red, 60%);
+    -fx-border-radius: 3;
 }

@@ -1,38 +1,62 @@
 package ticketSystemEASV.gui.controller;
 
-import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import ticketSystemEASV.gui.model.Model;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class RootController implements Initializable {
     @FXML
-    private MainViewController mainViewController;
-    @FXML
-    private BorderPane borderPane;
+    private GridPane gridPane;
     @FXML
     private MFXTextField searchBar;
-    @FXML
-    private MFXComboBox menuDropDown;
-    private Model model = new Model();
+    private final Model model = new Model();
+    private Node eventsScene, coordinatorsScene;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> searchEvents(searchBar.getText().trim().toLowerCase()));
-        mainViewController.setModel(model);
+        try {
+            FXMLLoader eventsLoader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
+            eventsScene = eventsLoader.load();
+            MainViewController mainViewController = eventsLoader.getController();
+            mainViewController.setModel(model);
+
+            FXMLLoader coordinatorsLoader = new FXMLLoader(getClass().getResource("/views/ManageCoordinatorsView.fxml"));
+            coordinatorsScene = coordinatorsLoader.load();
+            ManageCoordinatorsController manageCoordinatorsController = coordinatorsLoader.getController();
+            manageCoordinatorsController.setModel(model);
+
+            gridPane.add(eventsScene, 1, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void searchEvents(String query) {
-        mainViewController.setFilteredEvents(model.searchEvents(query));
+    public void manageCoordinatorsAction(ActionEvent actionEvent) throws IOException {
+        switchView(coordinatorsScene);
     }
 
-    public void setWindow(Node node) {
-        borderPane.setCenter(node);
+    public void myEventsAction(ActionEvent actionEvent) {
+        switchView(eventsScene);
+    }
+
+    private void switchView(Node scene) {
+        if (scene == eventsScene && !gridPane.getChildren().contains(eventsScene)){
+            gridPane.getChildren().remove(coordinatorsScene);
+            gridPane.add(eventsScene, 1, 0);
+        }
+        else if (scene == coordinatorsScene && !gridPane.getChildren().contains(coordinatorsScene)){
+            gridPane.getChildren().remove(eventsScene);
+            gridPane.add(coordinatorsScene, 1, 0);
+        }
     }
 }
