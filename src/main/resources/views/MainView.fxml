@@ -17,11 +17,10 @@
   <rowConstraints>
       <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="30.0" percentHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" percentHeight="80.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ScrollPane fx:id="eventScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent;" vbarPolicy="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="3">
+      <ScrollPane fx:id="eventScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent;" vbarPolicy="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <content>
             <FlowPane fx:id="eventFlowPane" columnHalignment="CENTER" hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="20.0">
                <padding>

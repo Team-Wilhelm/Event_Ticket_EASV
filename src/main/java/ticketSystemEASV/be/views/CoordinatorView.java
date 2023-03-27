@@ -21,7 +21,7 @@ public class CoordinatorView extends VBox {
         super();
         this.coordinator = coordinator;
 
-        this.setPrefWidth(400);
+        this.setPrefWidth(370);
         this.setPrefHeight(210);
         this.getStyleClass().add("coordinator-view");
 
