@@ -79,6 +79,7 @@ public class EventView extends VBox {
 
         // All the information about the event
         VBox vBox = new VBox(10);
+        vBox.getStyleClass().add("event-view-bottom");
         vBox.getChildren().add(nameBox);
         vBox.getChildren().add(dateBox);
         vBox.getChildren().add(timeBox);

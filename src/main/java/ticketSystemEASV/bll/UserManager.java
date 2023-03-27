@@ -19,7 +19,7 @@ public class UserManager {
         return userDAO.getUser(userID);
     }
 
-    public User getUserByEmail() {
-        return userDAO.getUserByEmail();
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
     }
 }

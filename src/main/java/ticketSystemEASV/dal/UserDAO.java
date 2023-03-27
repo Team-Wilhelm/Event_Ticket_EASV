@@ -91,15 +91,17 @@ public class UserDAO implements IUserDAO {
         return null;
     }
 
-    public User getUserByEmail() {
+    public User getUserByEmail(String email) {
         String sql = "SELECT * FROM [User] WHERE UserName=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, "test");
+            statement.setString(1, email);
             statement.execute();
-            return new User(statement.getResultSet().getString("Id"),
-                    statement.getResultSet().getString("Name"),
-                    statement.getResultSet().getString("UserName"),
-                    statement.getResultSet().getString("Password"));
+            while (statement.getResultSet().next()) {
+                return new User(statement.getResultSet().getString("Id"),
+                        statement.getResultSet().getString("Name"),
+                        statement.getResultSet().getString("UserName"),
+                        statement.getResultSet().getString("Password"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

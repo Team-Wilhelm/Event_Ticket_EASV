@@ -8,6 +8,7 @@ public class UserModel {
     private User loggedInUser;
 
     public UserModel() {
+        this.loggedInUser = userManager.getUserByEmail("admin");
     }
 
     public boolean logIn(String name, String password) {
@@ -26,7 +27,7 @@ public class UserModel {
         this.loggedInUser = loggedInUser;
     }
 
-    public User getUserByEmail() {
-        return userManager.getUserByEmail();
+    public User getUserByEmail(String email) {
+        return userManager.getUserByEmail(email);
     }
 }

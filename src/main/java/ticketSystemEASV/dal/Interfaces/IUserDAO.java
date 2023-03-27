@@ -11,5 +11,5 @@ public interface IUserDAO {
 
     User getUser(int userID);
 
-    User getUserByEmail();
+    User getUserByEmail(String email);
 }

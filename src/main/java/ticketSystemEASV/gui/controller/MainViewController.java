@@ -27,7 +27,8 @@ import java.util.ResourceBundle;
 public class MainViewController extends MotherController implements Initializable {
     @FXML
     private ScrollPane eventScrollPane;
-    private final FlowPane eventFlowPane = new FlowPane();
+    @FXML
+    private FlowPane eventFlowPane;
     private final ObservableList<EventView> eventViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private Model model;
@@ -37,14 +38,8 @@ public class MainViewController extends MotherController implements Initializabl
     public void initialize(URL location, ResourceBundle resources) {
         Bindings.bindContent(eventFlowPane.getChildren(), eventViews);
 
-        eventScrollPane.setContent(eventFlowPane);
-        eventScrollPane.setFitToHeight(true);
-        eventScrollPane.setFitToWidth(true);
-
         eventFlowPane.prefHeightProperty().bind(eventScrollPane.heightProperty());
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
-        eventFlowPane.setHgap(10);
-        eventFlowPane.setVgap(20);
     }
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
@@ -62,19 +57,6 @@ public class MainViewController extends MotherController implements Initializabl
             addEventController.setModel(model);
             addEventController.setIsEditing(lastFocusedEvent.getEvent());
             addEventController.setMainViewController(this);
-        }
-    }
-
-    public void deleteEventAction(ActionEvent actionEvent) {
-        if (lastFocusedEvent == null)
-            alertManager.getAlert(Alert.AlertType.ERROR, "No event selected!", actionEvent).showAndWait();
-        else {
-            Alert alert = alertManager.getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK){
-                model.deleteEvent(lastFocusedEvent.getEvent());
-                refreshItems();
-            }
         }
     }
 

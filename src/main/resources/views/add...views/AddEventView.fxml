@@ -6,6 +6,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <HBox prefHeight="463.0" prefWidth="600.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddEventController">
@@ -22,6 +23,8 @@
             <MFXTextField fx:id="txtLocationGuidance" floatMode="BORDER" floatingText="Location guidance (optional)" maxWidth="1.7976931348623157E308" textLimit="30" />
             <HBox alignment="CENTER" spacing="10.0">
                <children>
+                  <MFXButton onAction="#deleteEventAction" text="Delete" />
+                  <Region HBox.hgrow="ALWAYS" />
                   <MFXButton onAction="#cancelAction" text="Cancel" />
                   <MFXButton onAction="#saveAction" text="Save" />
                </children>

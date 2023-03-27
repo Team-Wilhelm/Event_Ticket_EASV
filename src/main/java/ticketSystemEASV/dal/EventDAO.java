@@ -25,6 +25,7 @@ public class EventDAO {
                 "VALUES (?, @EventID);";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(event, statement);
+            statement.setString(9, event.getEventName());
             statement.setString(10, userModel.getLoggedInUser().getId().toString());
             statement.execute();
         } catch (SQLException e) {
@@ -33,10 +34,10 @@ public class EventDAO {
     }
 
     public void updateEvent(Event event) {
-        String sql = "UPDATE Event SET coordinatorId=?, startDate=?, startTime=?, eventName=?, eventLocation=?, notes=?, endDate=?, endTime=?, locationGuidance=? WHERE id=?;";
+        String sql = "UPDATE Event SET startDate=?, startTime=?, eventName=?, eventLocation=?, notes=?, endDate=?, endTime=?, locationGuidance=? WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(event, statement);
-            statement.setInt(10, event.getId());
+            statement.setInt(9, event.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,14 +55,14 @@ public class EventDAO {
     }
 
     private void fillPreparedStatement(Event event, PreparedStatement statement) throws SQLException {
-        statement.setDate(2, event.getStartDate());
-        statement.setTime(3, event.getStartTime());
-        statement.setString(4, event.getEventName());
-        statement.setString(5, event.getLocation());
-        statement.setString(6, event.getNotes());
-        statement.setDate(7, event.getEndDate());
-        statement.setTime(8, event.getEndTime());
-        statement.setString(9, event.getLocationGuidance());
+        statement.setDate(1, event.getStartDate());
+        statement.setTime(2, event.getStartTime());
+        statement.setString(3, event.getEventName());
+        statement.setString(4, event.getLocation());
+        statement.setString(5, event.getNotes());
+        statement.setDate(6, event.getEndDate());
+        statement.setTime(7, event.getEndTime());
+        statement.setString(8, event.getLocationGuidance());
     }
 
     public Collection<Event> getAllEvents() {

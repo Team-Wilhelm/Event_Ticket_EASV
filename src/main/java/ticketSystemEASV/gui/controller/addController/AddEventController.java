@@ -2,6 +2,7 @@ package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.bll.AlertManager;
@@ -20,6 +21,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AddEventController implements Initializable {
@@ -102,6 +104,17 @@ public class AddEventController implements Initializable {
             mainViewController.refreshItems();
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         }
+    }
+
+    public void deleteEventAction(ActionEvent actionEvent) {
+        if (isEditing){
+            Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK)
+                model.deleteEvent(eventToEdit);
+            mainViewController.refreshItems();
+        }
+        ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
     public void setModel(Model model) {

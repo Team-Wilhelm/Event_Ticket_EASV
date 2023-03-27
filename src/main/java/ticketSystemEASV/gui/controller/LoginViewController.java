@@ -34,7 +34,7 @@ public class LoginViewController implements Initializable {
 
     public void loginUser(Event event) throws IOException {
         if(userModel.logIn(emailInput.getText(), passwordInput.getText())) {
-            userModel.setLoggedInUser(userModel.getUserByEmail());
+            userModel.setLoggedInUser(userModel.getUserByEmail(emailInput.getText()));
             Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/Root.fxml")));
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));

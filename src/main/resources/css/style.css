@@ -16,9 +16,8 @@
 }
 
 /*TODO: Make pretty*/
-.event-view:focused {
-    -fx-border-color: -fx-red;
-    -fx-border-width: 2px;
+.event-view:focused .event-view-bottom {
+    -fx-background-color: lightgray
 }
 
 .coordinator-view {
@@ -115,3 +114,6 @@
 /************************SLUT**************************/
 /******************************************************/
 
+.mfx-button {
+    -fx-background-color: derive(-fx-blue, 100%);
+}

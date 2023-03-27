@@ -27,7 +27,7 @@
             <Insets />
          </opaqueInsets>
          <BorderPane.margin>
-            <Insets />
+            <Insets left="15.0" right="15.0" />
          </BorderPane.margin>
       </HBox>
    </top>
@@ -35,6 +35,6 @@
       <fx:include fx:id="mainView" source="MainView.fxml" BorderPane.alignment="TOP_CENTER"> </fx:include>
    </center>
    <padding>
-      <Insets bottom="10.0" left="15.0" right="15.0" top="20.0" />
+      <Insets bottom="10.0" top="20.0" />
    </padding>
 </BorderPane>
