@@ -8,29 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class LogicManager {
-    private final EventDAO eventDAO = new EventDAO();
-    private final TicketDAO ticketDAO = new TicketDAO();
     private final VoucherDAO voucherDAO = new VoucherDAO();
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final EventCoordinatorDAO eventCoordinatorDAO = new EventCoordinatorDAO();
-
-    //region Event CRUD
-    public void saveEvent(Event eventToSave) {
-        eventDAO.addEvent(eventToSave);
-    }
-
-    public void updateEvent(Event eventToUpdate) {
-        eventDAO.updateEvent(eventToUpdate);
-    }
-
-    public void deleteEvent(Event eventToDelete) {
-        eventDAO.deleteEvent(eventToDelete);
-    }
-
-    public Collection<Event> getAllEvents() {
-        return eventDAO.getAllEvents();
-    }
-    //endregion
 
     //region EventCoordinator CRUD
     public void addCoordinator(EventCoordinator coordinatorToSave) {
@@ -50,29 +30,7 @@ public class LogicManager {
     }
     //endregion
 
-    public void addTicket(Ticket ticketToAdd) {
-        ticketDAO.addTicket(ticketToAdd);
-    }
 
-    public void addMultipleTickets(List<Ticket> tickets, Customer customer) {
-        ticketDAO.addMultipleTickets(tickets, customer);
-    }
-
-    public Ticket getTicket(UUID id) {
-        return ticketDAO.getTicket(id);
-    }
-
-    public List<Ticket> getAllTicketsForEvent(Event event) {
-        return ticketDAO.getAllTicketsForEvent(event);
-    }
-
-    public List<Ticket> getAllTicketsForCustomer(Customer customer) {
-        return ticketDAO.getAllTicketsForCustomer(customer);
-    }
-
-    public void deleteTicket(Ticket ticketToDelete) {
-        ticketDAO.deleteTicket(ticketToDelete);
-    }
 
     public void addVoucher(Voucher voucherToAdd) {
         voucherDAO.addVoucher(voucherToAdd);
@@ -86,7 +44,4 @@ public class LogicManager {
         voucherDAO.addMultipleVouchers(vouchers);
     }
 
-    public List<Event> searchEvents(String query) {
-        return eventDAO.searchEvents(query);
-    }
 }

@@ -38,4 +38,7 @@
          </GridPane.margin>
       </VBox>
    </children>
+   <padding>
+      <Insets top="10.0" />
+   </padding>
 </GridPane>

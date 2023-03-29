@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.Model;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class RootController implements Initializable {
     @FXML
     private MFXTextField searchBar;
     private final Model model = new Model();
+    private final EventModel eventModel = new EventModel();
     private Node eventsScene, coordinatorsScene;
 
 
@@ -28,12 +30,12 @@ public class RootController implements Initializable {
             FXMLLoader eventsLoader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
             eventsScene = eventsLoader.load();
             MainViewController mainViewController = eventsLoader.getController();
-            mainViewController.setModel(model);
+            mainViewController.setModels(model, eventModel);
 
             FXMLLoader coordinatorsLoader = new FXMLLoader(getClass().getResource("/views/ManageCoordinatorsView.fxml"));
             coordinatorsScene = coordinatorsLoader.load();
             ManageCoordinatorsController manageCoordinatorsController = coordinatorsLoader.getController();
-            manageCoordinatorsController.setModel(model);
+            manageCoordinatorsController.setModels(model, eventModel);
 
             gridPane.add(eventsScene, 1, 0);
         } catch (IOException e) {

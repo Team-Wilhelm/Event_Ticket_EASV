@@ -20,7 +20,7 @@
     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" percentHeight="80.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ScrollPane fx:id="coordinatorScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" vbarPolicy="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2">
+      <ScrollPane fx:id="coordinatorScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" vbarPolicy="ALWAYS" GridPane.rowSpan="3">
          <content>
             <FlowPane fx:id="flowPane" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" vgap="30.0">
                <padding>
@@ -28,7 +28,7 @@
                </padding></FlowPane>
          </content>
       </ScrollPane>
-      <MFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCoordinatorAction" text="Add coordinator" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <MFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCoordinatorAction" text="+ Add coordinator" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="15.0" right="15.0" />
          </GridPane.margin>
@@ -39,4 +39,7 @@
            </GridPane.margin>
        </MFXTextField>
    </children>
+   <padding>
+      <Insets bottom="10.0" top="10.0" />
+   </padding>
 </GridPane>

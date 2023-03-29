@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.MainViewController;
+import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.Model;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -26,6 +27,7 @@ import java.util.ResourceBundle;
 
 public class AddEventController implements Initializable {
     private Model model;
+    private EventModel eventModel;
     private MainViewController mainViewController;
     private boolean isEditing = false;
     private Event eventToEdit;
@@ -96,10 +98,10 @@ public class AddEventController implements Initializable {
         }
         else {
             if(!isEditing) {
-                model.saveEvent(new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
+                eventModel.saveEvent(new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
             }
             else {
-                model.updateEvent(new Event(eventToEdit.getId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
+                eventModel.updateEvent(new Event(eventToEdit.getId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
             }
             mainViewController.refreshItems();
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
@@ -111,15 +113,16 @@ public class AddEventController implements Initializable {
             Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                model.deleteEvent(eventToEdit);
+                eventModel.deleteEvent(eventToEdit);
                 mainViewController.refreshItems();
             }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-    public void setModel(Model model) {
+    public void setModels(Model model, EventModel eventModel) {
         this.model = model;
+        this.eventModel = eventModel;
     }
 
     public void setMainViewController(MainViewController mainViewController) {

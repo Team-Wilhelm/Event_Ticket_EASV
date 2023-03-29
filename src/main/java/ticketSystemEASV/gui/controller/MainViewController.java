@@ -8,6 +8,7 @@ import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventView;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
+import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,6 +36,7 @@ public class MainViewController extends MotherController implements Initializabl
     private final ObservableList<EventView> eventViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private Model model;
+    private EventModel eventModel;
     private EventView lastFocusedEvent;
 
     @Override
@@ -42,7 +44,7 @@ public class MainViewController extends MotherController implements Initializabl
         Bindings.bindContent(eventFlowPane.getChildren(), eventViews);
 
         searchBar.textProperty().addListener((observable, oldValue, newValue) ->
-                setFilteredEvents(model.searchEvents(searchBar.getText().trim().toLowerCase())));
+                setFilteredEvents(eventModel.searchEvents(searchBar.getText().trim().toLowerCase())));
 
         eventFlowPane.prefHeightProperty().bind(eventScrollPane.heightProperty());
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
@@ -50,7 +52,7 @@ public class MainViewController extends MotherController implements Initializabl
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
         AddEventController addEventController = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL).getController();
-        addEventController.setModel(model);
+        addEventController.setModels(model, eventModel);
         addEventController.setMainViewController(this);
     }
 
@@ -60,7 +62,7 @@ public class MainViewController extends MotherController implements Initializabl
         else {
             FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.APPLICATION_MODAL);
             AddEventController addEventController = fxmlLoader.getController();
-            addEventController.setModel(model);
+            addEventController.setModels(model, eventModel);
             addEventController.setIsEditing(lastFocusedEvent.getEvent());
             addEventController.setMainViewController(this);
         }
@@ -69,7 +71,7 @@ public class MainViewController extends MotherController implements Initializabl
     @Override
     public void refreshItems() {
         eventViews.clear();
-        eventViews.addAll(model.getAllEvents().stream().map(EventView::new).toList());
+        eventViews.addAll(eventModel.getAllEvents().stream().map(EventView::new).toList());
 
         for (var eventView : eventViews) {
             eventView.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -92,8 +94,9 @@ public class MainViewController extends MotherController implements Initializabl
         }
     }
 
-    public void setModel(Model model) {
+    public void setModels(Model model, EventModel eventModel) {
         this.model = model;
+        this.eventModel = eventModel;
         refreshItems();
     }
 

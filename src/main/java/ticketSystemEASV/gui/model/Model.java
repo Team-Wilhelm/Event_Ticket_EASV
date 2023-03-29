@@ -2,6 +2,7 @@ package ticketSystemEASV.gui.model;
 
 import ticketSystemEASV.be.*;
 import ticketSystemEASV.be.views.TicketView;
+import ticketSystemEASV.bll.EventManager;
 import ticketSystemEASV.bll.LogicManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +13,9 @@ import java.util.UUID;
 public class Model {
     private final LogicManager bll = new LogicManager();
     private final ObservableList<EventCoordinator> allEventCoordinators = FXCollections.observableArrayList();
-    private ObservableList<Event> allEvents = FXCollections.observableArrayList();
 
     public Model() {
         allEventCoordinators.addAll(bll.getAllEventCoordinators());
-        allEvents.addAll(bll.getAllEvents());
 
         /*saveEvent(new Event(allEventCoordinators.get(0).getId(), "UTTT Tournament!", Date.valueOf("2023-04-01"), new Time(7, 0, 0),
                 "Innovatorium", "Attendees are all losers", Date.valueOf("2023-04-08"),
@@ -31,26 +30,6 @@ public class Model {
                 new Time(22, 22, 22), "Don't forget to bring your best ears :)"));*/
     }
 
-    //region Event CRUD
-    public void saveEvent(Event eventToSave) {
-        bll.saveEvent(eventToSave);
-    }
-
-    public void updateEvent(Event eventToUpdate) {
-        bll.updateEvent(eventToUpdate);
-    }
-
-    public void deleteEvent(Event eventToDelete) {
-        bll.deleteEvent(eventToDelete);
-    }
-
-    public ObservableList<Event> getAllEvents() {
-        allEvents.setAll(bll.getAllEvents());
-        return allEvents;
-    }
-    //endregion
-
-    //region EventCoordinator CRUD
     public void addCoordinator(EventCoordinator coordinatorToSave) {
         bll.addCoordinator(coordinatorToSave);
     }
@@ -66,9 +45,4 @@ public class Model {
         allEventCoordinators.setAll(bll.getAllEventCoordinators());
         return allEventCoordinators;
     }
-
-    public List<Event> searchEvents(String query) {
-        return bll.searchEvents(query);
-    }
-    //endregion
 }

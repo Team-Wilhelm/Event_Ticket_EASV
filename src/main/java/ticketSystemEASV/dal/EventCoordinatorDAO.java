@@ -17,18 +17,12 @@ public class EventCoordinatorDAO {
         List<EventCoordinator> eventCoordinators = new ArrayList<>();
         String sql = "SELECT [User].Id, [User].Name, [User].Username, [User].Password FROM [User] " +
                 "JOIN UserRole ON [User].ID = UserRole.UserID, " +
-                "(SELECT Id FROM Role WHERE NAME LIKE 'EventCoordinator') Role " +
+                "(SELECT Id FROM Role WHERE RoleName LIKE 'EventCoordinator') Role " +
                 "WHERE [User].deleted=0 AND UserRole.RoleID = Role.ID;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                UUID id = (UUID.fromString(resultSet.getString("id")));
-                String name = resultSet.getString("Name");
-                String username = resultSet.getString("UserName");
-                String password = resultSet.getString("Password");
-                EventCoordinator coordinator = new EventCoordinator(id, name, username, password);
-                getEventsAssignedToEventCoordinator(coordinator);
-                eventCoordinators.add(coordinator);
+                eventCoordinators.add(constructEventCoordinator(resultSet));
             }
             return eventCoordinators;
         } catch (SQLException e) {
@@ -43,11 +37,9 @@ public class EventCoordinatorDAO {
                 "VALUES (?, ?, ?)" +
                 "SET @UserID = (SELECT ID FROM [User] WHERE UserName = ?)" +
                 "INSERT INTO UserRole (UserID, RoleID)" +
-                "VALUES (@UserID,(SELECT Id FROM Role WHERE NAME LIKE 'EventCoordinator'));";
+                "VALUES (@UserID,(SELECT Id FROM Role WHERE RoleName LIKE 'EventCoordinator'));";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, eventCoordinator.getName());
-            statement.setString(2, eventCoordinator.getUsername());
-            statement.setString(3, eventCoordinator.getPassword());
+            fillPreparedStatement(statement, eventCoordinator);
             statement.setString(4, eventCoordinator.getUsername());
             statement.execute();
         } catch (SQLException e) {
@@ -58,9 +50,7 @@ public class EventCoordinatorDAO {
     public void updateEventCoordinator(EventCoordinator eventCoordinator){
         String sql = "UPDATE [User] SET name=?, userName=?, password=? WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, eventCoordinator.getName());
-            statement.setString(2, eventCoordinator.getUsername());
-            statement.setString(3, eventCoordinator.getPassword());
+            fillPreparedStatement(statement, eventCoordinator);
             statement.setString(4, eventCoordinator.getId().toString());
             statement.execute();
         } catch (SQLException e) {
@@ -96,24 +86,53 @@ public class EventCoordinatorDAO {
     public EventCoordinator getEventCoordinator(UUID id){
         String sql = "SELECT [User].Id, [User].Name, [User].Username, [User].Password FROM [User] " +
                 "JOIN UserRole ON [User].ID = UserRole.UserID, " +
-                "(SELECT Id FROM Role WHERE NAME LIKE 'EventCoordinator') Role " +
+                "(SELECT Id FROM Role WHERE RoleName LIKE 'EventCoordinator') Role " +
                 "WHERE [User].deleted=0 AND UserRole.RoleID = Role.ID AND [User].id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, id.toString());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                String name = resultSet.getString("Name");
-                String username = resultSet.getString("UserName");
-                String password = resultSet.getString("Password");
-                EventCoordinator coordinator = new EventCoordinator(id, name, username, password);
-                getEventsAssignedToEventCoordinator(coordinator);
-                return coordinator;
+                return constructEventCoordinator(resultSet);
             }
             return null;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<EventCoordinator> searchCoordinators(String query) {
+        List<EventCoordinator> coordinators = new ArrayList<>();
+        String sql = "SELECT * FROM [User] WHERE [User].Name LIKE ? OR [User].UserName LIKE ? OR Id LIKE ?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, "%" + query + "%");
+            statement.setString(2, "%" + query + "%");
+            statement.setString(3, "%" + query + "%");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                coordinators.add(constructEventCoordinator(resultSet));
+            }
+            return coordinators;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private EventCoordinator constructEventCoordinator(ResultSet resultSet) throws SQLException {
+        UUID id = (UUID.fromString(resultSet.getString("id")));
+        String name = resultSet.getString("Name");
+        String username = resultSet.getString("UserName");
+        String password = resultSet.getString("Password");
+        EventCoordinator coordinator = new EventCoordinator(id, name, username, password);
+        getEventsAssignedToEventCoordinator(coordinator);
+        return coordinator;
+    }
+
+    private void fillPreparedStatement(PreparedStatement statement, EventCoordinator eventCoordinator) throws SQLException {
+        statement.setString(1, eventCoordinator.getName());
+        statement.setString(2, eventCoordinator.getUsername());
+        statement.setString(3, eventCoordinator.getPassword());
     }
 }
 

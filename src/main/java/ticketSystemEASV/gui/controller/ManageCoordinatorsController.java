@@ -15,6 +15,7 @@ import javafx.stage.Modality;
 import ticketSystemEASV.be.views.CoordinatorView;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
+import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.Model;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class ManageCoordinatorsController extends MotherController implements In
     private final ObservableList<CoordinatorView> coordinatorViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private Model model;
+    private EventModel eventModel;
     private CoordinatorView lastFocusedCoordinator;
 
     @Override
@@ -57,8 +59,9 @@ public class ManageCoordinatorsController extends MotherController implements In
         }
     }
 
-    public void setModel(Model model) {
+    public void setModels(Model model, EventModel eventModel) {
         this.model = model;
+        this.eventModel = eventModel;
         refreshItems();
     }
 

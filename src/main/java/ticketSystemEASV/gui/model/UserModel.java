@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.model;
 
+import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.UserManager;
 
@@ -15,8 +16,8 @@ public class UserModel {
         return userManager.logIn(name, password);
     }
 
-    public void signUp(String name, String userName, String password, String role) {
-        userManager.signUp(new User(name, userName, password), role);
+    public void signUp(String name, String userName, String password, Role role) {
+        userManager.signUp(new User(name, userName, password, role));
     }
 
     public User getLoggedInUser() {
