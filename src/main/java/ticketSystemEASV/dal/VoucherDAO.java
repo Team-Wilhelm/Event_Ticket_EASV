@@ -10,7 +10,7 @@ public class VoucherDAO {
     private final DBConnection dbConnection = new DBConnection();
 
     public void addVoucher(Voucher voucher){
-        String sql = "INSERT INTO Voucher (VoucherID, Restrictions, VoucherType, VoucherQR, Redeemed) VALUES (?,?,?);";
+        String sql = "INSERT INTO Voucher (VoucherType, Restrictions, Redeemed, VoucherQR) VALUES (?,?,?,?);";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, voucher.getId());
             statement.setString(2, voucher.getRestrictions());
@@ -30,7 +30,7 @@ public class VoucherDAO {
         String voucherQR = vouchers.get(0).getVoucherQR();
         boolean redeemed = vouchers.get(0).isRedeemed();
 
-        String sql = "INSERT INTO Voucher (VoucherID, Restrictions, VoucherQR, Redeemed) VALUES (?,?,?);";
+        /*String sql = "INSERT INTO Voucher (VoucherID, Restrictions, VoucherQR, Redeemed) VALUES (?,?,?);";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, id);
             statement.setString(2, restrictions);
@@ -40,7 +40,7 @@ public class VoucherDAO {
             statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void deleteVoucher(Voucher voucher){

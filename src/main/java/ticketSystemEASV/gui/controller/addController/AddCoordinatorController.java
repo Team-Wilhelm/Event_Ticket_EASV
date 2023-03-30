@@ -2,16 +2,13 @@ package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
@@ -19,18 +16,16 @@ import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
-import ticketSystemEASV.be.EventCoordinator;
+import ticketSystemEASV.be.Role;
+import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
 import ticketSystemEASV.gui.controller.ManageCoordinatorsController;
 import ticketSystemEASV.gui.model.Model;
 import javafx.fxml.FXML;
+import ticketSystemEASV.gui.model.UserModel;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -39,9 +34,10 @@ import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 public class AddCoordinatorController implements Initializable{
     private Model model;
+    private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
     private boolean isEditing = false;
-    private EventCoordinator coordinatorToEdit;
+    private User coordinatorToEdit;
     @FXML
     private MFXTextField txtCoordinatorName, txtPassword, txtUsername;
     @FXML
@@ -94,12 +90,14 @@ public class AddCoordinatorController implements Initializable{
         } else {
             new Thread(() -> {
                 if (!isEditing){
-                    model.addCoordinator(new EventCoordinator(coordinatorName, username, password[0]));
+                    userModel.signUp(coordinatorName, username, password[0],
+                            userModel.getAllRoles().stream().filter(role -> role.getName().equals("Event coordinator")).findFirst().get());
                 }
             else {
                     if (password[0].isEmpty())
                         password[0] = coordinatorToEdit.getPassword();
-                    model.updateCoordinator(new EventCoordinator(coordinatorToEdit.getId(), coordinatorName, username, password[0]));
+                    userModel.updateUser(new User(coordinatorToEdit.getId(), coordinatorName, username, password[0],
+                            userModel.getAllRoles().stream().filter(role -> role.getName().equals("Event coordinator")).findFirst().get()));
                 }
             }).start();
 
@@ -113,22 +111,23 @@ public class AddCoordinatorController implements Initializable{
             Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this coordinator?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                model.deleteCoordinator(coordinatorToEdit);
+                userModel.deleteUser(coordinatorToEdit);
                 manageCoordinatorsController.refreshItems();
             }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-    public void setIsEditing(EventCoordinator coordinator) {
+    public void setIsEditing(User coordinator) {
         isEditing = true;
         coordinatorToEdit = coordinator;
         txtCoordinatorName.setText(coordinator.getName());
         txtUsername.setText(coordinator.getUsername());
     }
 
-    public void setModel(Model model) {
+    public void setModels(Model model, UserModel userModel) {
         this.model = model;
+        this.userModel = userModel;
     }
 
     private String createRandomPassword(){

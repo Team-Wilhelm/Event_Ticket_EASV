@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.controller;
 
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,14 +13,19 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
+import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorView;
+import ticketSystemEASV.be.views.EventView;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.UserModel;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -28,22 +34,34 @@ public class ManageCoordinatorsController extends MotherController implements In
     private ScrollPane coordinatorScrollPane;
     @FXML
     private FlowPane flowPane;
+    @FXML
+    private MFXTextField searchBar;
     private final ObservableList<CoordinatorView> coordinatorViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private Model model;
     private EventModel eventModel;
+    private UserModel userModel;
     private CoordinatorView lastFocusedCoordinator;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Bindings.bindContent(flowPane.getChildren(), coordinatorViews);
+
+        searchBar.textProperty().addListener((observable, oldValue, newValue) ->
+                setFilteredUsers(userModel.searchUsers(searchBar.getText().trim().toLowerCase())));
+
         flowPane.prefHeightProperty().bind(coordinatorScrollPane.heightProperty());
         flowPane.prefWidthProperty().bind(coordinatorScrollPane.widthProperty());
-        Bindings.bindContent(flowPane.getChildren(), coordinatorViews);
+    }
+
+    private void setFilteredUsers(List<User> searchUsers) {
+        coordinatorViews.clear();
+        coordinatorViews.addAll(searchUsers.stream().map(CoordinatorView::new).toList());
     }
 
     public void addCoordinatorAction(ActionEvent actionEvent) throws IOException {
         AddCoordinatorController addCoordinatorController = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController();
-        addCoordinatorController.setModel(model);
+        addCoordinatorController.setModels(model, userModel);
         addCoordinatorController.setManageCoordinatorsController(this);
     }
 
@@ -53,15 +71,16 @@ public class ManageCoordinatorsController extends MotherController implements In
         else {
             FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL);
             AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
-            addCoordinatorController.setModel(model);
+            addCoordinatorController.setModels(model, userModel);
             addCoordinatorController.setIsEditing(lastFocusedCoordinator.getCoordinator());
             addCoordinatorController.setManageCoordinatorsController(this);
         }
     }
 
-    public void setModels(Model model, EventModel eventModel) {
+    public void setModels(Model model, EventModel eventModel, UserModel userModel) {
         this.model = model;
         this.eventModel = eventModel;
+        this.userModel = userModel;
         refreshItems();
     }
 
@@ -69,7 +88,7 @@ public class ManageCoordinatorsController extends MotherController implements In
     public void refreshItems() {
         //TODO optimize
         coordinatorViews.clear();
-        coordinatorViews.addAll(model.getAllEventCoordinators().stream().map(CoordinatorView::new).toList());
+        coordinatorViews.addAll(userModel.getAllEventCoordinators().stream().map(CoordinatorView::new).toList());
 
         for (var coordinatorView : coordinatorViews) {
             coordinatorView.focusedProperty().addListener((observable, oldValue, newValue) -> {

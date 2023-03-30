@@ -1,7 +1,7 @@
 package ticketSystemEASV.dal;
 
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.EventCoordinator;
+import ticketSystemEASV.be.User;
 import ticketSystemEASV.gui.model.UserModel;
 
 import java.sql.*;
@@ -12,9 +12,10 @@ import java.util.UUID;
 
 public class EventDAO {
     private final DBConnection dbConnection = new DBConnection();
-    private UserModel userModel = new UserModel();
 
     public void addEvent(Event event) {
+        UserDAO userDAO = new UserDAO();
+        User loggedInUser = userDAO.getUserByEmail("admin");
         //TODO unique Event names?
         //TODO be able to add multiple coordinators for one event (fucking pain in the ass, i think, respectfully)
         String sql = "DECLARE @EventID int;" +
@@ -26,7 +27,7 @@ public class EventDAO {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(event, statement);
             statement.setString(9, event.getEventName());
-            statement.setString(10, userModel.getLoggedInUser().getId().toString());
+            statement.setString(10, loggedInUser.getId().toString()); //TODO logged in users
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,16 +96,16 @@ public class EventDAO {
         return null;
     }
 
-    public Collection<EventCoordinator> getCoordinatorsAssignedToEvent(int eventID) {
-        EventCoordinatorDAO eventCoordinatorDAO = new EventCoordinatorDAO();
-        List<EventCoordinator> eventCoordinators = new ArrayList<>();
+    public Collection<User> getCoordinatorsAssignedToEvent(int eventID) {
+        UserDAO userDAO = new UserDAO();
+        List<User> eventCoordinators = new ArrayList<>();
         String sql = "SELECT * FROM User_Event_Link WHERE EventID=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, eventID);
             statement.execute();
             ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
-                eventCoordinators.add(eventCoordinatorDAO.getEventCoordinator(UUID.fromString(resultSet.getString("UserID"))));
+                eventCoordinators.add(userDAO.getUser(UUID.fromString(resultSet.getString("UserID"))));
             }
             return eventCoordinators;
         } catch (SQLException e) {

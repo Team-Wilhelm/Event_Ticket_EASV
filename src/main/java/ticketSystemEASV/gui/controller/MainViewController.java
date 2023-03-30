@@ -97,6 +97,7 @@ public class MainViewController extends MotherController implements Initializabl
     public void setModels(Model model, EventModel eventModel) {
         this.model = model;
         this.eventModel = eventModel;
+        System.out.println("MainViewController: " + eventModel.getAllEvents().size());
         refreshItems();
     }
 

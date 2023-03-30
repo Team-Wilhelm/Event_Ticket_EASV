@@ -3,14 +3,19 @@ package ticketSystemEASV.dal.Interfaces;
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 
+import java.util.List;
+import java.util.UUID;
+
 public interface IUserDAO {
-    boolean isInRole(int userID, String role);
+    boolean isInRole(UUID userID, String role);
 
     void signUp(User user);
 
     boolean logIn(String name, String password);
 
-    User getUser(int userID);
+    User getUser(UUID userID);
 
     User getUserByEmail(String email);
+
+    List<User> searchUsers(String query);
 }

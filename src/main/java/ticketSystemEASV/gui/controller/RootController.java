@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.controller;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.UserModel;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,8 +22,11 @@ public class RootController implements Initializable {
     @FXML
     private MFXTextField searchBar;
     private final Model model = new Model();
+    private UserModel userModel;
     private final EventModel eventModel = new EventModel();
     private Node eventsScene, coordinatorsScene;
+    private MainViewController mainViewController;
+    private ManageCoordinatorsController manageCoordinatorsController;
 
 
     @Override
@@ -29,13 +34,11 @@ public class RootController implements Initializable {
         try {
             FXMLLoader eventsLoader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
             eventsScene = eventsLoader.load();
-            MainViewController mainViewController = eventsLoader.getController();
-            mainViewController.setModels(model, eventModel);
+            mainViewController = eventsLoader.getController();
 
             FXMLLoader coordinatorsLoader = new FXMLLoader(getClass().getResource("/views/ManageCoordinatorsView.fxml"));
             coordinatorsScene = coordinatorsLoader.load();
-            ManageCoordinatorsController manageCoordinatorsController = coordinatorsLoader.getController();
-            manageCoordinatorsController.setModels(model, eventModel);
+            manageCoordinatorsController = coordinatorsLoader.getController();
 
             gridPane.add(eventsScene, 1, 0);
         } catch (IOException e) {
@@ -60,5 +63,15 @@ public class RootController implements Initializable {
             gridPane.getChildren().remove(eventsScene);
             gridPane.add(coordinatorsScene, 1, 0);
         }
+    }
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+        mainViewController.setModels(model, eventModel);
+        manageCoordinatorsController.setModels(model, eventModel, userModel);
     }
 }

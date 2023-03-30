@@ -9,15 +9,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.EventCoordinator;
+import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.CropImageToCircle;
 
 public class CoordinatorView extends VBox {
     private final int IMAGE_SIZE = 150;
     private final Image userIcon = new Image("images/userProfilePictures/userIcon.png", IMAGE_SIZE, IMAGE_SIZE, true, true);
-    private EventCoordinator coordinator;
+    private User coordinator;
 
-    public CoordinatorView(EventCoordinator coordinator) {
+    public CoordinatorView(User coordinator) {
         super();
         this.coordinator = coordinator;
 
@@ -78,7 +78,7 @@ public class CoordinatorView extends VBox {
                 .otherwise(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))));
     }
 
-    public EventCoordinator getCoordinator() {
+    public User getCoordinator() {
         return coordinator;
     }
 }

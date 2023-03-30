@@ -12,10 +12,8 @@ import java.util.UUID;
 
 public class Model {
     private final LogicManager bll = new LogicManager();
-    private final ObservableList<EventCoordinator> allEventCoordinators = FXCollections.observableArrayList();
-
     public Model() {
-        allEventCoordinators.addAll(bll.getAllEventCoordinators());
+
 
         /*saveEvent(new Event(allEventCoordinators.get(0).getId(), "UTTT Tournament!", Date.valueOf("2023-04-01"), new Time(7, 0, 0),
                 "Innovatorium", "Attendees are all losers", Date.valueOf("2023-04-08"),
@@ -28,21 +26,5 @@ public class Model {
         saveEvent(new Event(allEventCoordinators.get(0).getId(),"Ornithology 101", Date.valueOf("2012-12-20"), new Time(12, 12, 12),
                 "Basement restroom", "Oh my god Beckeighhh", Date.valueOf("9999-08-01"),
                 new Time(22, 22, 22), "Don't forget to bring your best ears :)"));*/
-    }
-
-    public void addCoordinator(EventCoordinator coordinatorToSave) {
-        bll.addCoordinator(coordinatorToSave);
-    }
-
-    public void updateCoordinator(EventCoordinator coordinatorToUpdate) {
-        bll.updateCoordinator(coordinatorToUpdate);
-    }
-    public void deleteCoordinator(EventCoordinator coordinatorToDelete) {
-        bll.deleteCoordinator(coordinatorToDelete);
-    }
-
-    public List<EventCoordinator> getAllEventCoordinators() {
-        allEventCoordinators.setAll(bll.getAllEventCoordinators());
-        return allEventCoordinators;
     }
 }

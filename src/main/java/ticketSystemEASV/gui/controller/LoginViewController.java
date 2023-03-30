@@ -35,7 +35,9 @@ public class LoginViewController implements Initializable {
     public void loginUser(Event event) throws IOException {
         if(userModel.logIn(emailInput.getText(), passwordInput.getText())) {
             userModel.setLoggedInUser(userModel.getUserByEmail(emailInput.getText()));
-            Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/Root.fxml")));
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/views/Root.fxml"));
+            Parent root = fxmlLoader.load();
+            ((RootController) fxmlLoader.getController()).setUserModel(userModel);
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -49,7 +51,7 @@ public class LoginViewController implements Initializable {
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == ENTER) {
                 try {
-                    loginUser(event);
+                    loginUser(new Event(passwordInput, passwordInput, Event.ANY));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
