@@ -1,7 +1,6 @@
 package ticketSystemEASV.gui.controller;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.gui.model.EventModel;
-import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.UserModel;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class RootController implements Initializable {
     private GridPane gridPane;
     @FXML
     private MFXTextField searchBar;
-    private final Model model = new Model();
+    private final TicketModel ticketModel = new TicketModel();
     private UserModel userModel;
     private final EventModel eventModel = new EventModel();
     private Node eventsScene, coordinatorsScene;
@@ -71,7 +70,7 @@ public class RootController implements Initializable {
 
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
-        mainViewController.setModels(model, eventModel);
-        manageCoordinatorsController.setModels(model, eventModel, userModel);
+        mainViewController.setModels(ticketModel, eventModel);
+        manageCoordinatorsController.setModels(ticketModel, eventModel, userModel);
     }
 }

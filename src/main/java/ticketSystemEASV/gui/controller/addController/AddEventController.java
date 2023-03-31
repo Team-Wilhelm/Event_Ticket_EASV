@@ -1,32 +1,40 @@
 package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.MainViewController;
+import ticketSystemEASV.gui.controller.TicketController;
 import ticketSystemEASV.gui.model.EventModel;
-import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.TicketModel;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.TextArea;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AddEventController implements Initializable {
-    private Model model;
+    private TicketModel ticketModel;
     private EventModel eventModel;
     private MainViewController mainViewController;
     private boolean isEditing = false;
@@ -120,8 +128,8 @@ public class AddEventController implements Initializable {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-    public void setModels(Model model, EventModel eventModel) {
-        this.model = model;
+    public void setModels(TicketModel ticketModel, EventModel eventModel) {
+        this.ticketModel = ticketModel;
         this.eventModel = eventModel;
     }
 
@@ -135,5 +143,22 @@ public class AddEventController implements Initializable {
 
     private String formatTime(Time time) {
         return new SimpleDateFormat(TIME_FORMAT).format(time);
+    }
+
+    public void ticketsAction(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/Tickets.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(fxmlLoader.load());
+        TicketController ticketController = fxmlLoader.getController();
+
+        ticketController.setTicketModel(ticketModel);
+        ticketController.setEvent(eventToEdit);
+
+        stage.setScene(scene);
+        stage.setTitle("EASV Ticket System");
+        stage.getIcons().add(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("/images/icons/chicken.jpg"))));
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }

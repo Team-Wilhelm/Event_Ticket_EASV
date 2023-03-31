@@ -16,12 +16,11 @@ import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
-import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
 import ticketSystemEASV.gui.controller.ManageCoordinatorsController;
-import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.TicketModel;
 import javafx.fxml.FXML;
 import ticketSystemEASV.gui.model.UserModel;
 
@@ -33,7 +32,7 @@ import java.util.ResourceBundle;
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 public class AddCoordinatorController implements Initializable{
-    private Model model;
+    private TicketModel ticketModel;
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
     private boolean isEditing = false;
@@ -125,8 +124,8 @@ public class AddCoordinatorController implements Initializable{
         txtUsername.setText(coordinator.getUsername());
     }
 
-    public void setModels(Model model, UserModel userModel) {
-        this.model = model;
+    public void setModels(TicketModel ticketModel, UserModel userModel) {
+        this.ticketModel = ticketModel;
         this.userModel = userModel;
     }
 

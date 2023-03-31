@@ -21,6 +21,7 @@
             <MFXComboBox fx:id="comboEndTime" floatMode="BORDER" floatingText="End time (optional)" maxWidth="1.7976931348623157E308" />
             <MFXTextField fx:id="txtNotes" floatMode="BORDER" floatingText="Notes (optional)" maxWidth="1.7976931348623157E308" prefWidth="270.0" textLimit="200" />
             <MFXTextField fx:id="txtLocationGuidance" floatMode="BORDER" floatingText="Location guidance (optional)" maxWidth="1.7976931348623157E308" textLimit="30" />
+            <MFXButton fx:id="btnTickets" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#ticketsAction" text="Ticket options" />
             <HBox alignment="CENTER" spacing="10.0">
                <children>
                   <MFXButton onAction="#deleteEventAction" text="Delete" />

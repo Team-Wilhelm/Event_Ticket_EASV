@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="10.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.TicketController">
+   <children>
+      <MFXTextField fx:id="txtEventId" allowEdit="false" floatMode="BORDER" floatingText="EventID" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
+      <MFXTextField fx:id="txtCustomerName" floatMode="BORDER" floatingText="Customer name" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
+      <MFXTextField fx:id="txtCustomerEmail" floatMode="BORDER" floatingText="Customer e-mail" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
+      <HBox>
+         <children>
+            <Region HBox.hgrow="ALWAYS" />
+          <MFXButton onAction="#generateTicket" text="Generate ticket" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+          <MFXTextField fx:id="txtNumberOfTickets" floatMode="BORDER" floatingText="Number of tickets" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
+          <MFXButton onAction="#generateEmptyTickets" text="Generate tickets" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

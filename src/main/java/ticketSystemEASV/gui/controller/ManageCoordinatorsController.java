@@ -9,24 +9,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
-import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorView;
-import ticketSystemEASV.be.views.EventView;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.model.EventModel;
-import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.UserModel;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ManageCoordinatorsController extends MotherController implements Initializable {
@@ -38,7 +34,7 @@ public class ManageCoordinatorsController extends MotherController implements In
     private MFXTextField searchBar;
     private final ObservableList<CoordinatorView> coordinatorViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
-    private Model model;
+    private TicketModel ticketModel;
     private EventModel eventModel;
     private UserModel userModel;
     private CoordinatorView lastFocusedCoordinator;
@@ -61,7 +57,7 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void addCoordinatorAction(ActionEvent actionEvent) throws IOException {
         AddCoordinatorController addCoordinatorController = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController();
-        addCoordinatorController.setModels(model, userModel);
+        addCoordinatorController.setModels(ticketModel, userModel);
         addCoordinatorController.setManageCoordinatorsController(this);
     }
 
@@ -71,14 +67,14 @@ public class ManageCoordinatorsController extends MotherController implements In
         else {
             FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL);
             AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
-            addCoordinatorController.setModels(model, userModel);
+            addCoordinatorController.setModels(ticketModel, userModel);
             addCoordinatorController.setIsEditing(lastFocusedCoordinator.getCoordinator());
             addCoordinatorController.setManageCoordinatorsController(this);
         }
     }
 
-    public void setModels(Model model, EventModel eventModel, UserModel userModel) {
-        this.model = model;
+    public void setModels(TicketModel ticketModel, EventModel eventModel, UserModel userModel) {
+        this.ticketModel = ticketModel;
         this.eventModel = eventModel;
         this.userModel = userModel;
         refreshItems();

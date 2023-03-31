@@ -12,13 +12,32 @@ public class TicketDAO {
     private final DBConnection dbConnection = new DBConnection();
 
     public void addTicket(Ticket ticket){
-        String sql = "INSERT INTO Ticket (eventID, customerID, ticketType, ticketQR) VALUES (?,?,?,?);";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setInt(1, ticket.getEvent().getId());
-            statement.setInt(2, ticket.getCustomer().getId());
-            statement.setString(3, ticket.getTicketType());
-            statement.setString(4, ticket.getTicketQR());
-            statement.execute();
+        String SQL = "SELECT id FROM Customer WHERE CustomerName = ? AND email = ?";
+        try (PreparedStatement idStatement = dbConnection.getConnection().prepareStatement(SQL)) {
+            idStatement.setString(1, ticket.getCustomer().getName());
+            idStatement.setString(2, ticket.getCustomer().getEmail());
+
+            int customerID;
+            ResultSet rs = idStatement.executeQuery();
+            if (rs.next()) {
+                customerID = rs.getInt("id");
+            } else {
+                try (PreparedStatement ps = dbConnection.getConnection().prepareStatement("INSERT INTO Customer (CustomerName, Email) VALUES (?,?);")){
+                    ps.setString(1, ticket.getCustomer().getName());
+                    ps.setString(2, ticket.getCustomer().getEmail());
+                    ps.execute();
+                    customerID = ps.getGeneratedKeys().getInt(1);
+                }
+            }
+
+            SQL = "INSERT INTO Ticket (eventID, customerID, ticketType, ticketQR) VALUES (?,?,?,?);";
+            try (PreparedStatement ticketStatement = dbConnection.getConnection().prepareStatement(SQL)) {
+                ticketStatement.setInt(1, ticket.getEvent().getId());
+                ticketStatement.setInt(2, customerID);
+                ticketStatement.setString(3, ticket.getTicketType());
+                ticketStatement.setString(4, ticket.getTicketQR());
+                ticketStatement.execute();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

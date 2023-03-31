@@ -3,13 +3,12 @@ package ticketSystemEASV.gui.controller;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventView;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
-import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.TicketModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +22,6 @@ import javafx.stage.Modality;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainViewController extends MotherController implements Initializable {
@@ -35,7 +33,7 @@ public class MainViewController extends MotherController implements Initializabl
     private MFXTextField searchBar;
     private final ObservableList<EventView> eventViews = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
-    private Model model;
+    private TicketModel ticketModel;
     private EventModel eventModel;
     private EventView lastFocusedEvent;
 
@@ -52,7 +50,7 @@ public class MainViewController extends MotherController implements Initializabl
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
         AddEventController addEventController = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL).getController();
-        addEventController.setModels(model, eventModel);
+        addEventController.setModels(ticketModel, eventModel);
         addEventController.setMainViewController(this);
     }
 
@@ -62,7 +60,7 @@ public class MainViewController extends MotherController implements Initializabl
         else {
             FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.APPLICATION_MODAL);
             AddEventController addEventController = fxmlLoader.getController();
-            addEventController.setModels(model, eventModel);
+            addEventController.setModels(ticketModel, eventModel);
             addEventController.setIsEditing(lastFocusedEvent.getEvent());
             addEventController.setMainViewController(this);
         }
@@ -94,10 +92,9 @@ public class MainViewController extends MotherController implements Initializabl
         }
     }
 
-    public void setModels(Model model, EventModel eventModel) {
-        this.model = model;
+    public void setModels(TicketModel ticketModel, EventModel eventModel) {
+        this.ticketModel = ticketModel;
         this.eventModel = eventModel;
-        System.out.println("MainViewController: " + eventModel.getAllEvents().size());
         refreshItems();
     }
 

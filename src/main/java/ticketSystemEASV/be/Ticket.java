@@ -32,6 +32,12 @@ public class Ticket {
         this.id = id;
     }
 
+    public Ticket(Event event, Customer customer) {
+        this.event = event;
+        this.customer = customer;
+        this.ticketQR = "NO";
+    }
+
     public Event getEvent() {
         return event;
     }

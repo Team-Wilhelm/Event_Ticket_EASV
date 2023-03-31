@@ -18,7 +18,9 @@ import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
+import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Ticket;
+import ticketSystemEASV.gui.model.EventModel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -27,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TicketView {
     private static PdfFont FONT;
@@ -136,5 +139,14 @@ public class TicketView {
         for (IElement iElement : table.getChildren()) {
             ((Cell)iElement).setBorder(Border.NO_BORDER);
         }
+    }
+
+    public static void main(String[] args) {
+        TicketView ticketView = new TicketView();
+        EventModel eventModel = new EventModel();
+        Ticket ticket1 = new Ticket(UUID.randomUUID(), eventModel.getAllEvents().get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
+        Ticket ticket2 = new Ticket(UUID.randomUUID(), eventModel.getAllEvents().get(5), new Customer("Ashghhleigh", "real@mail.com"), "I'm a winner", "No QR");
+        ticketView.generateTicket(ticket2);
+        ticketView.generateTicket(ticket1);
     }
 }
