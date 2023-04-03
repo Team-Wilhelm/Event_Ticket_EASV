@@ -36,6 +36,7 @@ public class Ticket {
     public Ticket(Event event, Customer customer) {
         this.event = event;
         this.customer = customer;
+        this.ticketType = "Classic";
     }
 
     public Event getEvent() {

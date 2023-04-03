@@ -22,7 +22,7 @@ public class TicketManager {
         try {
             ticketToAdd.setTicketQR(ticketGenerator.generateQRCode(ticketToAdd, 150));
         } catch (WriterException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         ticketDAO.addTicket(ticketToAdd);
     }
