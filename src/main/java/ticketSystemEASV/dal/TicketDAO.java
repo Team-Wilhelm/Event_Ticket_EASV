@@ -17,17 +17,22 @@ public class TicketDAO {
             PreparedStatement idStatement = connection.prepareStatement(SQL);
             idStatement.setString(1, ticket.getCustomer().getName());
             idStatement.setString(2, ticket.getCustomer().getEmail());
+            ResultSet rs = idStatement.executeQuery();
 
             int customerID;
-            ResultSet rs = idStatement.executeQuery();
             if (rs.next()) {
                 customerID = rs.getInt("id");
             } else {
-                try (PreparedStatement ps = connection.prepareStatement("INSERT INTO Customer (CustomerName, Email) VALUES (?,?);")){
+                try (PreparedStatement ps = connection.prepareStatement("INSERT INTO Customer (CustomerName, Email) VALUES (?,?);", Statement.RETURN_GENERATED_KEYS)){
                     ps.setString(1, ticket.getCustomer().getName());
                     ps.setString(2, ticket.getCustomer().getEmail());
-                    ps.execute();
-                    customerID = ps.getGeneratedKeys().getInt(1);
+                    ps.executeUpdate();
+                    rs = ps.getGeneratedKeys();
+                    if (rs.next()) {
+                        customerID = rs.getInt(1);
+                    } else {
+                        throw new SQLException("Creating customer failed, no ID obtained.");
+                    }
                 }
             }
 

@@ -21,7 +21,7 @@ public class TicketController {
 
     @FXML
     private void generateEmptyTickets(ActionEvent actionEvent) {
-
+        //TODO not sure if needed
     }
 
     public void setTicketModel(TicketModel ticketModel) {
@@ -30,6 +30,6 @@ public class TicketController {
 
     public void setEvent(Event event) {
         this.event = event;
-        txtEventId.setText("" + event.getId());
+        txtEventId.setText("" + event.getId() + " - " + event.getEventName());
     }
 }
