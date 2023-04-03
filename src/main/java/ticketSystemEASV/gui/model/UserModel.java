@@ -6,6 +6,7 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.UserManager;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class UserModel {
@@ -23,8 +24,8 @@ public class UserModel {
         return userManager.logIn(name, password);
     }
 
-    public void signUp(String name, String userName, String password, Role role) {
-        userManager.signUp(new User(name, userName, password, role));
+    public void signUp(String name, String userName, String password, Role role, byte[] profilePicture) {
+        userManager.signUp(new User(name, userName, password, role, profilePicture));
     }
 
     public User getLoggedInUser() {

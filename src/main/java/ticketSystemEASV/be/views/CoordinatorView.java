@@ -12,9 +12,10 @@ import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.CropImageToCircle;
 
+import java.io.ByteArrayInputStream;
+
 public class CoordinatorView extends VBox {
-    private final int IMAGE_SIZE = 150;
-    private final Image userIcon = new Image("images/userProfilePictures/userIcon.png", IMAGE_SIZE, IMAGE_SIZE, true, true);
+    private final int IMAGE_SIZE = 500;
     private User coordinator;
 
     public CoordinatorView(User coordinator) {
@@ -26,9 +27,10 @@ public class CoordinatorView extends VBox {
         this.getStyleClass().add("coordinator-view");
 
         // Picture of the event coordinator
+        Image userIcon = new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true);
         ImageView imageView = new ImageView(CropImageToCircle.getRoundedImage(userIcon, IMAGE_SIZE/2));
-        imageView.setFitWidth(IMAGE_SIZE);
-        imageView.setFitHeight(IMAGE_SIZE);
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(150);
 
         // Coordinator information
         Label nameLabel = new Label(coordinator.getName());

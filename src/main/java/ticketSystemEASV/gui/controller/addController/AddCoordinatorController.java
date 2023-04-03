@@ -2,6 +2,7 @@ package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -16,6 +17,7 @@ import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
@@ -24,6 +26,10 @@ import ticketSystemEASV.gui.model.TicketModel;
 import javafx.fxml.FXML;
 import ticketSystemEASV.gui.model.UserModel;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.Optional;
@@ -36,13 +42,13 @@ public class AddCoordinatorController implements Initializable{
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
     private boolean isEditing = false;
+    private int IMAGE_SIZE;
     private User coordinatorToEdit;
     @FXML
     private MFXTextField txtCoordinatorName, txtPassword, txtUsername;
     @FXML
     private GridPane gridPane;
     private ImageView imgViewProfilePicture;
-    private String profilePicturePath;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -50,12 +56,17 @@ public class AddCoordinatorController implements Initializable{
     }
 
     private void setUpProfilePicture() {
-        int IMAGE_SIZE = 500;
-        Image userIcon = new Image("images/userProfilePictures/userIcon.png", IMAGE_SIZE, IMAGE_SIZE, false, true);
+        IMAGE_SIZE = 500;
+        Image userIcon;
+        if (isEditing)
+            userIcon = new Image(new ByteArrayInputStream(coordinatorToEdit.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true);
+        else
+            userIcon = new Image("images/userProfilePictures/userIcon.png", IMAGE_SIZE, IMAGE_SIZE, true, true);
+
         imgViewProfilePicture = new ImageView(CropImageToCircle.getRoundedImage(userIcon,IMAGE_SIZE/2));
         imgViewProfilePicture.fitWidthProperty().bind(txtCoordinatorName.widthProperty().subtract(txtCoordinatorName.widthProperty().divide(2)));
         imgViewProfilePicture.fitHeightProperty().bind(imgViewProfilePicture.fitWidthProperty());
-        imgViewProfilePicture.preserveRatioProperty().setValue(false);
+        imgViewProfilePicture.preserveRatioProperty().setValue(true);
         gridPane.add(imgViewProfilePicture, 0,1);
 
         imgViewProfilePicture.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -82,21 +93,31 @@ public class AddCoordinatorController implements Initializable{
         String coordinatorName = txtCoordinatorName.getText();
         String username = txtUsername.getText();
         final String[] password = {txtPassword.getText()};
-        //System.out.println(profilePicturePath);
+
+        byte[] profilePicture = null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imgViewProfilePicture.getImage(), null);
+            ImageIO.write(bufferedImage, "png", baos);
+            profilePicture = baos.toByteArray();
+            baos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (coordinatorName.isEmpty() || username.isEmpty()) {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill out all required fields!", actionEvent).showAndWait();
         } else {
+            Role role =  userModel.getAllRoles().stream().filter(r -> r.getName().equals("EventCoordinator")).findFirst().get();
+            byte[] finalProfilePicture = profilePicture;
             new Thread(() -> {
                 if (!isEditing){
-                    userModel.signUp(coordinatorName, username, password[0],
-                            userModel.getAllRoles().stream().filter(role -> role.getName().equals("Event coordinator")).findFirst().get());
+                    userModel.signUp(coordinatorName, username, password[0], role, finalProfilePicture);
                 }
             else {
                     if (password[0].isEmpty())
                         password[0] = coordinatorToEdit.getPassword();
-                    userModel.updateUser(new User(coordinatorToEdit.getId(), coordinatorName, username, password[0],
-                            userModel.getAllRoles().stream().filter(role -> role.getName().equals("Event coordinator")).findFirst().get()));
+                    userModel.updateUser(new User(coordinatorToEdit.getId(), coordinatorName, username, password[0], role, finalProfilePicture));
                 }
             }).start();
 
@@ -122,6 +143,8 @@ public class AddCoordinatorController implements Initializable{
         coordinatorToEdit = coordinator;
         txtCoordinatorName.setText(coordinator.getName());
         txtUsername.setText(coordinator.getUsername());
+        imgViewProfilePicture.setImage(CropImageToCircle.getRoundedImage(
+                new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true), IMAGE_SIZE/2));
     }
 
     public void setModels(TicketModel ticketModel, UserModel userModel) {

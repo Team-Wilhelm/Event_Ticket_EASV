@@ -1,5 +1,12 @@
 package ticketSystemEASV.be;
 
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import javafx.scene.image.Image;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,22 +16,20 @@ public class User {
     private String name, username, password;
     private Role role;
     private final List<Event> assignedEvents;
+    private byte[] profilePicture;
 
-    public User(String name, String username, String password, Role role) {
+    public User(String name, String username, String password, Role role, byte[] profilePicture) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.role = role;
         this.assignedEvents = new ArrayList<>();
+        this.profilePicture = profilePicture;
     }
 
-    public User(UUID id, String name, String username, String password, Role role) {
-        this(name, username, password, role);
+    public User(UUID id, String name, String username, String password, Role role, byte[] profilePicture) {
+        this(name, username, password, role, profilePicture);
         this.id = id;
-    }
-
-    public User(UUID id, String name, String username, String password) {
-        this(id, name, username, password, null);
     }
 
     public UUID getId() {
@@ -62,5 +67,9 @@ public class User {
 
     public List<Event> getAssignedEvents() {
         return assignedEvents;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
     }
 }

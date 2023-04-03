@@ -30,6 +30,9 @@ public class LoginViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Platform.runLater(this::setEnterKeyAction);
+        //TODO delete
+        emailInput.setText("admin");
+        passwordInput.setText("admin");
     }
 
     public void loginUser(Event event) throws IOException {

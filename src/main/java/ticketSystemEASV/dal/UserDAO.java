@@ -5,6 +5,8 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.dal.Interfaces.IUserDAO;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +27,9 @@ public class UserDAO implements IUserDAO {
             User user = new User(UUID.fromString(statement.getResultSet().getString("Id")),
                     statement.getResultSet().getString("Name"),
                     statement.getResultSet().getString("UserName"),
-                    statement.getResultSet().getString("Password"));
+                    statement.getResultSet().getString("Password"),
+                    null,
+                    statement.getResultSet().getBytes("profilePicture"));
             assignRoleToUser(user);
             return user;
         } catch (SQLException e) {
@@ -64,32 +68,30 @@ public class UserDAO implements IUserDAO {
     }
 
     public void signUp(User user) {
-        String sql = "INSERT INTO [User] (Name, UserName, Password) VALUES (?,?,?);";
-        var userId = 0;
+        String sql = "DECLARE @UserID uniqueidentifier;" +
+                "INSERT INTO [User] (name, userName, Password, profilePicture)" +
+                "VALUES (?, ?, ?, ?)" +
+                "SET @UserID = (SELECT ID FROM [User] WHERE UserName = ?)" +
+                "INSERT INTO UserRole (UserID, RoleID)" +
+                "VALUES (@UserID,(SELECT Id FROM Role WHERE RoleName LIKE 'EventCoordinator'));";
+
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getUsername());
             statement.setString(3, user.getPassword());
-            statement.execute();
-            userId = statement.getGeneratedKeys().getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        sql = "INSERT INTO UserRole (UserId, RoleId) VALUES (?,?);";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setInt(1, userId);
-            statement.setString(2, user.getRole().getId().toString());
+            statement.setBytes(4, user.getProfilePicture());
+            statement.setString(5, user.getUsername());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateUser(User user){
-        String sql = "UPDATE [User] SET name=?, userName=?, password=? WHERE id=?;";
+    public void updateUser(User user) {
+        String sql = "UPDATE [User] SET name=?, userName=?, password=?, profilePicture=? WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(statement, user);
-            statement.setString(4, user.getId().toString());
+            statement.setString(5, user.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -115,7 +117,9 @@ public class UserDAO implements IUserDAO {
                 User user = new User(UUID.fromString(statement.getResultSet().getString("Id")),
                         statement.getResultSet().getString("Name"),
                         statement.getResultSet().getString("UserName"),
-                        statement.getResultSet().getString("Password"));
+                        statement.getResultSet().getString("Password"),
+                        null,
+                        statement.getResultSet().getBytes("profilePicture"));
                 assignRoleToUser(user);
                 return user;
             }
@@ -144,6 +148,7 @@ public class UserDAO implements IUserDAO {
         statement.setString(1, user.getName());
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
+        statement.setBytes(4, user.getProfilePicture());
     }
 
     public String getRoleId(String role) {
@@ -171,7 +176,9 @@ public class UserDAO implements IUserDAO {
                 User user = new User(UUID.fromString(statement.getResultSet().getString("Id")),
                         statement.getResultSet().getString("Name"),
                         statement.getResultSet().getString("UserName"),
-                        statement.getResultSet().getString("Password"));
+                        statement.getResultSet().getString("Password"),
+                        null,
+                        statement.getResultSet().getBytes("profilePicture"));
                 assignRoleToUser(user);
                 users.add(user);
             }
@@ -185,7 +192,7 @@ public class UserDAO implements IUserDAO {
     // Event coordinators
     public Collection<User> getAllEventCoordinators() {
         List<User> eventCoordinators = new ArrayList<>();
-        String sql = "SELECT [User].Id, [User].Name, [User].Username, [User].Password FROM [User] " +
+        String sql = "SELECT * FROM [User] " +
                 "JOIN UserRole ON [User].ID = UserRole.UserID, " +
                 "(SELECT Id FROM Role WHERE RoleName LIKE 'EventCoordinator') Role " +
                 "WHERE [User].deleted=0 AND UserRole.RoleID = Role.ID;";
@@ -221,7 +228,8 @@ public class UserDAO implements IUserDAO {
         String name = resultSet.getString("Name");
         String username = resultSet.getString("UserName");
         String password = resultSet.getString("Password");
-        User coordinator = new User(id, name, username, password);
+        byte[] profilePicture = resultSet.getBytes("profilePicture");
+        User coordinator = new User(id, name, username, password, null, profilePicture);
         coordinator.setRole(new Role(UUID.fromString(getRoleId("EventCoordinator")), "EventCoordinator"));
         getEventsAssignedToEventCoordinator(coordinator);
         return coordinator;

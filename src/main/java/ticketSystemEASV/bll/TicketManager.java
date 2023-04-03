@@ -1,17 +1,18 @@
 package ticketSystemEASV.bll;
 
 import com.google.zxing.WriterException;
-import ticketSystemEASV.be.Customer;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import ticketSystemEASV.be.*;
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.Ticket;
-import ticketSystemEASV.be.Voucher;
-import ticketSystemEASV.be.views.TicketGenerator;
-import ticketSystemEASV.dal.CustomerDAO;
 import ticketSystemEASV.dal.TicketDAO;
+import ticketSystemEASV.dal.UserDAO;
 import ticketSystemEASV.dal.VoucherDAO;
 
-import javax.print.Doc;
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -67,11 +68,18 @@ public class TicketManager {
         voucherDAO.addMultipleVouchers(vouchers);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         TicketGenerator ticketGenerator = new TicketGenerator();
         TicketManager ticketManager = new TicketManager();
-        ticketGenerator.generateTicket(ticketManager.getTicket(UUID.fromString("A34AA799-B8C6-4AC8-9A2F-5983351BBC54")));
-        ticketGenerator.generateTicket(ticketManager.getTicket(UUID.fromString("B18D9552-2C27-4860-9C9B-5EDCC450F31C")));
+        UserDAO userDAO = new UserDAO();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/images/userProfilePictures/userIcon.png"));
+        ImageIO.write(bufferedImage, "png", baos);
+        byte[] profile = baos.toByteArray();
+        baos.close();
+        /*userDAO.signUp(new User("test", "test", "test",
+                new Role(UUID.fromString("DEF30627-B332-4C4A-AB14-801ED28E80BD"), "EventCoordinator"),
+                profile));*/
     }
 
     public void openTicket(Ticket ticket) {
