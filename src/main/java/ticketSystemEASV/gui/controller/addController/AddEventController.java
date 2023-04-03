@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.bll.AlertManager;
-import ticketSystemEASV.gui.controller.MainViewController;
+import ticketSystemEASV.gui.controller.EventViewController;
 import ticketSystemEASV.gui.controller.TicketController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 public class AddEventController implements Initializable {
     private TicketModel ticketModel;
     private EventModel eventModel;
-    private MainViewController mainViewController;
+    private EventViewController eventViewController;
     private boolean isEditing = false;
     private Event eventToEdit;
     private final String TIME_FORMAT = "HH:mm";
@@ -111,7 +111,7 @@ public class AddEventController implements Initializable {
             else {
                 eventModel.updateEvent(new Event(eventToEdit.getId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
             }
-            mainViewController.refreshItems();
+            eventViewController.refreshItems();
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         }
     }
@@ -122,7 +122,7 @@ public class AddEventController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 eventModel.deleteEvent(eventToEdit);
-                mainViewController.refreshItems();
+                eventViewController.refreshItems();
             }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
@@ -133,8 +133,8 @@ public class AddEventController implements Initializable {
         this.eventModel = eventModel;
     }
 
-    public void setMainViewController(MainViewController mainViewController) {
-        this.mainViewController = mainViewController;
+    public void setMainViewController(EventViewController eventViewController) {
+        this.eventViewController = eventViewController;
     }
 
     private String formatTime(String time) {

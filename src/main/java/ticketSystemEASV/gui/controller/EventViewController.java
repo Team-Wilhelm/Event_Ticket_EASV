@@ -3,8 +3,9 @@ package ticketSystemEASV.gui.controller;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.views.EventView;
+import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -24,22 +25,25 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MainViewController extends MotherController implements Initializable {
+public class EventViewController extends MotherController implements Initializable {
     @FXML
     private ScrollPane eventScrollPane;
     @FXML
     private FlowPane eventFlowPane;
     @FXML
+    private GridPane gridPane;
+    @FXML
     private MFXTextField searchBar;
-    private final ObservableList<EventView> eventViews = FXCollections.observableArrayList();
+    private final ObservableList<EventCard> eventCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private TicketModel ticketModel;
     private EventModel eventModel;
-    private EventView lastFocusedEvent;
+    private EventCard lastFocusedEvent;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Bindings.bindContent(eventFlowPane.getChildren(), eventViews);
+        //TODO add calendar to gridpane(1,2)
+        Bindings.bindContent(eventFlowPane.getChildren(), eventCards);
 
         searchBar.textProperty().addListener((observable, oldValue, newValue) ->
                 setFilteredEvents(eventModel.searchEvents(searchBar.getText().trim().toLowerCase())));
@@ -68,10 +72,10 @@ public class MainViewController extends MotherController implements Initializabl
 
     @Override
     public void refreshItems() {
-        eventViews.clear();
-        eventViews.addAll(eventModel.getAllEvents().stream().map(EventView::new).toList());
+        eventCards.clear();
+        eventCards.addAll(eventModel.getAllEvents().stream().map(EventCard::new).toList());
 
-        for (var eventView : eventViews) {
+        for (var eventView : eventCards) {
             eventView.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) lastFocusedEvent = eventView;
             });
@@ -99,7 +103,7 @@ public class MainViewController extends MotherController implements Initializabl
     }
 
     public void setFilteredEvents(List<Event> searchEvents) {
-        eventViews.clear();
-        eventViews.addAll(searchEvents.stream().map(EventView::new).toList());
+        eventCards.clear();
+        eventCards.addAll(searchEvents.stream().map(EventCard::new).toList());
     }
 }

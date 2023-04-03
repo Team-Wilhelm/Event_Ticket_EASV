@@ -14,11 +14,11 @@ import ticketSystemEASV.bll.CropImageToCircle;
 
 import java.io.ByteArrayInputStream;
 
-public class CoordinatorView extends VBox {
+public class CoordinatorCard extends VBox {
     private final int IMAGE_SIZE = 500;
     private User coordinator;
 
-    public CoordinatorView(User coordinator) {
+    public CoordinatorCard(User coordinator) {
         super();
         this.coordinator = coordinator;
 

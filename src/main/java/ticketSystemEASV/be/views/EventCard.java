@@ -12,14 +12,14 @@ import ticketSystemEASV.be.Event;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
-public class EventView extends VBox {
+public class EventCard extends VBox {
     private Event event;
     private final Image mapPin = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/map-pin.png")));
     private final Image calendar = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/calendar.png")));
     private final Image clock = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/clock.png")));
 
 
-    public EventView(Event event) {
+    public EventCard(Event event) {
         super();
         this.event = event;
 

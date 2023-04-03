@@ -13,7 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import ticketSystemEASV.be.User;
-import ticketSystemEASV.be.views.CoordinatorView;
+import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -32,16 +32,16 @@ public class ManageCoordinatorsController extends MotherController implements In
     private FlowPane flowPane;
     @FXML
     private MFXTextField searchBar;
-    private final ObservableList<CoordinatorView> coordinatorViews = FXCollections.observableArrayList();
+    private final ObservableList<CoordinatorCard> coordinatorCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private TicketModel ticketModel;
     private EventModel eventModel;
     private UserModel userModel;
-    private CoordinatorView lastFocusedCoordinator;
+    private CoordinatorCard lastFocusedCoordinator;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Bindings.bindContent(flowPane.getChildren(), coordinatorViews);
+        Bindings.bindContent(flowPane.getChildren(), coordinatorCards);
 
         searchBar.textProperty().addListener((observable, oldValue, newValue) ->
                 setFilteredUsers(userModel.searchUsers(searchBar.getText().trim().toLowerCase())));
@@ -51,8 +51,8 @@ public class ManageCoordinatorsController extends MotherController implements In
     }
 
     private void setFilteredUsers(List<User> searchUsers) {
-        coordinatorViews.clear();
-        coordinatorViews.addAll(searchUsers.stream().map(CoordinatorView::new).toList());
+        coordinatorCards.clear();
+        coordinatorCards.addAll(searchUsers.stream().map(CoordinatorCard::new).toList());
     }
 
     public void addCoordinatorAction(ActionEvent actionEvent) throws IOException {
@@ -83,10 +83,10 @@ public class ManageCoordinatorsController extends MotherController implements In
     @Override
     public void refreshItems() {
         //TODO optimize
-        coordinatorViews.clear();
-        coordinatorViews.addAll(userModel.getAllEventCoordinators().stream().map(CoordinatorView::new).toList());
+        coordinatorCards.clear();
+        coordinatorCards.addAll(userModel.getAllEventCoordinators().stream().map(CoordinatorCard::new).toList());
 
-        for (var coordinatorView : coordinatorViews) {
+        for (var coordinatorView : coordinatorCards) {
             coordinatorView.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) lastFocusedCoordinator = coordinatorView;
             });

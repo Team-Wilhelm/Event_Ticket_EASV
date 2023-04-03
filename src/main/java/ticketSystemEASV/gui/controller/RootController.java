@@ -24,16 +24,16 @@ public class RootController implements Initializable {
     private UserModel userModel;
     private final EventModel eventModel = new EventModel();
     private Node eventsScene, coordinatorsScene;
-    private MainViewController mainViewController;
+    private EventViewController eventViewController;
     private ManageCoordinatorsController manageCoordinatorsController;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            FXMLLoader eventsLoader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
+            FXMLLoader eventsLoader = new FXMLLoader(getClass().getResource("/views/EventView.fxml"));
             eventsScene = eventsLoader.load();
-            mainViewController = eventsLoader.getController();
+            eventViewController = eventsLoader.getController();
 
             FXMLLoader coordinatorsLoader = new FXMLLoader(getClass().getResource("/views/ManageCoordinatorsView.fxml"));
             coordinatorsScene = coordinatorsLoader.load();
@@ -70,7 +70,7 @@ public class RootController implements Initializable {
 
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
-        mainViewController.setModels(ticketModel, eventModel);
+        eventViewController.setModels(ticketModel, eventModel);
         manageCoordinatorsController.setModels(ticketModel, eventModel, userModel);
     }
 }
