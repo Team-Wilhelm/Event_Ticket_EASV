@@ -13,7 +13,8 @@ public class TicketDAO {
 
     public void addTicket(Ticket ticket){
         String SQL = "SELECT id FROM Customer WHERE CustomerName = ? AND email = ?";
-        try (PreparedStatement idStatement = dbConnection.getConnection().prepareStatement(SQL)) {
+        try (Connection connection = dbConnection.getConnection()) {
+            PreparedStatement idStatement = connection.prepareStatement(SQL);
             idStatement.setString(1, ticket.getCustomer().getName());
             idStatement.setString(2, ticket.getCustomer().getEmail());
 
@@ -22,7 +23,7 @@ public class TicketDAO {
             if (rs.next()) {
                 customerID = rs.getInt("id");
             } else {
-                try (PreparedStatement ps = dbConnection.getConnection().prepareStatement("INSERT INTO Customer (CustomerName, Email) VALUES (?,?);")){
+                try (PreparedStatement ps = connection.prepareStatement("INSERT INTO Customer (CustomerName, Email) VALUES (?,?);")){
                     ps.setString(1, ticket.getCustomer().getName());
                     ps.setString(2, ticket.getCustomer().getEmail());
                     ps.execute();
@@ -31,11 +32,11 @@ public class TicketDAO {
             }
 
             SQL = "INSERT INTO Ticket (eventID, customerID, ticketType, ticketQR) VALUES (?,?,?,?);";
-            try (PreparedStatement ticketStatement = dbConnection.getConnection().prepareStatement(SQL)) {
+            try (PreparedStatement ticketStatement = connection.prepareStatement(SQL)) {
                 ticketStatement.setInt(1, ticket.getEvent().getId());
                 ticketStatement.setInt(2, customerID);
                 ticketStatement.setString(3, ticket.getTicketType());
-                ticketStatement.setString(4, ticket.getTicketQR());
+                ticketStatement.setBytes(4, ticket.getTicketQR());
                 ticketStatement.execute();
             }
         } catch (SQLException e) {
@@ -52,7 +53,7 @@ public class TicketDAO {
                 statement.setInt(1, ticket.getEvent().getId());
                 statement.setInt(2, customerId);
                 statement.setString(3, ticket.getTicketType());
-                statement.setString(4, ticket.getTicketQR());
+                statement.setBytes(4, ticket.getTicketQR());
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -82,7 +83,7 @@ public class TicketDAO {
                         new EventDAO().getEvent(rs.getInt("eventID")),
                         new CustomerDAO().getCustomer(rs.getInt("customerID")),
                         rs.getString("ticketType"),
-                        rs.getString("ticketQR")
+                        rs.getBytes("ticketQR")
                 );
             }
         } catch (SQLException e) {
@@ -118,7 +119,7 @@ public class TicketDAO {
                         new EventDAO().getEvent(rs.getInt("eventID")),
                         new CustomerDAO().getCustomer(rs.getInt("customerID")),
                         rs.getString("ticketType"),
-                        rs.getString("ticketQR")
+                        rs.getBytes("ticketQR")
                 ));
             }
         } catch (SQLException e) {

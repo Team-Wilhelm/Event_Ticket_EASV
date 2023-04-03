@@ -1,9 +1,11 @@
 package ticketSystemEASV.bll;
 
+import com.google.zxing.WriterException;
 import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.be.Voucher;
+import ticketSystemEASV.be.views.TicketGenerator;
 import ticketSystemEASV.dal.CustomerDAO;
 import ticketSystemEASV.dal.TicketDAO;
 import ticketSystemEASV.dal.VoucherDAO;
@@ -13,11 +15,15 @@ import java.util.UUID;
 
 public class TicketManager {
     private final TicketDAO ticketDAO = new TicketDAO();
-
     private final VoucherDAO voucherDAO = new VoucherDAO();
-    private final CustomerDAO customerDAO = new CustomerDAO();
+    private final TicketGenerator ticketGenerator = new TicketGenerator();
 
     public void addTicket(Ticket ticketToAdd) {
+        try {
+            ticketToAdd.setTicketQR(ticketGenerator.generateQRCode(ticketToAdd, 150));
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
+        }
         ticketDAO.addTicket(ticketToAdd);
     }
 
@@ -51,5 +57,12 @@ public class TicketManager {
 
     public void addMultipleVouchers(List<Voucher> vouchers) {
         voucherDAO.addMultipleVouchers(vouchers);
+    }
+
+    public static void main(String[] args) {
+        TicketGenerator ticketGenerator = new TicketGenerator();
+        TicketManager ticketManager = new TicketManager();
+        ticketGenerator.generateTicket(ticketManager.getTicket(UUID.fromString("A34AA799-B8C6-4AC8-9A2F-5983351BBC54")));
+        ticketGenerator.generateTicket(ticketManager.getTicket(UUID.fromString("B18D9552-2C27-4860-9C9B-5EDCC450F31C")));
     }
 }

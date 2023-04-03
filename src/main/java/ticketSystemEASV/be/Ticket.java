@@ -18,16 +18,17 @@ public class Ticket {
     private Event event;
     private Customer customer;
     private UUID id;
-    private String ticketType, ticketQR;
+    private String ticketType;
+    private byte[] ticketQR;
 
-    public Ticket(Event event, Customer customer, String ticketType, String ticketQR) {
+    public Ticket(Event event, Customer customer, String ticketType, byte[] ticketQR) {
         this.event = event;
         this.customer = customer;
         this.ticketType = ticketType;
         this.ticketQR = ticketQR;
     }
 
-    public Ticket(UUID id, Event event, Customer customer, String ticketType, String ticketQR) {
+    public Ticket(UUID id, Event event, Customer customer, String ticketType, byte[] ticketQR) {
         this(event, customer, ticketType, ticketQR);
         this.id = id;
     }
@@ -35,7 +36,6 @@ public class Ticket {
     public Ticket(Event event, Customer customer) {
         this.event = event;
         this.customer = customer;
-        this.ticketQR = "NO";
     }
 
     public Event getEvent() {
@@ -62,11 +62,11 @@ public class Ticket {
         this.ticketType = ticketType;
     }
 
-    public String getTicketQR() {
+    public byte[] getTicketQR() {
         return ticketQR;
     }
 
-    public void setTicketQR(String ticketQR) {
+    public void setTicketQR(byte[] ticketQR) {
         this.ticketQR = ticketQR;
     }
 

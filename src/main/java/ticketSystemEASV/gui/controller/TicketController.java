@@ -7,21 +7,21 @@ import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.gui.model.TicketModel;
 
-import java.util.UUID;
 
 public class TicketController {
     private TicketModel ticketModel;
     private Event event;
     @FXML private MFXTextField txtEventId, txtCustomerName, txtCustomerEmail, txtNumberOfTickets;
 
+
     @FXML
     private void generateTicket(ActionEvent actionEvent) {
         ticketModel.generateTicket(event, new Customer(txtCustomerName.getText().trim(), txtCustomerEmail.getText().trim()));
-
     }
 
     @FXML
     private void generateEmptyTickets(ActionEvent actionEvent) {
+
     }
 
     public void setTicketModel(TicketModel ticketModel) {
@@ -30,5 +30,6 @@ public class TicketController {
 
     public void setEvent(Event event) {
         this.event = event;
+        txtEventId.setText("" + event.getId());
     }
 }

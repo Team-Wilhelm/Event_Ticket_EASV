@@ -31,10 +31,4 @@ public class TicketModel {
     public void generateTicket(Event event, Customer customer) {
         bll.addTicket(new Ticket(event, customer));
     }
-
-    public static void main(String[] args){
-        TicketModel ticketModel = new TicketModel();
-        Ticket ticket1 = new Ticket(UUID.randomUUID(), List.copyOf(eventDAO.getAllEvents()).get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
-        //ticketModel.bll.addTicket(ticket1);
-    }
 }

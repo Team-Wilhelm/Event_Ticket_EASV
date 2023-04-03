@@ -27,11 +27,12 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class TicketView {
+public class TicketGenerator {
     private static PdfFont FONT;
     private static final int FONT_SIZE = 14;
 
@@ -90,9 +91,7 @@ public class TicketView {
             }
 
             // Add the QR code to the ticket
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(generateQRCode(ticket, 150), "png", baos);
-            Image qrCode = new Image(ImageDataFactory.create(baos.toByteArray()));
+            Image qrCode = new Image(ImageDataFactory.create(ticket.getTicketQR()));
             qrCode.setHorizontalAlignment(HorizontalAlignment.CENTER);
             qrCode.setAutoScale(true);
 
@@ -121,7 +120,7 @@ public class TicketView {
         }
     }
 
-    private BufferedImage generateQRCode(Ticket ticket, int size) throws WriterException {
+    public byte[] generateQRCode(Ticket ticket, int size) throws WriterException {
         Map<EncodeHintType, Object> hintMap = new HashMap<>();
         hintMap.put(EncodeHintType.MARGIN, 1);
 
@@ -131,22 +130,21 @@ public class TicketView {
                         + " " + ticket.getCustomer().getName()
                         + " " + ticket.getId()).getBytes(StandardCharsets.UTF_8)),
                 BarcodeFormat.QR_CODE, 1, 1, hintMap);
-        return MatrixToImageWriter.toBufferedImage(matrix);
         //MultiFormatWriter is a factory class that finds the appropriate Writer subclass for the BarcodeFormat requested and encodes the barcode with the supplied contents.
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(MatrixToImageWriter.toBufferedImage(matrix), "png", baos);
+            return baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void removeBorder(Table table) {
         for (IElement iElement : table.getChildren()) {
             ((Cell)iElement).setBorder(Border.NO_BORDER);
         }
-    }
-
-    public static void main(String[] args) {
-        TicketView ticketView = new TicketView();
-        EventModel eventModel = new EventModel();
-        Ticket ticket1 = new Ticket(UUID.randomUUID(), eventModel.getAllEvents().get(0), new Customer("Beckeigh", "beckeigh@nielsen.dk"), "I'm a loser", "No QR");
-        Ticket ticket2 = new Ticket(UUID.randomUUID(), eventModel.getAllEvents().get(5), new Customer("Ashghhleigh", "real@mail.com"), "I'm a winner", "No QR");
-        ticketView.generateTicket(ticket2);
-        ticketView.generateTicket(ticket1);
     }
 }
