@@ -43,7 +43,7 @@ public class TicketGenerator {
             //TODO choose a font
 
             // Open a new PDF document
-            PdfWriter writer = new PdfWriter("src/main/resources/" + ticket.getId() + ".pdf");
+            PdfWriter writer = new PdfWriter("src/main/resources/tickets/" + ticket.getId() + ".pdf");
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
 

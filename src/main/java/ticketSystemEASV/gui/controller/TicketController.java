@@ -96,9 +96,9 @@ public class TicketController {
     @FXML
     private void tableViewDoubleClickAction(MouseEvent event) {
         if (event.getClickCount() == 2) {
-            if (tblTickets.getSelectionModel().getSelection().size() > 0) {
+            if (!tblTickets.getSelectionModel().getSelection().isEmpty()) {
                 Ticket ticket = tblTickets.getSelectionModel().getSelectedValues().get(0);
-                //ticketModel.openTicket(ticket);
+                ticketModel.openTicket(ticket);
             }
             else {
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please select a ticket!", event).showAndWait();

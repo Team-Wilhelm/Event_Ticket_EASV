@@ -11,9 +11,10 @@ import java.util.UUID;
 
 public class TicketModel {
     private final TicketManager bll = new TicketManager();
-    private static EventDAO eventDAO = new EventDAO();
+    private List<Ticket> allTickets;
 
     public TicketModel() {
+        allTickets = bll.getAllTickets();
 
         /*saveEvent(new Event(allEventCoordinators.get(0).getId(), "UTTT Tournament!", Date.valueOf("2023-04-01"), new Time(7, 0, 0),
                 "Innovatorium", "Attendees are all losers", Date.valueOf("2023-04-08"),
@@ -34,5 +35,9 @@ public class TicketModel {
 
     public List<Ticket> getAllTicketsForEvent(Event event) {
         return bll.getAllTicketsForEvent(event);
+    }
+
+    public void openTicket(Ticket ticket) {
+        bll.openTicket(ticket);
     }
 }

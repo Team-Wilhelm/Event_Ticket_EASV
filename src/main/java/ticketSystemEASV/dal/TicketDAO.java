@@ -131,4 +131,24 @@ public class TicketDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Ticket> getAllTickets() {
+        List<Ticket> tickets = new ArrayList<>();
+        String sql = "SELECT * FROM Ticket;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                tickets.add(new Ticket(
+                        UUID.fromString(rs.getString("id")),
+                        new EventDAO().getEvent(rs.getInt("eventID")),
+                        new CustomerDAO().getCustomer(rs.getInt("customerID")),
+                        rs.getString("ticketType"),
+                        rs.getBytes("ticketQR")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tickets;
+    }
 }

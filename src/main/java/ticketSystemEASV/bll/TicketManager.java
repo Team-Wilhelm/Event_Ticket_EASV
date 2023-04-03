@@ -10,6 +10,10 @@ import ticketSystemEASV.dal.CustomerDAO;
 import ticketSystemEASV.dal.TicketDAO;
 import ticketSystemEASV.dal.VoucherDAO;
 
+import javax.print.Doc;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +37,10 @@ public class TicketManager {
 
     public Ticket getTicket(UUID id) {
         return ticketDAO.getTicket(id);
+    }
+
+    public List<Ticket> getAllTickets() {
+        return ticketDAO.getAllTickets();
     }
 
     public List<Ticket> getAllTicketsForEvent(Event event) {
@@ -64,5 +72,18 @@ public class TicketManager {
         TicketManager ticketManager = new TicketManager();
         ticketGenerator.generateTicket(ticketManager.getTicket(UUID.fromString("A34AA799-B8C6-4AC8-9A2F-5983351BBC54")));
         ticketGenerator.generateTicket(ticketManager.getTicket(UUID.fromString("B18D9552-2C27-4860-9C9B-5EDCC450F31C")));
+    }
+
+    public void openTicket(Ticket ticket) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File ticketPDF = new File("src/main/resources/tickets/" + ticket.getId() + ".pdf");
+                if (!ticketPDF.exists())
+                    ticketGenerator.generateTicket(ticket);
+                Desktop.getDesktop().open(ticketPDF);
+            } catch (IOException ex) {
+                // no application registered for PDFs
+            }
+        }
     }
 }
