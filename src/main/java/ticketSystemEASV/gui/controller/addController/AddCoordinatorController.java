@@ -6,6 +6,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -13,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -21,6 +23,7 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
+import ticketSystemEASV.bll.tasks.SaveUserTask;
 import ticketSystemEASV.gui.controller.ManageCoordinatorsController;
 import ticketSystemEASV.gui.model.TicketModel;
 import javafx.fxml.FXML;
@@ -34,6 +37,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
@@ -49,6 +54,7 @@ public class AddCoordinatorController implements Initializable{
     @FXML
     private GridPane gridPane;
     private ImageView imgViewProfilePicture;
+    private SaveUserTask saveUserTask;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -90,6 +96,8 @@ public class AddCoordinatorController implements Initializable{
     }
 
     public void saveAction(ActionEvent actionEvent) {
+        Scene source = ((Node) actionEvent.getSource()).getScene();
+
         String coordinatorName = txtCoordinatorName.getText();
         String username = txtUsername.getText();
         final String[] password = {txtPassword.getText()};
@@ -105,24 +113,26 @@ public class AddCoordinatorController implements Initializable{
             e.printStackTrace();
         }
 
-        if (coordinatorName.isEmpty() || username.isEmpty()) {
+        if (coordinatorName.isEmpty() || username.isEmpty() || (password[0].isEmpty() && !isEditing)) {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill out all required fields!", actionEvent).showAndWait();
         } else {
-            Role role =  userModel.getAllRoles().stream().filter(r -> r.getName().equals("EventCoordinator")).findFirst().get();
+            Role role = userModel.getAllRoles().stream().filter(r -> r.getName().equals("EventCoordinator")).findFirst().get();
             byte[] finalProfilePicture = profilePicture;
-            new Thread(() -> {
-                if (!isEditing){
-                    userModel.signUp(coordinatorName, username, password[0], role, finalProfilePicture);
-                }
-            else {
-                    if (password[0].isEmpty())
-                        password[0] = coordinatorToEdit.getPassword();
-                    userModel.updateUser(new User(coordinatorToEdit.getId(), coordinatorName, username, password[0], role, finalProfilePicture));
-                }
-            }).start();
 
-            Platform.runLater(() -> manageCoordinatorsController.refreshItems());
-            ((Node) actionEvent.getSource()).getScene().getWindow().hide();
+            if (password[0].isEmpty())
+                password[0] = coordinatorToEdit.getPassword();
+
+            User user = new User(coordinatorName, username, password[0], role, finalProfilePicture);
+            if (isEditing) user.setId(coordinatorToEdit.getId());
+            saveUserTask = new SaveUserTask(user, isEditing, source);
+
+            try (ExecutorService executorService = Executors.newFixedThreadPool(1)){
+                executorService.execute(saveUserTask);
+                executorService.shutdown();
+            }
+
+            //TODO manageCoordinatorsController.refreshItems());
+            source.getWindow().hide();
         }
     }
 

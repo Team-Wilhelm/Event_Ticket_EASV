@@ -18,8 +18,6 @@ import java.util.ResourceBundle;
 public class RootController implements Initializable {
     @FXML
     private GridPane gridPane;
-    @FXML
-    private MFXTextField searchBar;
     private final TicketModel ticketModel = new TicketModel();
     private UserModel userModel;
     private final EventModel eventModel = new EventModel();
@@ -71,6 +69,6 @@ public class RootController implements Initializable {
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
         eventViewController.setModels(ticketModel, eventModel);
-        manageCoordinatorsController.setModels(ticketModel, eventModel, userModel);
+        manageCoordinatorsController.setModels(ticketModel, userModel);
     }
 }

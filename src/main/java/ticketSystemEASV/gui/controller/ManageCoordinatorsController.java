@@ -35,7 +35,6 @@ public class ManageCoordinatorsController extends MotherController implements In
     private final ObservableList<CoordinatorCard> coordinatorCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private TicketModel ticketModel;
-    private EventModel eventModel;
     private UserModel userModel;
     private CoordinatorCard lastFocusedCoordinator;
 
@@ -73,9 +72,8 @@ public class ManageCoordinatorsController extends MotherController implements In
         }
     }
 
-    public void setModels(TicketModel ticketModel, EventModel eventModel, UserModel userModel) {
+    public void setModels(TicketModel ticketModel, UserModel userModel) {
         this.ticketModel = ticketModel;
-        this.eventModel = eventModel;
         this.userModel = userModel;
         refreshItems();
     }

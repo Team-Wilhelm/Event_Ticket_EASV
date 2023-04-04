@@ -1,12 +1,13 @@
 package ticketSystemEASV.gui.controller;
 
-import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EventViewController extends MotherController implements Initializable {
     @FXML
@@ -39,6 +42,7 @@ public class EventViewController extends MotherController implements Initializab
     private TicketModel ticketModel;
     private EventModel eventModel;
     private EventCard lastFocusedEvent;
+    private ConstructEventCardTask task;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -50,7 +54,19 @@ public class EventViewController extends MotherController implements Initializab
 
         eventFlowPane.prefHeightProperty().bind(eventScrollPane.heightProperty());
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
+
+       /* Platform.runLater(() -> {
+            MFXDatePicker datePicker = new MFXDatePicker();
+            gridPane.add(datePicker, 1, 2);
+
+            Node calendar = datePicker.getClip();
+            System.out.println(calendar);
+
+            //gridPane.getChildren().remove(datePicker);
+            //gridPane.add(calendar, 1, 2);
+        });*/
     }
+
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
         AddEventController addEventController = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL).getController();
@@ -72,8 +88,19 @@ public class EventViewController extends MotherController implements Initializab
 
     @Override
     public void refreshItems() {
-        eventCards.clear();
-        eventCards.addAll(eventModel.getAllEvents().stream().map(EventCard::new).toList());
+        // Create a new task and bind it to the eventCards list
+        task = new ConstructEventCardTask(eventModel.getAllEvents(), eventModel);
+
+        task.valueProperty().addListener((observable, oldValue, newValue) -> {
+            eventCards.clear();
+            eventCards.addAll(newValue);
+        });
+
+        // Start the task
+        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+            executorService.execute(task);
+            executorService.shutdown();
+        }
 
         for (var eventView : eventCards) {
             eventView.focusedProperty().addListener((observable, oldValue, newValue) -> {
