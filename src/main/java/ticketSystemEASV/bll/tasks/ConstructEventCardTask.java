@@ -40,8 +40,8 @@ public class ConstructEventCardTask extends Task<List<EventCard>> {
                 } else {
                     eventCard = loadedEventCards.get(event);
                 }
-                updateValue(constructedEventCards);
                 constructedEventCards.add(eventCard);
+                updateValue(constructedEventCards);
             }
         }
         return constructedEventCards;

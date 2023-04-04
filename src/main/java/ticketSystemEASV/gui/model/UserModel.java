@@ -4,9 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
+import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.UserManager;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class UserModel {
@@ -14,6 +16,7 @@ public class UserModel {
     private User loggedInUser;
     private final ObservableList<User> allEventCoordinators = FXCollections.observableArrayList();
     private final ObservableList<Role> allRoles = FXCollections.observableArrayList();
+    private final HashMap<User, CoordinatorCard> loadedCoordinatorCards = new HashMap<>();
 
     public UserModel() {
         this.loggedInUser = userManager.getUserByEmail("admin");
@@ -59,5 +62,9 @@ public class UserModel {
 
     public List<Role> getAllRoles() {
         return allRoles;
+    }
+
+    public HashMap<User, CoordinatorCard> getLoadedCoordinatorCards() {
+        return loadedCoordinatorCards;
     }
 }

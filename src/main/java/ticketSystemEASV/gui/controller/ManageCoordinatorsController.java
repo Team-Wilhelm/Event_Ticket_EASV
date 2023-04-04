@@ -15,6 +15,8 @@ import javafx.stage.Modality;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.tasks.ConstructCoordinatorCardTask;
+import ticketSystemEASV.bll.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
@@ -24,6 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ManageCoordinatorsController extends MotherController implements Initializable {
     @FXML
@@ -37,6 +41,7 @@ public class ManageCoordinatorsController extends MotherController implements In
     private TicketModel ticketModel;
     private UserModel userModel;
     private CoordinatorCard lastFocusedCoordinator;
+    private ConstructCoordinatorCardTask task;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -80,29 +85,18 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     @Override
     public void refreshItems() {
-        //TODO optimize
-        coordinatorCards.clear();
-        coordinatorCards.addAll(userModel.getAllEventCoordinators().stream().map(CoordinatorCard::new).toList());
+        // Create a new task and bind it to the eventCards list
+        task = new ConstructCoordinatorCardTask(userModel.getAllEventCoordinators(), userModel);
 
-        for (var coordinatorView : coordinatorCards) {
-            coordinatorView.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue) lastFocusedCoordinator = coordinatorView;
-            });
+        task.valueProperty().addListener((observable, oldValue, newValue) -> {
+            coordinatorCards.clear();
+            coordinatorCards.addAll(newValue);
+        });
 
-            coordinatorView.setOnMouseClicked(event -> {
-                if (!coordinatorView.isFocused())
-                    coordinatorView.requestFocus();
-
-                if (event.getClickCount() == 2) {
-                    try {
-                        coordinatorView.requestFocus();
-                        lastFocusedCoordinator = coordinatorView;
-                        editCoordinatorAction(null);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+        // Start the task
+        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+            executorService.execute(task);
+            executorService.shutdown();
         }
     }
 }
