@@ -91,4 +91,8 @@ public class UserModel {
         }
         return allEventCoordinators;
     }
+
+    public boolean isAdmin() {
+        return loggedInUser.getRole().getName().equals("Admin");
+    }
 }
