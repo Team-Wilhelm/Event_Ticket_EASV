@@ -96,4 +96,8 @@ public class UserModel {
     public User getUser(UUID userID) {
         return userManager.getUser(userID);
     }
+
+    public boolean isAdmin() {
+        return loggedInUser.getRole().getName().equals("Admin");
+    }
 }

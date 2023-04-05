@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class CustomerDAO {
-    //TODO maybe this class should ticketSystemEASV.be merged with TicketDAO?
     private final DBConnection dbConnection = new DBConnection();
 
     public void addCustomer(Customer customer) {

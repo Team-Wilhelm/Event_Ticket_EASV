@@ -237,6 +237,7 @@ public class UserDAO implements IUserDAO {
         return coordinator;
     }
 
+    //TODO remove this and getAllRoles from RoleDAO instead?
     public List<Role> getAllRoles() {
         String sql = "SELECT * FROM Role;";
         List<Role> roles = new ArrayList<>();
