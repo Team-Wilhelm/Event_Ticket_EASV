@@ -6,7 +6,7 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.UserManager;
-import ticketSystemEASV.bll.tasks.ConstructCoordinatorCardTask;
+import ticketSystemEASV.gui.tasks.ConstructCoordinatorCardTask;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -36,9 +36,10 @@ public class UserModel {
         return userManager.logIn(name, password);
     }
 
-    public void signUp(String name, String userName, String password, Role role, byte[] profilePicture) {
-        userManager.signUp(new User(name, userName, password, role, profilePicture));
+    public String signUp(User user) {
+        String message = userManager.signUp(user);
         getAllEventCoordinatorsFromManager();
+        return message;
     }
 
     public User getLoggedInUser() {
@@ -57,9 +58,10 @@ public class UserModel {
         return userManager.searchUsers(query);
     }
 
-    public void updateUser(User user) {
-        userManager.updateUser(user);
+    public String updateUser(User user) {
+        String message = userManager.updateUser(user);
         getAllEventCoordinatorsFromManager();
+        return message;
     }
 
     public void deleteUser(User user) {
@@ -79,7 +81,7 @@ public class UserModel {
         return loadedCoordinatorCards;
     }
 
-    public HashMap<UUID, User> getAllEventCoordinatorsFromManager() {
+    public void getAllEventCoordinatorsFromManager() {
         Callable<HashMap<UUID, User>> setAllEventCoordinatorsRunnable = ()
                 -> (HashMap<UUID, User>) userManager.getAllEventCoordinators();
 
@@ -89,6 +91,9 @@ public class UserModel {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return allEventCoordinators;
+    }
+
+    public User getUser(UUID userID) {
+        return userManager.getUser(userID);
     }
 }

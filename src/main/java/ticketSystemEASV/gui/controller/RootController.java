@@ -13,6 +13,9 @@ import ticketSystemEASV.gui.model.UserModel;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RootController implements Initializable {
     @FXML
@@ -25,8 +28,16 @@ public class RootController implements Initializable {
     private ManageCoordinatorsController manageCoordinatorsController;
 
     public RootController() {
-        ticketModel = new TicketModel();
-        eventModel = new EventModel();
+        Callable<TicketModel> ticketModelCallable = TicketModel::new;
+        Callable<EventModel> eventModelCallable = EventModel::new;
+
+        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
+            ticketModel = executorService.submit(ticketModelCallable).get();
+            eventModel = executorService.submit(eventModelCallable).get();
+            executorService.shutdown();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -72,6 +83,6 @@ public class RootController implements Initializable {
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
         eventViewController.setModels(ticketModel, eventModel);
-        manageCoordinatorsController.setModels(ticketModel, userModel);
+        manageCoordinatorsController.setModels(userModel);
     }
 }

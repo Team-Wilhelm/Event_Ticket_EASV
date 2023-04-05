@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class Main extends Application {
+    //TODO exception handling
 
     @Override
     public void start(Stage primaryStage) throws Exception {

@@ -6,38 +6,47 @@ import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.bll.TicketManager;
 import ticketSystemEASV.dal.EventDAO;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.*;
 
 public class TicketModel {
-    private final TicketManager bll = new TicketManager();
+    private final TicketManager bll;;
     private List<Ticket> allTickets;
 
     public TicketModel() {
-        allTickets = bll.getAllTickets();
-
-        /*saveEvent(new Event(allEventCoordinators.get(0).getId(), "UTTT Tournament!", Date.valueOf("2023-04-01"), new Time(7, 0, 0),
-                "Innovatorium", "Attendees are all losers", Date.valueOf("2023-04-08"),
-                new Time(24, 30, 0), "Use your god damn feet!"));
-
-        saveEvent(new Event(allEventCoordinators.get(0).getId(),"RPS Tournament!", Date.valueOf("2023-12-24"), new Time(9, 0, 0),
-                "EASV Bar", "No notes", Date.valueOf("2023-12-24"),
-                new Time(17, 45, 0), "Private jet to the moon"));
-
-        saveEvent(new Event(allEventCoordinators.get(0).getId(),"Ornithology 101", Date.valueOf("2012-12-20"), new Time(12, 12, 12),
-                "Basement restroom", "Oh my god Beckeighhh", Date.valueOf("9999-08-01"),
-                new Time(22, 22, 22), "Don't forget to bring your best ears :)"));*/
+        Callable<TicketManager> ticketManagerCallable = TicketManager::new;
+        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+            Future<TicketManager> future = executorService.submit(ticketManagerCallable);
+            bll = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not create TicketManager");
+        }
+        getTicketsFromManager();
     }
 
     public void generateTicket(Event event, Customer customer) {
         bll.addTicket(new Ticket(event, customer));
+        getTicketsFromManager();
     }
 
     public List<Ticket> getAllTicketsForEvent(Event event) {
-        return bll.getAllTicketsForEvent(event);
+        return allTickets;
     }
 
     public void openTicket(Ticket ticket) {
         bll.openTicket(ticket);
+    }
+
+    public void getTicketsFromManager() {
+        Callable<List<Ticket>> setAllTicketsRunnable = bll::getAllTickets;
+        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+            Future<List<Ticket>> future = executorService.submit(setAllTicketsRunnable);
+            allTickets = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -17,11 +17,29 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.*;
 
 public class TicketManager {
-    private final TicketDAO ticketDAO = new TicketDAO();
-    private final VoucherDAO voucherDAO = new VoucherDAO();
-    private final TicketGenerator ticketGenerator = new TicketGenerator();
+    private final TicketDAO ticketDAO;
+    private final VoucherDAO voucherDAO;
+    private final TicketGenerator ticketGenerator;
+
+    public TicketManager() {
+        Callable<TicketDAO> ticketDAOCallable = TicketDAO::new;
+        Callable<VoucherDAO> voucherDAOCallable = VoucherDAO::new;
+        Callable<TicketGenerator> ticketGeneratorCallable = TicketGenerator::new;
+        try (ExecutorService executorService = Executors.newFixedThreadPool(3)) {
+            Future<TicketDAO> ticketDAOFuture = executorService.submit(ticketDAOCallable);
+            Future<VoucherDAO> voucherDAOFuture = executorService.submit(voucherDAOCallable);
+            Future<TicketGenerator> ticketGeneratorFuture = executorService.submit(ticketGeneratorCallable);
+            ticketDAO = ticketDAOFuture.get();
+            voucherDAO = voucherDAOFuture.get();
+            ticketGenerator = ticketGeneratorFuture.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not create TicketManager");
+        }
+    }
 
     public void addTicket(Ticket ticketToAdd) {
         try {

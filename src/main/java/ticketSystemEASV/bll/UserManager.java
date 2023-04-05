@@ -13,8 +13,8 @@ public class UserManager {
         return userDAO.logIn(name, password);
     }
 
-    public void signUp(User user) {
-        userDAO.signUp(user);
+    public String signUp(User user) {
+        return userDAO.signUp(user);
     }
 
     public boolean isInRole(UUID userID, String role) {
@@ -33,8 +33,8 @@ public class UserManager {
         return userDAO.searchUsers(query);
     }
 
-    public void updateUser(User user) {
-        userDAO.updateUser(user);
+    public String updateUser(User user) {
+        return userDAO.updateUser(user);
     }
 
     public void deleteUser(User user) {

@@ -3,6 +3,7 @@ package ticketSystemEASV.gui.model;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.EventManager;
+import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,15 @@ public class EventModel {
 
     public EventModel() {
         getAllEventsFromManager();
+
+        // Create a new task and bind it to the eventCards list
+        ConstructEventCardTask task = new ConstructEventCardTask(List.copyOf(allEvents.values()), this);
+
+        // Start the task
+        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+            executorService.execute(task);
+            executorService.shutdown();
+        }
     }
 
     public void saveEvent(Event eventToSave) {
@@ -42,7 +52,7 @@ public class EventModel {
         return loadedEventCards;
     }
 
-    public HashMap<Integer, Event> getAllEventsFromManager() {
+    public void getAllEventsFromManager() {
         Callable<HashMap<Integer, Event>> setAllEventsRunnable = ()
                 -> (HashMap<Integer, Event>) eventManager.getAllEvents();
 
@@ -52,6 +62,5 @@ public class EventModel {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return allEvents;
     }
 }

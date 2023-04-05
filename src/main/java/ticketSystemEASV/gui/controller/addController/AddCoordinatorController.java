@@ -1,7 +1,6 @@
 package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -14,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -23,9 +21,8 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
-import ticketSystemEASV.bll.tasks.SaveUserTask;
+import ticketSystemEASV.gui.tasks.SaveUserTask;
 import ticketSystemEASV.gui.controller.ManageCoordinatorsController;
-import ticketSystemEASV.gui.model.TicketModel;
 import javafx.fxml.FXML;
 import ticketSystemEASV.gui.model.UserModel;
 
@@ -43,7 +40,6 @@ import java.util.concurrent.Executors;
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 public class AddCoordinatorController implements Initializable{
-    private TicketModel ticketModel;
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
     private boolean isEditing = false;
@@ -116,6 +112,8 @@ public class AddCoordinatorController implements Initializable{
         if (coordinatorName.isEmpty() || username.isEmpty() || (password[0].isEmpty() && !isEditing)) {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill out all required fields!", actionEvent).showAndWait();
         } else {
+            source.getWindow().hide();
+
             Role role = userModel.getAllRoles().stream().filter(r -> r.getName().equals("EventCoordinator")).findFirst().get();
             byte[] finalProfilePicture = profilePicture;
 
@@ -124,15 +122,34 @@ public class AddCoordinatorController implements Initializable{
 
             User user = new User(coordinatorName, username, password[0], role, finalProfilePicture);
             if (isEditing) user.setId(coordinatorToEdit.getId());
-            saveUserTask = new SaveUserTask(user, isEditing, source);
+            saveUserTask = new SaveUserTask(user, isEditing, userModel);
 
-            try (ExecutorService executorService = Executors.newFixedThreadPool(1)){
-                executorService.execute(saveUserTask);
-                executorService.shutdown();
-            }
+            saveUserTask.setOnRunning(event -> {
+                manageCoordinatorsController.getProgressSpinner().progressProperty().bind(saveUserTask.progressProperty());
+                manageCoordinatorsController.getProgressSpinner().setVisible(true);
+            });
 
-            //TODO manageCoordinatorsController.refreshItems());
-            source.getWindow().hide();
+            saveUserTask.setOnFailed(event -> {
+                manageCoordinatorsController.getProgressSpinner().setVisible(false);
+                manageCoordinatorsController.getProgressSpinner().progressProperty().unbind();
+                AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
+            });
+
+            saveUserTask.setOnSucceeded(event -> {
+                manageCoordinatorsController.getProgressSpinner().setVisible(false);
+                manageCoordinatorsController.getProgressSpinner().progressProperty().unbind();
+                if (saveUserTask.getValue() == SaveUserTask.TaskState.USERNAME_ALREADY_EXISTS) {
+                    AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();
+                } else if (saveUserTask.getValue() == SaveUserTask.TaskState.USER_SAVED) {
+                    manageCoordinatorsController.refreshLastFocusedCard();
+                } else {
+                    AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
+                }
+            });
+
+            ExecutorService executorService = Executors.newFixedThreadPool(1);
+            executorService.execute(saveUserTask);
+            executorService.shutdown();
         }
     }
 
@@ -141,8 +158,8 @@ public class AddCoordinatorController implements Initializable{
             Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this coordinator?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
+                manageCoordinatorsController.deleteCard(coordinatorToEdit);
                 userModel.deleteUser(coordinatorToEdit);
-                manageCoordinatorsController.refreshItems();
             }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
@@ -157,8 +174,7 @@ public class AddCoordinatorController implements Initializable{
                 new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true), IMAGE_SIZE/2));
     }
 
-    public void setModels(TicketModel ticketModel, UserModel userModel) {
-        this.ticketModel = ticketModel;
+    public void setModels(UserModel userModel) {
         this.userModel = userModel;
     }
 

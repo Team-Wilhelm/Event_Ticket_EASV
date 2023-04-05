@@ -1,4 +1,4 @@
-package ticketSystemEASV.bll.tasks;
+package ticketSystemEASV.gui.tasks;
 
 import javafx.concurrent.Task;
 import ticketSystemEASV.be.Event;

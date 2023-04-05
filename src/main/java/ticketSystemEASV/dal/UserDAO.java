@@ -5,8 +5,6 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.dal.Interfaces.IUserDAO;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +18,17 @@ public class UserDAO implements IUserDAO {
         String sql = "SELECT * FROM [User] WHERE Id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, userID.toString());
-            statement.execute();
-            User user = new User(UUID.fromString(statement.getResultSet().getString("Id")),
-                    statement.getResultSet().getString("Name"),
-                    statement.getResultSet().getString("UserName"),
-                    statement.getResultSet().getString("Password"),
-                    null,
-                    statement.getResultSet().getBytes("profilePicture"));
-            assignRoleToUser(user);
-            return user;
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User(UUID.fromString(resultSet.getString("Id")),
+                        resultSet.getString("Name"),
+                        resultSet.getString("UserName"),
+                        resultSet.getString("Password"),
+                        null,
+                        resultSet.getBytes("profilePicture"));
+                assignRoleToUser(user);
+                return user;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,7 +64,8 @@ public class UserDAO implements IUserDAO {
         return false;
     }
 
-    public void signUp(User user) {
+    public String signUp(User user) {
+        String message = "";
         String sql = "DECLARE @UserID uniqueidentifier;" +
                 "INSERT INTO [User] (name, userName, Password, profilePicture)" +
                 "VALUES (?, ?, ?, ?)" +
@@ -80,19 +81,22 @@ public class UserDAO implements IUserDAO {
             statement.setString(5, user.getUsername());
             statement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            message = e.getMessage();
         }
+        return message;
     }
 
-    public void updateUser(User user) {
+    public String updateUser(User user) {
+        String message = "";
         String sql = "UPDATE [User] SET name=?, userName=?, password=?, profilePicture=? WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(statement, user);
             statement.setString(5, user.getId().toString());
             statement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            message = e.getMessage();
         }
+        return message;
     }
 
     public void deleteUser(User user) {

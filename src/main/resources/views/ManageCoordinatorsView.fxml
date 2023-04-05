@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
@@ -38,6 +39,11 @@
                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
            </GridPane.margin>
        </MFXTextField>
+      <MFXProgressSpinner fx:id="progressSpinner" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="15.0" right="15.0" />
+         </GridPane.margin>
+      </MFXProgressSpinner>
    </children>
    <padding>
       <Insets bottom="10.0" top="10.0" />

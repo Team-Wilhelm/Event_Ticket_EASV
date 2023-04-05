@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.controller;
 
+import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -15,10 +16,8 @@ import javafx.stage.Modality;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.AlertManager;
-import ticketSystemEASV.bll.tasks.ConstructCoordinatorCardTask;
-import ticketSystemEASV.bll.tasks.ConstructEventCardTask;
+import ticketSystemEASV.gui.tasks.ConstructCoordinatorCardTask;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
-import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.UserModel;
 
@@ -28,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ManageCoordinatorsController extends MotherController implements Initializable {
     @FXML
@@ -38,12 +35,12 @@ public class ManageCoordinatorsController extends MotherController implements In
     private FlowPane flowPane;
     @FXML
     private MFXTextField searchBar;
+    @FXML
+    private MFXProgressSpinner progressSpinner;
     private final ObservableList<CoordinatorCard> coordinatorCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
-    private TicketModel ticketModel;
     private UserModel userModel;
     private CoordinatorCard lastFocusedCoordinator;
-    private ConstructCoordinatorCardTask task;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -54,6 +51,8 @@ public class ManageCoordinatorsController extends MotherController implements In
 
         flowPane.prefHeightProperty().bind(coordinatorScrollPane.heightProperty());
         flowPane.prefWidthProperty().bind(coordinatorScrollPane.widthProperty());
+
+        progressSpinner.setVisible(false);
     }
 
     private void setFilteredUsers(List<User> searchUsers) {
@@ -63,7 +62,7 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void addCoordinatorAction(ActionEvent actionEvent) throws IOException {
         AddCoordinatorController addCoordinatorController = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController();
-        addCoordinatorController.setModels(ticketModel, userModel);
+        addCoordinatorController.setModels(userModel);
         addCoordinatorController.setManageCoordinatorsController(this);
     }
 
@@ -73,14 +72,13 @@ public class ManageCoordinatorsController extends MotherController implements In
         else {
             FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL);
             AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
-            addCoordinatorController.setModels(ticketModel, userModel);
+            addCoordinatorController.setModels(userModel);
             addCoordinatorController.setIsEditing(lastFocusedCoordinator.getCoordinator());
             addCoordinatorController.setManageCoordinatorsController(this);
         }
     }
 
-    public void setModels(TicketModel ticketModel, UserModel userModel) {
-        this.ticketModel = ticketModel;
+    public void setModels(UserModel userModel) {
         this.userModel = userModel;
         refreshItems();
     }
@@ -94,7 +92,7 @@ public class ManageCoordinatorsController extends MotherController implements In
         for (User user : coordinators.values()) {
 
             CoordinatorCard coordinatorCard = loadedCards.get(user);
-            if (loadedCards.get(user) == null) {
+            if (loadedCards.get(user) == null || lastFocusedCoordinator == coordinatorCard) {
                 coordinatorCard = new CoordinatorCard(user);
                 userModel.getLoadedCoordinatorCards().put(user, coordinatorCard);
                 loadedCards.put(user, coordinatorCard);
@@ -120,5 +118,20 @@ public class ManageCoordinatorsController extends MotherController implements In
             });
             coordinatorCards.add(coordinatorCard);
         }
+        System.out.println(coordinatorCards.size());
+    }
+
+    public void refreshLastFocusedCard() {
+        if (lastFocusedCoordinator != null) {
+            lastFocusedCoordinator.refresh(userModel.getUser(lastFocusedCoordinator.getCoordinator().getId()));
+        }
+    }
+
+    public void deleteCard(User coordinatorToDelete) {
+        coordinatorCards.removeIf(coordinatorCard -> coordinatorCard.getCoordinator().getId() == coordinatorToDelete.getId());
+    }
+
+    public MFXProgressSpinner getProgressSpinner() {
+        return progressSpinner;
     }
 }

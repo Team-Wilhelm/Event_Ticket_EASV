@@ -1,6 +1,8 @@
 package ticketSystemEASV.be.views;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -13,10 +15,19 @@ import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.CropImageToCircle;
 
 import java.io.ByteArrayInputStream;
+import java.util.Properties;
 
 public class CoordinatorCard extends VBox {
     private final int IMAGE_SIZE = 500;
     private User coordinator;
+
+    // Child nodes
+    private ImageView imageView;
+    private Image userIcon;
+    private Label nameLabel, usernameLabel, mostRecentEvent;
+    private String mostRecent;
+
+
 
     public CoordinatorCard(User coordinator) {
         super();
@@ -27,20 +38,20 @@ public class CoordinatorCard extends VBox {
         this.getStyleClass().add("coordinator-view");
 
         // Picture of the event coordinator
-        Image userIcon = new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true);
-        ImageView imageView = new ImageView(CropImageToCircle.getRoundedImage(userIcon, IMAGE_SIZE/2));
+        userIcon = new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true);
+        imageView = new ImageView(CropImageToCircle.getRoundedImage(userIcon, IMAGE_SIZE/2));
         imageView.setFitWidth(150);
         imageView.setFitHeight(150);
 
         // Coordinator information
-        Label nameLabel = new Label(coordinator.getName());
+        nameLabel = new Label(coordinator.getName());
         nameLabel.getStyleClass().add("info-label");
 
-        Label usernameLabel = new Label(coordinator.getUsername());
+        usernameLabel = new Label(coordinator.getUsername());
         usernameLabel.getStyleClass().add("info-label");
 
-        String mostRecent = coordinator.getAssignedEvents().size() > 0 ? ((Event) coordinator.getAssignedEvents().toArray()[0]).getEventName() : "No events assigned";
-        Label mostRecentEvent = new Label(mostRecent);
+        mostRecent = coordinator.getAssignedEvents().size() > 0 ? ((Event) coordinator.getAssignedEvents().toArray()[0]).getEventName() : "No events assigned";
+        mostRecentEvent = new Label(mostRecent);
         mostRecentEvent.getStyleClass().add("info-label");
 
         // Store all the information in a VBox
@@ -51,13 +62,6 @@ public class CoordinatorCard extends VBox {
                 new VBox(new Label("Username"), usernameLabel),
                 new VBox(new Label("Most recent event"), mostRecentEvent));
         information.setAlignment(Pos.CENTER_LEFT);
-
-        // Events assigned to this coordinator
-        VBox events = new VBox(10, new Label("Assigned events:"));
-        for (var event : coordinator.getAssignedEvents()) {
-            Label eventLabel = new Label("-" + event.getEventName());
-            events.getChildren().add(eventLabel);
-        }
 
         // Add all the elements to the VBox
         this.setPadding(new Insets(15,15,15,15));
@@ -78,9 +82,22 @@ public class CoordinatorCard extends VBox {
                 .when(this.focusedProperty())
                 .then(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)))
                 .otherwise(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))));
+
     }
 
     public User getCoordinator() {
         return coordinator;
+    }
+
+    public void refresh(User coordinator) {
+        this.coordinator = coordinator;
+
+        userIcon = new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true);
+        imageView.setImage(CropImageToCircle.getRoundedImage(userIcon, IMAGE_SIZE/2));
+
+        nameLabel.setText(coordinator.getName());
+        usernameLabel.setText(coordinator.getUsername());
+        mostRecent = coordinator.getAssignedEvents().size() > 0 ? ((Event) coordinator.getAssignedEvents().toArray()[0]).getEventName() : "No events assigned";
+        mostRecentEvent.setText(mostRecent);
     }
 }

@@ -5,11 +5,9 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.User;
-import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
-import ticketSystemEASV.bll.tasks.ConstructEventCardTask;
+import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
@@ -28,8 +26,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class EventViewController extends MotherController implements Initializable {
     @FXML
@@ -91,21 +87,6 @@ public class EventViewController extends MotherController implements Initializab
 
     @Override
     public void refreshItems() {
-        /*// Create a new task and bind it to the eventCards list
-        task = new ConstructEventCardTask(eventModel.getAllEvents(), eventModel);
-
-        task.valueProperty().addListener((observable, oldValue, newValue) -> {
-            eventCards.clear();
-            eventCards.addAll(newValue);
-        });
-
-        // Start the task
-        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
-            executorService.execute(task);
-            executorService.shutdown();
-        }*/
-
-        long timeMilis = System.currentTimeMillis();
         eventCards.clear();
 
         HashMap<Event, EventCard> loadedCards = eventModel.getLoadedEventCards();
@@ -138,7 +119,6 @@ public class EventViewController extends MotherController implements Initializab
             });
             eventCards.add(eventCard);
         }
-        System.out.println("Refresh events: " + (System.currentTimeMillis() - timeMilis));
     }
 
     public void setModels(TicketModel ticketModel, EventModel eventModel) {
