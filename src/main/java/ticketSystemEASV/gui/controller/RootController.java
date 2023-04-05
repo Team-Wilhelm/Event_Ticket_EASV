@@ -76,6 +76,8 @@ public class RootController implements Initializable {
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
         eventViewController.setModels(ticketModel, eventModel);
-        manageCoordinatorsController.setModels(ticketModel, userModel);
+        if (userModel.getLoggedInUser().getRole().getName().equals("Admin"))
+            manageCoordinatorsController.setModels(ticketModel, userModel);
+        else btnManageCoordinators.setVisible(false);
     }
 }

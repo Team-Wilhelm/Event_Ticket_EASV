@@ -23,10 +23,6 @@ public class UserManager {
         return userDAO.isInRole(userID, role);
     }
 
-    public boolean isAdmin(User user) {
-        return user.getRole().getName().equals("Admin");
-    }
-
     public User getUser(UUID userID) {
         return userDAO.getUser(userID);
     }
