@@ -75,6 +75,11 @@ public class UserModel {
         return allRoles;
     }
 
+    public boolean isAdmin(UUID userID) {
+        return userManager.isAdmin(userID);
+    }
+
+
     public HashMap<User, CoordinatorCard> getLoadedCoordinatorCards() {
         return loadedCoordinatorCards;
     }

@@ -2,12 +2,14 @@ package ticketSystemEASV.bll;
 
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
+import ticketSystemEASV.dal.RoleDAO;
 import ticketSystemEASV.dal.UserDAO;
 
 import java.util.*;
 
 public class UserManager {
     private final UserDAO userDAO = new UserDAO();
+    private final RoleDAO roleDAO = new RoleDAO();
 
     public boolean logIn(String name, String password) {
         return userDAO.logIn(name, password);
@@ -47,5 +49,9 @@ public class UserManager {
 
     public List<Role> getAllRoles() {
         return userDAO.getAllRoles();
+    }
+
+    public boolean isAdmin(UUID userID) {
+        return roleDAO.isAdmin(userID);
     }
 }
