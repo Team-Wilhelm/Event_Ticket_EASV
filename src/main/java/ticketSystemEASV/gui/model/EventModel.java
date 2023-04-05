@@ -29,13 +29,13 @@ public class EventModel implements Model {
 
 
     @Override
-    public String add(Object objectToAdd) {
+    public String add(Object objectToAdd, CountDownLatch latch) {
         Event eventToSave = (Event) objectToAdd;
         return eventManager.saveEvent(eventToSave);
     }
 
     @Override
-    public String update(Object objectToUpdate) {
+    public String update(Object objectToUpdate, CountDownLatch latch) {
         Event eventToUpdate = (Event) objectToUpdate;
         return eventManager.updateEvent(eventToUpdate);
     }
@@ -67,11 +67,13 @@ public class EventModel implements Model {
         try {
             Future<HashMap<Integer, Event>> future = executorService.submit(setAllEventsRunnable);
             allEvents = future.get();
-            executorService.shutdown();
-            executorService.awaitTermination(15, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        } finally {
+        }
+        try {
+            executorService.shutdown();
+        }
+        finally {
             if (!executorService.isShutdown())
                 executorService.shutdown();
         }

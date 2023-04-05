@@ -120,9 +120,6 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
             try {
                 executorService.shutdown();
-                executorService.awaitTermination(1, java.util.concurrent.TimeUnit.MINUTES);
-            } catch (Exception e) {
-                e.printStackTrace();
             } finally {
                 if (!executorService.isTerminated()) {
                     executorService.shutdownNow();

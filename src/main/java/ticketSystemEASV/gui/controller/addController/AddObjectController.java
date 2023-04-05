@@ -8,6 +8,7 @@ import ticketSystemEASV.gui.tasks.SaveTask;
 
 public abstract class AddObjectController {
     protected void setUpTask(SaveTask saveTask, ActionEvent actionEvent, MotherController controller){
+
         saveTask.setOnRunning(event -> {
             controller.bindSpinnerToTask(saveTask);
             controller.setProgressSpinnerVisibility(true);

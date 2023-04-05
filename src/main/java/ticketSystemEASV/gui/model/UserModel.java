@@ -20,7 +20,7 @@ public class UserModel implements Model {
 
     public UserModel() {
         allRoles.setAll(userManager.getAllRoles());
-        getAllEventCoordinatorsFromManager();
+        getAllEventCoordinatorsFromManager(new CountDownLatch(0));
 
         // Create a new task and construct the CoordinatorCards
         ConstructCoordinatorCardTask task = new ConstructCoordinatorCardTask(List.copyOf(allEventCoordinators.values()), this);
@@ -53,18 +53,18 @@ public class UserModel implements Model {
     }
 
     @Override
-    public String add(Object objectToAdd) {
+    public String add(Object objectToAdd, CountDownLatch latch) {
         User user = (User) objectToAdd;
         String message = userManager.signUp(user);
-        getAllEventCoordinatorsFromManager();
+        getAllEventCoordinatorsFromManager(latch);
         return message;
     }
 
     @Override
-    public String update(Object objectToUpdate) {
+    public String update(Object objectToUpdate, CountDownLatch latch) {
         User user = (User) objectToUpdate;
         String message = userManager.updateUser(user);
-        getAllEventCoordinatorsFromManager();
+        getAllEventCoordinatorsFromManager(latch);
         return message;
     }
 
@@ -72,7 +72,7 @@ public class UserModel implements Model {
     public void delete(Object objectToDelete) {
         User user = (User) objectToDelete;
         userManager.deleteUser(user);
-        getAllEventCoordinatorsFromManager();
+        getAllEventCoordinatorsFromManager(new CountDownLatch(0));
     }
 
     public Map<UUID, User> getAllEventCoordinators() {
@@ -87,24 +87,29 @@ public class UserModel implements Model {
         return loadedCoordinatorCards;
     }
 
-    public void getAllEventCoordinatorsFromManager() {
+    public void getAllEventCoordinatorsFromManager(CountDownLatch latch) {
         Callable<HashMap<UUID, User>> setAllEventCoordinatorsRunnable = ()
                 -> (HashMap<UUID, User>) userManager.getAllEventCoordinators();
 
         ExecutorService executorService = Executors.newFixedThreadPool(1);
+        Future<HashMap<UUID, User>> future = executorService.submit(() -> {
+            HashMap<UUID, User> result = setAllEventCoordinatorsRunnable.call();
+            latch.countDown();
+            return result;
+        });
+
         try {
-            Future<HashMap<UUID, User>> future = executorService.submit(setAllEventCoordinatorsRunnable);
+            latch.await();
             allEventCoordinators = future.get();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
         // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
         try {
             executorService.shutdown();
-            executorService.awaitTermination(20, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         } finally {
             if (!executorService.isShutdown())
                 executorService.shutdownNow();

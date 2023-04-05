@@ -31,9 +31,6 @@ public class TicketModel {
         // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
         try {
             executorService.shutdown();
-            executorService.awaitTermination(20, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         } finally {
             if (!executorService.isShutdown())
                 executorService.shutdownNow();

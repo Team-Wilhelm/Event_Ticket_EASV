@@ -3,6 +3,8 @@ package ticketSystemEASV.gui.tasks;
 import javafx.concurrent.Task;
 import ticketSystemEASV.gui.model.Model;
 
+import java.util.concurrent.CountDownLatch;
+
 public class SaveTask extends Task<SaveTask.TaskState> {
     public enum TaskState {SAVED, CHOSEN_NAME_ALREADY_EXISTS, NOT_SAVED}
     protected final Object objectToSave;
@@ -17,7 +19,7 @@ public class SaveTask extends Task<SaveTask.TaskState> {
 
     @Override
     protected SaveTask.TaskState call() {
-        System.out.println(Thread.currentThread().getName());
+        CountDownLatch latch = new CountDownLatch(1);
         if (isCancelled()) {
             updateMessage("User was not saved");
             return TaskState.NOT_SAVED;
@@ -25,9 +27,9 @@ public class SaveTask extends Task<SaveTask.TaskState> {
         else {
             String message;
             if (isEditing)
-                message = model.update(objectToSave);
+                message = model.update(objectToSave, latch);
             else
-                message = model.add(objectToSave);
+                message = model.add(objectToSave, latch);
 
             if (message.isEmpty())
                 return TaskState.SAVED;

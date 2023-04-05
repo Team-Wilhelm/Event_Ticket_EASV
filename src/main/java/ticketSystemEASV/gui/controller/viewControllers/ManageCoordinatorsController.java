@@ -118,7 +118,6 @@ public class ManageCoordinatorsController extends MotherController implements In
             });
             coordinatorCards.add(coordinatorCard);
         }
-        System.out.println(coordinatorCards.size());
     }
 
     @Override
@@ -136,8 +135,8 @@ public class ManageCoordinatorsController extends MotherController implements In
         progressSpinner.setVisible(isVisible);
     }
 
-    public void bindSpinnerToTask(SaveTask constructCoordinatorCardTask) {
-        progressSpinner.progressProperty().bind(constructCoordinatorCardTask.progressProperty());
+    public void bindSpinnerToTask(SaveTask saveTask) {
+        progressSpinner.progressProperty().bind(saveTask.progressProperty());
     }
 
     public void unbindSpinnerFromTask() {

@@ -133,8 +133,8 @@ public class EventViewController extends MotherController implements Initializab
     }
 
     @Override
-    public void bindSpinnerToTask(SaveTask constructCoordinatorCardTask) {
-        progressSpinner.progressProperty().bind(constructCoordinatorCardTask.progressProperty());
+    public void bindSpinnerToTask(SaveTask saveTask) {
+        progressSpinner.progressProperty().bind(saveTask.progressProperty());
     }
 
     @Override
@@ -157,9 +157,5 @@ public class EventViewController extends MotherController implements Initializab
     public void setFilteredEvents(List<Event> searchEvents) {
         eventCards.clear();
         eventCards.addAll(searchEvents.stream().map(EventCard::new).toList());
-    }
-
-    public void setProgressSpinner(boolean isVisible) {
-        progressSpinner.setVisible(isVisible);
     }
 }
