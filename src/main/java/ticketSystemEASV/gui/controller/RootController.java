@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
@@ -17,6 +18,8 @@ import java.util.ResourceBundle;
 public class RootController implements Initializable {
     @FXML
     private GridPane gridPane;
+    @FXML
+    private Button btnManageCoordinators;
     private final TicketModel ticketModel;
     private UserModel userModel;
     private final EventModel eventModel;
@@ -31,6 +34,7 @@ public class RootController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         try {
             FXMLLoader eventsLoader = new FXMLLoader(getClass().getResource("/views/EventView.fxml"));
             eventsScene = eventsLoader.load();

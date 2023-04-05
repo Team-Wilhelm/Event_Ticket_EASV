@@ -28,16 +28,4 @@ public class RoleDAO {
             return null;
         }
     }
-
-    public boolean isAdmin(UUID userId){
-        String sql = "SELECT * FROM UserRole WHERE UserId = ? INNER JOIN Role ON Role.id = UserRole.RoleId WHERE Role.RoleName = 'Admin'";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, userId.toString());
-            ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
