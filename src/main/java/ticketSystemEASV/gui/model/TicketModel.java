@@ -17,12 +17,26 @@ public class TicketModel {
 
     public TicketModel() {
         Callable<TicketManager> ticketManagerCallable = TicketManager::new;
-        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        // Try to execute the callable, if it fails, throw a runtime exception
+        try {
             Future<TicketManager> future = executorService.submit(ticketManagerCallable);
             bll = future.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not create TicketManager");
+        }
+
+        // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
+        try {
+            executorService.shutdown();
+            executorService.awaitTermination(20, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (!executorService.isShutdown())
+                executorService.shutdownNow();
         }
         getTicketsFromManager();
     }

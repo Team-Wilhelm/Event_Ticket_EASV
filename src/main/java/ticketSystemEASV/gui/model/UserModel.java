@@ -91,11 +91,23 @@ public class UserModel implements Model {
         Callable<HashMap<UUID, User>> setAllEventCoordinatorsRunnable = ()
                 -> (HashMap<UUID, User>) userManager.getAllEventCoordinators();
 
-        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        try {
             Future<HashMap<UUID, User>> future = executorService.submit(setAllEventCoordinatorsRunnable);
             allEventCoordinators = future.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+        }
+
+        // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
+        try {
+            executorService.shutdown();
+            executorService.awaitTermination(20, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (!executorService.isShutdown())
+                executorService.shutdownNow();
         }
     }
 

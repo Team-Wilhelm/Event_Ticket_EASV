@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Event Ticket EASV.iml" filepath="$PROJECT_DIR$/Event Ticket EASV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EventTicketEASV.iml" filepath="$PROJECT_DIR$/EventTicketEASV.iml" />
     </modules>
   </component>
 </project>

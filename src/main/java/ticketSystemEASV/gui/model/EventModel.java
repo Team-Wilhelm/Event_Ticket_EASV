@@ -63,11 +63,17 @@ public class EventModel implements Model {
         Callable<HashMap<Integer, Event>> setAllEventsRunnable = ()
                 -> (HashMap<Integer, Event>) eventManager.getAllEvents();
 
-        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        try {
             Future<HashMap<Integer, Event>> future = executorService.submit(setAllEventsRunnable);
             allEvents = future.get();
+            executorService.shutdown();
+            executorService.awaitTermination(15, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            if (!executorService.isShutdown())
+                executorService.shutdown();
         }
     }
 

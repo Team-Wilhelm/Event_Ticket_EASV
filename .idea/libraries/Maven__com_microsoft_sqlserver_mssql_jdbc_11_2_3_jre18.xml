@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre18" type="java-imported" external-system-id="Maven">
+    <properties groupId="com.microsoft.sqlserver" artifactId="mssql-jdbc" version="11.2.3.jre18" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/sqlserver/mssql-jdbc/11.2.3.jre18/mssql-jdbc-11.2.3.jre18.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/sqlserver/mssql-jdbc/11.2.3.jre18/mssql-jdbc-11.2.3.jre18-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/sqlserver/mssql-jdbc/11.2.3.jre18/mssql-jdbc-11.2.3.jre18-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

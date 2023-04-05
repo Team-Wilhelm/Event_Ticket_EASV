@@ -39,16 +39,16 @@ import java.util.concurrent.Executors;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
-public class AddCoordinatorController extends AddObjectController implements Initializable{
+public class AddCoordinatorController extends AddObjectController implements Initializable {
+    @FXML
+    private MFXTextField txtCoordinatorName, txtPassword, txtUsername;
+    @FXML
+    private GridPane gridPane;
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
     private boolean isEditing = false;
     private int IMAGE_SIZE;
     private User coordinatorToEdit;
-    @FXML
-    private MFXTextField txtCoordinatorName, txtPassword, txtUsername;
-    @FXML
-    private GridPane gridPane;
     private ImageView imgViewProfilePicture;
     private SaveTask saveTask;
 
@@ -116,7 +116,18 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             setUpTask(saveTask, actionEvent, manageCoordinatorsController);
             ExecutorService executorService = Executors.newFixedThreadPool(1);
             executorService.execute(saveTask);
-            executorService.shutdown();
+
+            // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
+            try {
+                executorService.shutdown();
+                executorService.awaitTermination(1, java.util.concurrent.TimeUnit.MINUTES);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (!executorService.isTerminated()) {
+                    executorService.shutdownNow();
+                }
+            }
         }
     }
 

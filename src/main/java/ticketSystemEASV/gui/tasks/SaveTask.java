@@ -17,6 +17,7 @@ public class SaveTask extends Task<SaveTask.TaskState> {
 
     @Override
     protected SaveTask.TaskState call() {
+        System.out.println(Thread.currentThread().getName());
         if (isCancelled()) {
             updateMessage("User was not saved");
             return TaskState.NOT_SAVED;

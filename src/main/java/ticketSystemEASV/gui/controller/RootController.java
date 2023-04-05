@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class RootController implements Initializable {
     @FXML
@@ -36,12 +37,24 @@ public class RootController implements Initializable {
         Callable<TicketModel> ticketModelCallable = TicketModel::new;
         Callable<EventModel> eventModelCallable = EventModel::new;
 
-        try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        try {
             ticketModel = executorService.submit(ticketModelCallable).get();
             eventModel = executorService.submit(eventModelCallable).get();
-            executorService.shutdown();
         } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize models");
+        }
+
+        // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
+        try {
+            executorService.shutdown();
+            executorService.awaitTermination(20, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (!executorService.isShutdown())
+                executorService.shutdownNow();
         }
     }
 

@@ -11,6 +11,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Event Ticket EASV" target="19" />
+      <module name="EventTicketEASV" target="19" />
     </bytecodeTargetLevel>
   </component>
 </project>
