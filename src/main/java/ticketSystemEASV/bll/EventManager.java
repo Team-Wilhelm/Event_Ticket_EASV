@@ -11,12 +11,12 @@ import java.util.Map;
 public class EventManager {
     private final EventDAO eventDAO = new EventDAO();
 
-    public void saveEvent(Event eventToSave) {
-        eventDAO.addEvent(eventToSave);
+    public String saveEvent(Event eventToSave) {
+        return eventDAO.addEvent(eventToSave);
     }
 
-    public void updateEvent(Event eventToUpdate) {
-        eventDAO.updateEvent(eventToUpdate);
+    public String updateEvent(Event eventToUpdate) {
+        return eventDAO.updateEvent(eventToUpdate);
     }
 
     public void deleteEvent(Event eventToDelete) {
@@ -29,5 +29,9 @@ public class EventManager {
 
     public List<Event> searchEvents(String query) {
         return eventDAO.searchEvents(query);
+    }
+
+    public Event getEvent(int id) {
+        return eventDAO.getEvent(id);
     }
 }

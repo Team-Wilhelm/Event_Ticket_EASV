@@ -11,7 +11,7 @@ import ticketSystemEASV.gui.tasks.ConstructCoordinatorCardTask;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class UserModel {
+public class UserModel implements Model {
     private final UserManager userManager = new UserManager();
     private User loggedInUser;
     private HashMap<UUID, User> allEventCoordinators = new HashMap<>();
@@ -36,12 +36,6 @@ public class UserModel {
         return userManager.logIn(name, password);
     }
 
-    public String signUp(User user) {
-        String message = userManager.signUp(user);
-        getAllEventCoordinatorsFromManager();
-        return message;
-    }
-
     public User getLoggedInUser() {
         return loggedInUser;
     }
@@ -58,13 +52,25 @@ public class UserModel {
         return userManager.searchUsers(query);
     }
 
-    public String updateUser(User user) {
+    @Override
+    public String add(Object objectToAdd) {
+        User user = (User) objectToAdd;
+        String message = userManager.signUp(user);
+        getAllEventCoordinatorsFromManager();
+        return message;
+    }
+
+    @Override
+    public String update(Object objectToUpdate) {
+        User user = (User) objectToUpdate;
         String message = userManager.updateUser(user);
         getAllEventCoordinatorsFromManager();
         return message;
     }
 
-    public void deleteUser(User user) {
+    @Override
+    public void delete(Object objectToDelete) {
+        User user = (User) objectToDelete;
         userManager.deleteUser(user);
         getAllEventCoordinatorsFromManager();
     }

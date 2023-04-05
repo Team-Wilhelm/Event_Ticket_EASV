@@ -8,7 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.User;
+import ticketSystemEASV.bll.CropImageToCircle;
 
+import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
@@ -17,7 +20,7 @@ public class EventCard extends VBox {
     private final Image mapPin = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/map-pin.png")));
     private final Image calendar = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/calendar.png")));
     private final Image clock = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/clock.png")));
-
+    private Label nameLabel, dateLabel, timeLabel, locationLabel;
 
     public EventCard(Event event) {
         super();
@@ -32,7 +35,7 @@ public class EventCard extends VBox {
 
         // Name of the event
         ImageView nameIV = new ImageView();
-        Label nameLabel = new Label(event.getEventName());
+        nameLabel = new Label(event.getEventName());
         nameLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
         nameLabel.maxWidthProperty().bind(top.prefWidthProperty());
 
@@ -45,7 +48,7 @@ public class EventCard extends VBox {
 
         // Date of the event
         ImageView calendarIV = new ImageView(calendar);
-        Label dateLabel = new Label(new SimpleDateFormat("dd.MM.yyyy").format(event.getStartDate()));
+        dateLabel = new Label(new SimpleDateFormat("dd.MM.yyyy").format(event.getStartDate()));
         calendarIV.setPreserveRatio(true);
         calendarIV.setSmooth(true);
         calendarIV.fitHeightProperty().bind(dateLabel.heightProperty());
@@ -55,7 +58,7 @@ public class EventCard extends VBox {
 
         // Time of the event
         ImageView timeIV = new ImageView(clock);
-        Label timeLabel = new Label(new SimpleDateFormat("HH:mm").format(event.getStartTime()));
+        timeLabel = new Label(new SimpleDateFormat("HH:mm").format(event.getStartTime()));
         timeIV.setPreserveRatio(true);
         timeIV.setSmooth(true);
         timeIV.fitHeightProperty().bind(timeLabel.heightProperty());
@@ -65,7 +68,7 @@ public class EventCard extends VBox {
 
         // Location of the event
         ImageView locationIV = new ImageView(mapPin);
-        Label locationLabel = new Label(event.getLocation());
+        locationLabel = new Label(event.getLocation());
 
         locationLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
         locationLabel.maxWidthProperty().bind(top.prefWidthProperty());
@@ -99,5 +102,14 @@ public class EventCard extends VBox {
 
     public Event getEvent() {
         return event;
+    }
+
+    public void refresh(Event event) {
+        this.event = event;
+
+        nameLabel.setText(event.getEventName());
+        dateLabel.setText(new SimpleDateFormat("dd.MM.yyyy").format(event.getStartDate()));
+        timeLabel.setText(new SimpleDateFormat("HH:mm").format(event.getStartTime()));
+        locationLabel.setText(event.getLocation());
     }
 }

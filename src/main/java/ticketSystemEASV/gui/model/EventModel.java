@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class EventModel {
+public class EventModel implements Model {
     private final EventManager eventManager = new EventManager();
     private HashMap<Integer, Event> allEvents = new HashMap<>();
     private HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
@@ -27,15 +27,22 @@ public class EventModel {
         }
     }
 
-    public void saveEvent(Event eventToSave) {
-        eventManager.saveEvent(eventToSave);
+
+    @Override
+    public String add(Object objectToAdd) {
+        Event eventToSave = (Event) objectToAdd;
+        return eventManager.saveEvent(eventToSave);
     }
 
-    public void updateEvent(Event eventToUpdate) {
-        eventManager.updateEvent(eventToUpdate);
+    @Override
+    public String update(Object objectToUpdate) {
+        Event eventToUpdate = (Event) objectToUpdate;
+        return eventManager.updateEvent(eventToUpdate);
     }
 
-    public void deleteEvent(Event eventToDelete) {
+    @Override
+    public void delete(Object objectToDelete) {
+        Event eventToDelete = (Event) objectToDelete;
         eventManager.deleteEvent(eventToDelete);
     }
 
@@ -62,5 +69,9 @@ public class EventModel {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public Event getEvent(int id) {
+        return eventManager.getEvent(id);
     }
 }

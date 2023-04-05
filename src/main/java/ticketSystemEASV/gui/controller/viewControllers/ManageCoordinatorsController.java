@@ -1,4 +1,4 @@
-package ticketSystemEASV.gui.controller;
+package ticketSystemEASV.gui.controller.viewControllers;
 
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -16,10 +16,10 @@ import javafx.stage.Modality;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.AlertManager;
-import ticketSystemEASV.gui.tasks.ConstructCoordinatorCardTask;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
-import ticketSystemEASV.gui.model.TicketModel;
+import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.model.UserModel;
+import ticketSystemEASV.gui.tasks.SaveTask;
 
 import java.io.IOException;
 import java.net.URL;
@@ -62,7 +62,7 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void addCoordinatorAction(ActionEvent actionEvent) throws IOException {
         AddCoordinatorController addCoordinatorController = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL).getController();
-        addCoordinatorController.setModels(userModel);
+        addCoordinatorController.setModel(userModel);
         addCoordinatorController.setManageCoordinatorsController(this);
     }
 
@@ -72,7 +72,7 @@ public class ManageCoordinatorsController extends MotherController implements In
         else {
             FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddCoordinatorView.fxml", Modality.WINDOW_MODAL);
             AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
-            addCoordinatorController.setModels(userModel);
+            addCoordinatorController.setModel(userModel);
             addCoordinatorController.setIsEditing(lastFocusedCoordinator.getCoordinator());
             addCoordinatorController.setManageCoordinatorsController(this);
         }
@@ -121,6 +121,7 @@ public class ManageCoordinatorsController extends MotherController implements In
         System.out.println(coordinatorCards.size());
     }
 
+    @Override
     public void refreshLastFocusedCard() {
         if (lastFocusedCoordinator != null) {
             lastFocusedCoordinator.refresh(userModel.getUser(lastFocusedCoordinator.getCoordinator().getId()));
@@ -131,7 +132,15 @@ public class ManageCoordinatorsController extends MotherController implements In
         coordinatorCards.removeIf(coordinatorCard -> coordinatorCard.getCoordinator().getId() == coordinatorToDelete.getId());
     }
 
-    public MFXProgressSpinner getProgressSpinner() {
-        return progressSpinner;
+    public void setProgressSpinnerVisibility(boolean isVisible) {
+        progressSpinner.setVisible(isVisible);
+    }
+
+    public void bindSpinnerToTask(SaveTask constructCoordinatorCardTask) {
+        progressSpinner.progressProperty().bind(constructCoordinatorCardTask.progressProperty());
+    }
+
+    public void unbindSpinnerFromTask() {
+        progressSpinner.progressProperty().unbind();
     }
 }

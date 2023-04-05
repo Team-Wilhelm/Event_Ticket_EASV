@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class Event {
     //Required information
-    int id;
+    private int id;
     private List<UUID> coordinatorIdList;
     private Date startDate;
     private Time startTime;

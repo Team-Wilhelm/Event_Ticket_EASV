@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.bll.AlertManager;
-import ticketSystemEASV.gui.controller.EventViewController;
+import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.TicketController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import ticketSystemEASV.gui.tasks.SaveTask;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,8 +33,10 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class AddEventController implements Initializable {
+public class AddEventController extends AddObjectController implements Initializable {
     private TicketModel ticketModel;
     private EventModel eventModel;
     private EventViewController eventViewController;
@@ -49,6 +52,7 @@ public class AddEventController implements Initializable {
     private VBox leftVBox;
     @FXML
     private MFXComboBox<String> comboStartTime, comboEndTime;
+    private SaveTask saveTask;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,8 +68,10 @@ public class AddEventController implements Initializable {
         }
     }
 
-    public void setIsEditing(Event event) {
+    @Override
+    public void setIsEditing(Object object) {
         isEditing = true;
+        Event event = (Event) object;
         eventToEdit = event;
         txtEventName.setText(event.getEventName());
         txtLocation.setText(event.getLocation());
@@ -90,7 +96,7 @@ public class AddEventController implements Initializable {
         String notes = txtNotes.getText();
         String locationGuidance = txtLocationGuidance.getText();
 
-        //Check if the field has a value, if not, set it to null, otherwise, an exception will ticketSystemEASV.be thrown
+        //Check if the field has a value, if not, set it to null, otherwise, an exception will be thrown
         Time startingTime = !(comboStartTime.getValue() == null) ? Time.valueOf(comboStartTime.getValue()+":00") : null;
         Date startingDate = dateStartDate.getValue() != null ? Date.valueOf(dateStartDate.getValue()) : null;
         Date endDate = dateEndDate.getValue() != null ? Date.valueOf(dateEndDate.getValue()) : null;
@@ -105,14 +111,16 @@ public class AddEventController implements Initializable {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
         }
         else {
-            if(!isEditing) {
-                eventModel.saveEvent(new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
-            }
-            else {
-                eventModel.updateEvent(new Event(eventToEdit.getId(), eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance));
-            }
-            eventViewController.refreshItems();
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
+
+            Event event = new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance);
+            if (isEditing) event.setId(eventToEdit.getId());
+
+            saveTask = new SaveTask(event, isEditing, eventModel);
+            setUpTask(saveTask, actionEvent, eventViewController);
+            ExecutorService executorService = Executors.newFixedThreadPool(1);
+            executorService.execute(saveTask);
+            executorService.shutdown();
         }
     }
 
@@ -121,7 +129,7 @@ public class AddEventController implements Initializable {
             Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                eventModel.deleteEvent(eventToEdit);
+                eventModel.delete(eventToEdit);
                 eventViewController.refreshItems();
             }
         }

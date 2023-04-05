@@ -1,4 +1,4 @@
-package ticketSystemEASV.gui.controller;
+package ticketSystemEASV.gui.controller.viewControllers;
 
 import io.github.palexdev.materialfx.controls.*;
 import javafx.beans.binding.Bindings;
@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -20,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
+import ticketSystemEASV.gui.tasks.SaveTask;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,6 +38,8 @@ public class EventViewController extends MotherController implements Initializab
     private GridPane gridPane;
     @FXML
     private MFXTextField searchBar;
+    @FXML
+    private MFXProgressSpinner progressSpinner;
     private final ObservableList<EventCard> eventCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private TicketModel ticketModel;
@@ -53,6 +57,8 @@ public class EventViewController extends MotherController implements Initializab
 
         eventFlowPane.prefHeightProperty().bind(eventScrollPane.heightProperty());
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
+
+        progressSpinner.setVisible(false);
 
        /* Platform.runLater(() -> {
             MFXDatePicker datePicker = new MFXDatePicker();
@@ -121,6 +127,27 @@ public class EventViewController extends MotherController implements Initializab
         }
     }
 
+    @Override
+    public void setProgressSpinnerVisibility(boolean isVisible) {
+        progressSpinner.setVisible(isVisible);
+    }
+
+    @Override
+    public void bindSpinnerToTask(SaveTask constructCoordinatorCardTask) {
+        progressSpinner.progressProperty().bind(constructCoordinatorCardTask.progressProperty());
+    }
+
+    @Override
+    public void unbindSpinnerFromTask() {
+        progressSpinner.progressProperty().unbind();
+    }
+
+    @Override
+    public void refreshLastFocusedCard() {
+        if (lastFocusedEvent != null)
+            lastFocusedEvent.refresh(eventModel.getEvent(lastFocusedEvent.getEvent().getId()));
+    }
+
     public void setModels(TicketModel ticketModel, EventModel eventModel) {
         this.ticketModel = ticketModel;
         this.eventModel = eventModel;
@@ -130,5 +157,9 @@ public class EventViewController extends MotherController implements Initializab
     public void setFilteredEvents(List<Event> searchEvents) {
         eventCards.clear();
         eventCards.addAll(searchEvents.stream().map(EventCard::new).toList());
+    }
+
+    public void setProgressSpinner(boolean isVisible) {
+        progressSpinner.setVisible(isVisible);
     }
 }

@@ -21,8 +21,8 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
-import ticketSystemEASV.gui.tasks.SaveUserTask;
-import ticketSystemEASV.gui.controller.ManageCoordinatorsController;
+import ticketSystemEASV.gui.tasks.SaveTask;
+import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
 import javafx.fxml.FXML;
 import ticketSystemEASV.gui.model.UserModel;
 
@@ -39,7 +39,7 @@ import java.util.concurrent.Executors;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
-public class AddCoordinatorController implements Initializable{
+public class AddCoordinatorController extends AddObjectController implements Initializable{
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
     private boolean isEditing = false;
@@ -50,7 +50,7 @@ public class AddCoordinatorController implements Initializable{
     @FXML
     private GridPane gridPane;
     private ImageView imgViewProfilePicture;
-    private SaveUserTask saveUserTask;
+    private SaveTask saveTask;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -98,57 +98,24 @@ public class AddCoordinatorController implements Initializable{
         String username = txtUsername.getText();
         final String[] password = {txtPassword.getText()};
 
-        byte[] profilePicture = null;
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imgViewProfilePicture.getImage(), null);
-            ImageIO.write(bufferedImage, "png", baos);
-            profilePicture = baos.toByteArray();
-            baos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         if (coordinatorName.isEmpty() || username.isEmpty() || (password[0].isEmpty() && !isEditing)) {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill out all required fields!", actionEvent).showAndWait();
         } else {
             source.getWindow().hide();
 
             Role role = userModel.getAllRoles().stream().filter(r -> r.getName().equals("EventCoordinator")).findFirst().get();
-            byte[] finalProfilePicture = profilePicture;
+            byte[] finalProfilePicture = getProfilePictureAsBytes();
 
             if (password[0].isEmpty())
                 password[0] = coordinatorToEdit.getPassword();
 
             User user = new User(coordinatorName, username, password[0], role, finalProfilePicture);
             if (isEditing) user.setId(coordinatorToEdit.getId());
-            saveUserTask = new SaveUserTask(user, isEditing, userModel);
 
-            saveUserTask.setOnRunning(event -> {
-                manageCoordinatorsController.getProgressSpinner().progressProperty().bind(saveUserTask.progressProperty());
-                manageCoordinatorsController.getProgressSpinner().setVisible(true);
-            });
-
-            saveUserTask.setOnFailed(event -> {
-                manageCoordinatorsController.getProgressSpinner().setVisible(false);
-                manageCoordinatorsController.getProgressSpinner().progressProperty().unbind();
-                AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
-            });
-
-            saveUserTask.setOnSucceeded(event -> {
-                manageCoordinatorsController.getProgressSpinner().setVisible(false);
-                manageCoordinatorsController.getProgressSpinner().progressProperty().unbind();
-                if (saveUserTask.getValue() == SaveUserTask.TaskState.USERNAME_ALREADY_EXISTS) {
-                    AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();
-                } else if (saveUserTask.getValue() == SaveUserTask.TaskState.USER_SAVED) {
-                    manageCoordinatorsController.refreshLastFocusedCard();
-                } else {
-                    AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
-                }
-            });
-
+            saveTask = new SaveTask(user, isEditing, userModel);
+            setUpTask(saveTask, actionEvent, manageCoordinatorsController);
             ExecutorService executorService = Executors.newFixedThreadPool(1);
-            executorService.execute(saveUserTask);
+            executorService.execute(saveTask);
             executorService.shutdown();
         }
     }
@@ -159,14 +126,16 @@ public class AddCoordinatorController implements Initializable{
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 manageCoordinatorsController.deleteCard(coordinatorToEdit);
-                userModel.deleteUser(coordinatorToEdit);
+                userModel.delete(coordinatorToEdit);
             }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-    public void setIsEditing(User coordinator) {
+    @Override
+    public void setIsEditing(Object object) {
         isEditing = true;
+        User coordinator = (User) object;
         coordinatorToEdit = coordinator;
         txtCoordinatorName.setText(coordinator.getName());
         txtUsername.setText(coordinator.getUsername());
@@ -174,7 +143,7 @@ public class AddCoordinatorController implements Initializable{
                 new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true), IMAGE_SIZE/2));
     }
 
-    public void setModels(UserModel userModel) {
+    public void setModel(UserModel userModel) {
         this.userModel = userModel;
     }
 
@@ -214,5 +183,19 @@ public class AddCoordinatorController implements Initializable{
 
     public void setManageCoordinatorsController(ManageCoordinatorsController manageCoordinatorsController) {
         this.manageCoordinatorsController = manageCoordinatorsController;
+    }
+
+    private byte[] getProfilePictureAsBytes() {
+        byte[] profilePicture = null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imgViewProfilePicture.getImage(), null);
+            ImageIO.write(bufferedImage, "png", baos);
+            profilePicture = baos.toByteArray();
+            baos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return profilePicture;
     }
 }

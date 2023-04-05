@@ -7,6 +7,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
+import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.UserModel;
@@ -77,10 +79,6 @@ public class RootController implements Initializable {
             gridPane.getChildren().remove(eventsScene);
             gridPane.add(coordinatorsScene, 1, 0);
         }
-    }
-
-    public UserModel getUserModel() {
-        return userModel;
     }
 
     public void setUserModel(UserModel userModel) {

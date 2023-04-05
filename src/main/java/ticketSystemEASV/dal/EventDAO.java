@@ -11,9 +11,10 @@ import java.util.*;
 public class EventDAO {
     private final DBConnection dbConnection = new DBConnection();
 
-    public void addEvent(Event event) {
+    public String addEvent(Event event) {
         UserDAO userDAO = new UserDAO();
         User loggedInUser = userDAO.getUserByEmail("admin");
+        String message="";
         //TODO unique Event names?
         //TODO be able to add multiple coordinators for one event (fucking pain in the ass, i think, respectfully)
         String sql = "DECLARE @EventID int;" +
@@ -28,11 +29,14 @@ public class EventDAO {
             statement.setString(10, loggedInUser.getId().toString()); //TODO logged in users
             statement.execute();
         } catch (SQLException e) {
+            message = e.getMessage();
             e.printStackTrace();
         }
+        return message;
     }
 
-    public void updateEvent(Event event) {
+    public String updateEvent(Event event) {
+        String message = "";
         String sql = "UPDATE Event SET startDate=?, startTime=?, eventName=?, eventLocation=?, notes=?, endDate=?, endTime=?, locationGuidance=? WHERE id=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             fillPreparedStatement(event, statement);
@@ -40,7 +44,9 @@ public class EventDAO {
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            message = e.getMessage();
         }
+        return message;
     }
 
     public void deleteEvent(Event eventToDelete) {
