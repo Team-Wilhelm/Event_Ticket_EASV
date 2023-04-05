@@ -4,9 +4,7 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.dal.UserDAO;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class UserManager {
     private final UserDAO userDAO = new UserDAO();
@@ -43,7 +41,7 @@ public class UserManager {
         userDAO.deleteUser(user);
     }
 
-    public Collection<User> getAllEventCoordinators(){
+    public Map<UUID, User> getAllEventCoordinators(){
         return userDAO.getAllEventCoordinators();
     }
 

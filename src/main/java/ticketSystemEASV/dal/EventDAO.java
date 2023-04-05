@@ -5,10 +5,8 @@ import ticketSystemEASV.be.User;
 import ticketSystemEASV.gui.model.UserModel;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.sql.Date;
+import java.util.*;
 
 public class EventDAO {
     private final DBConnection dbConnection = new DBConnection();
@@ -66,13 +64,14 @@ public class EventDAO {
         statement.setString(8, event.getLocationGuidance());
     }
 
-    public Collection<Event> getAllEvents() {
-        List<Event> events = new ArrayList<>();
+    public Map<Integer, Event> getAllEvents() {
+        HashMap<Integer, Event> events = new HashMap<>();
         String sql = "SELECT * FROM Event WHERE deleted=0;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
-                events.add(constructEvent(resultSet));
+                Event e = constructEvent(resultSet);
+                events.put(e.getId(), e);
             }
             return events;
         } catch (SQLException e) {

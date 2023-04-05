@@ -4,7 +4,9 @@ import ticketSystemEASV.be.Event;
 import ticketSystemEASV.dal.EventDAO;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EventManager {
     private final EventDAO eventDAO = new EventDAO();
@@ -21,7 +23,7 @@ public class EventManager {
         eventDAO.deleteEvent(eventToDelete);
     }
 
-    public Collection<Event> getAllEvents() {
+    public Map<Integer, Event> getAllEvents() {
         return eventDAO.getAllEvents();
     }
 

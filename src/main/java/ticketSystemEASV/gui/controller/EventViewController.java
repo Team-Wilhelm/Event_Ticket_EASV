@@ -5,6 +5,8 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.User;
+import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.tasks.ConstructEventCardTask;
@@ -23,6 +25,7 @@ import javafx.stage.Modality;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -88,7 +91,7 @@ public class EventViewController extends MotherController implements Initializab
 
     @Override
     public void refreshItems() {
-        // Create a new task and bind it to the eventCards list
+        /*// Create a new task and bind it to the eventCards list
         task = new ConstructEventCardTask(eventModel.getAllEvents(), eventModel);
 
         task.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -100,27 +103,42 @@ public class EventViewController extends MotherController implements Initializab
         try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
             executorService.execute(task);
             executorService.shutdown();
-        }
+        }*/
 
-        for (var eventView : eventCards) {
-            eventView.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue) lastFocusedEvent = eventView;
+        long timeMilis = System.currentTimeMillis();
+        eventCards.clear();
+
+        HashMap<Event, EventCard> loadedCards = eventModel.getLoadedEventCards();
+        for (Event event : eventModel.getAllEvents().values()) {
+
+            EventCard eventCard = loadedCards.get(event);
+            if (loadedCards.get(event) == null) {
+                eventCard = new EventCard(event);
+                eventModel.getLoadedEventCards().put(event, eventCard);
+                loadedCards.put(event, eventCard);
+            }
+
+            final EventCard finalEventCard = eventCard;
+            eventCard.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) lastFocusedEvent = finalEventCard;
             });
 
-            eventView.setOnMouseClicked(event -> {
-                if (!eventView.isFocused())
-                    eventView.requestFocus();
+            eventCard.setOnMouseClicked(e -> {
+                if (!finalEventCard.isFocused())
+                    finalEventCard.requestFocus();
 
-                if (event.getClickCount() == 2) {
+                if (e.getClickCount() == 2) {
                     try {
-                        lastFocusedEvent = eventView;
+                        lastFocusedEvent = finalEventCard;
                         editEventAction(null);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
                     }
                 }
             });
+            eventCards.add(eventCard);
         }
+        System.out.println("Refresh events: " + (System.currentTimeMillis() - timeMilis));
     }
 
     public void setModels(TicketModel ticketModel, EventModel eventModel) {

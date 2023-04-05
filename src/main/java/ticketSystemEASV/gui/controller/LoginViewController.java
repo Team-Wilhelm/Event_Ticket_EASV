@@ -35,13 +35,17 @@ public class LoginViewController implements Initializable {
     }
 
     public void loginUser(Event event) throws IOException {
+        long timeMilis = System.currentTimeMillis();
         if(userModel.logIn(emailInput.getText(), passwordInput.getText())) {
             userModel.setLoggedInUser(userModel.getUserByEmail(emailInput.getText()));
+
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/views/Root.fxml"));
             Parent root = fxmlLoader.load();
             ((RootController) fxmlLoader.getController()).setUserModel(userModel);
+
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));
+            System.out.println("Time to log in: " + (System.currentTimeMillis() - timeMilis));
             stage.show();
         }
         else

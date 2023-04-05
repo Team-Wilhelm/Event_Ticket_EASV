@@ -24,8 +24,10 @@ import ticketSystemEASV.gui.model.UserModel;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -85,18 +87,38 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     @Override
     public void refreshItems() {
-        // Create a new task and bind it to the eventCards list
-        task = new ConstructCoordinatorCardTask(userModel.getAllEventCoordinators(), userModel);
+        coordinatorCards.clear();
+        HashMap<User, CoordinatorCard> loadedCards = userModel.getLoadedCoordinatorCards();
+        HashMap<UUID, User> coordinators = (HashMap<UUID, User>) userModel.getAllEventCoordinators();
 
-        task.valueProperty().addListener((observable, oldValue, newValue) -> {
-            coordinatorCards.clear();
-            coordinatorCards.addAll(newValue);
-        });
+        for (User user : coordinators.values()) {
 
-        // Start the task
-        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
-            executorService.execute(task);
-            executorService.shutdown();
+            CoordinatorCard coordinatorCard = loadedCards.get(user);
+            if (loadedCards.get(user) == null) {
+                coordinatorCard = new CoordinatorCard(user);
+                userModel.getLoadedCoordinatorCards().put(user, coordinatorCard);
+                loadedCards.put(user, coordinatorCard);
+            }
+
+            final CoordinatorCard finalCoordinatorCard = coordinatorCard;
+            coordinatorCard.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) lastFocusedCoordinator = finalCoordinatorCard;
+            });
+
+            coordinatorCard.setOnMouseClicked(event -> {
+                if (!finalCoordinatorCard.isFocused())
+                    finalCoordinatorCard.requestFocus();
+
+                if (event.getClickCount() == 2) {
+                    try {
+                        lastFocusedCoordinator = finalCoordinatorCard;
+                        editCoordinatorAction(null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            coordinatorCards.add(coordinatorCard);
         }
     }
 }

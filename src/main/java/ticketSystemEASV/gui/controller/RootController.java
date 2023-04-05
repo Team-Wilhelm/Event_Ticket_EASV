@@ -1,6 +1,5 @@
 package ticketSystemEASV.gui.controller;
 
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,13 +17,17 @@ import java.util.ResourceBundle;
 public class RootController implements Initializable {
     @FXML
     private GridPane gridPane;
-    private final TicketModel ticketModel = new TicketModel();
+    private final TicketModel ticketModel;
     private UserModel userModel;
-    private final EventModel eventModel = new EventModel();
+    private final EventModel eventModel;
     private Node eventsScene, coordinatorsScene;
     private EventViewController eventViewController;
     private ManageCoordinatorsController manageCoordinatorsController;
 
+    public RootController() {
+        ticketModel = new TicketModel();
+        eventModel = new EventModel();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

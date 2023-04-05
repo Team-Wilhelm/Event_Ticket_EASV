@@ -1,21 +1,20 @@
 package ticketSystemEASV.gui.model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class EventModel {
     private final EventManager eventManager = new EventManager();
-    private ObservableList<Event> allEvents = FXCollections.observableArrayList();
+    private HashMap<Integer, Event> allEvents = new HashMap<>();
     private HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
 
     public EventModel() {
-        allEvents.addAll(eventManager.getAllEvents());
+        getAllEventsFromManager();
     }
 
     public void saveEvent(Event eventToSave) {
@@ -30,8 +29,8 @@ public class EventModel {
         eventManager.deleteEvent(eventToDelete);
     }
 
-    public ObservableList<Event> getAllEvents() {
-        allEvents.setAll(eventManager.getAllEvents());
+    public HashMap<Integer, Event> getAllEvents() {
+        getAllEventsFromManager();
         return allEvents;
     }
 
@@ -41,5 +40,18 @@ public class EventModel {
 
     public HashMap<Event, EventCard> getLoadedEventCards() {
         return loadedEventCards;
+    }
+
+    public HashMap<Integer, Event> getAllEventsFromManager() {
+        Callable<HashMap<Integer, Event>> setAllEventsRunnable = ()
+                -> (HashMap<Integer, Event>) eventManager.getAllEvents();
+
+        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
+            Future<HashMap<Integer, Event>> future = executorService.submit(setAllEventsRunnable);
+            allEvents = future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return allEvents;
     }
 }
