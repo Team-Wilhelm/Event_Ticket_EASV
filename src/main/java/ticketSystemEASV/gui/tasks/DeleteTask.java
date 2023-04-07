@@ -16,7 +16,6 @@ public class DeleteTask extends Task<TaskState> {
 
     @Override
     protected TaskState call() {
-        CountDownLatch latch = new CountDownLatch(1);
         if (isCancelled()) {
             updateMessage("User was not deleted");
             return TaskState.NOT_SUCCESSFUL;
