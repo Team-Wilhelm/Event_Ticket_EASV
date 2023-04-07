@@ -1,12 +1,5 @@
 package ticketSystemEASV.be;
 
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import javafx.scene.image.Image;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

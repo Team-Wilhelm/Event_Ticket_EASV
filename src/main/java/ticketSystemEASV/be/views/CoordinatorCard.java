@@ -1,8 +1,6 @@
 package ticketSystemEASV.be.views;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -15,7 +13,6 @@ import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.CropImageToCircle;
 
 import java.io.ByteArrayInputStream;
-import java.util.Properties;
 
 public class CoordinatorCard extends VBox {
     private final int IMAGE_SIZE = 500;

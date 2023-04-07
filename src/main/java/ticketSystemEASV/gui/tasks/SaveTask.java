@@ -5,8 +5,7 @@ import ticketSystemEASV.gui.model.Model;
 
 import java.util.concurrent.CountDownLatch;
 
-public class SaveTask extends Task<SaveTask.TaskState> {
-    public enum TaskState {SAVED, CHOSEN_NAME_ALREADY_EXISTS, NOT_SAVED}
+public class SaveTask extends Task<TaskState> {
     protected final Object objectToSave;
     protected final boolean isEditing;
     protected final Model model;
@@ -18,11 +17,11 @@ public class SaveTask extends Task<SaveTask.TaskState> {
     }
 
     @Override
-    protected SaveTask.TaskState call() {
+    protected TaskState call() {
         CountDownLatch latch = new CountDownLatch(1);
         if (isCancelled()) {
             updateMessage("User was not saved");
-            return TaskState.NOT_SAVED;
+            return TaskState.NOT_SUCCESSFUL;
         }
         else {
             String message;
@@ -34,11 +33,11 @@ public class SaveTask extends Task<SaveTask.TaskState> {
             System.out.println(message);
 
             if (message.isEmpty())
-                return TaskState.SAVED;
+                return TaskState.SUCCESSFUL;
             else if (message.contains("Violation of UNIQUE KEY constraint"))
                 return TaskState.CHOSEN_NAME_ALREADY_EXISTS;
             else
-                return TaskState.NOT_SAVED;
+                return TaskState.NOT_SUCCESSFUL;
         }
     }
 

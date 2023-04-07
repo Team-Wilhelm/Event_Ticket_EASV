@@ -5,6 +5,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -134,8 +135,8 @@ public class ManageCoordinatorsController extends MotherController implements In
         progressSpinner.setVisible(isVisible);
     }
 
-    public void bindSpinnerToTask(SaveTask saveTask) {
-        progressSpinner.progressProperty().bind(saveTask.progressProperty());
+    public void bindSpinnerToTask(Task task) {
+        progressSpinner.progressProperty().bind(task.progressProperty());
     }
 
     public void unbindSpinnerFromTask() {

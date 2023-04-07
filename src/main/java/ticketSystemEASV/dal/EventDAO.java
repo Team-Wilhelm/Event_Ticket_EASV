@@ -49,14 +49,17 @@ public class EventDAO {
         return message;
     }
 
-    public void deleteEvent(Event eventToDelete) {
+    public String deleteEvent(Event eventToDelete) {
         String sql = "UPDATE Event SET deleted=1 WHERE id=?;";
+        String message = "";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, eventToDelete.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            message = e.getMessage();
         }
+        return message;
     }
 
     private void fillPreparedStatement(Event event, PreparedStatement statement) throws SQLException {

@@ -41,9 +41,11 @@ public class EventModel implements Model {
     }
 
     @Override
-    public void delete(Object objectToDelete) {
+    public String delete(Object objectToDelete) {
         Event eventToDelete = (Event) objectToDelete;
+        String message = eventManager.deleteEvent(eventToDelete);
         eventManager.deleteEvent(eventToDelete);
+        return message;
     }
 
     public HashMap<Integer, Event> getAllEvents() {

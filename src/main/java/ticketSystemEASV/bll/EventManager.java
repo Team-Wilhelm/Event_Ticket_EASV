@@ -19,8 +19,8 @@ public class EventManager {
         return eventDAO.updateEvent(eventToUpdate);
     }
 
-    public void deleteEvent(Event eventToDelete) {
-        eventDAO.deleteEvent(eventToDelete);
+    public String deleteEvent(Event eventToDelete) {
+        return eventDAO.deleteEvent(eventToDelete);
     }
 
     public Map<Integer, Event> getAllEvents() {

@@ -39,8 +39,8 @@ public class UserManager {
         return userDAO.updateUser(user);
     }
 
-    public void deleteUser(User user) {
-        userDAO.deleteUser(user);
+    public String deleteUser(User user) {
+        return userDAO.deleteUser(user);
     }
 
     public Map<UUID, User> getAllEventCoordinators(){

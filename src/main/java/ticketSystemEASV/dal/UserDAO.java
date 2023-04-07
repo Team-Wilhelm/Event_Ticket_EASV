@@ -99,14 +99,17 @@ public class UserDAO implements IUserDAO {
         return message;
     }
 
-    public void deleteUser(User user) {
+    public String deleteUser(User user) {
         String sql = "UPDATE [User] SET deleted=1 WHERE id=?;";
+        String message = "";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, user.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            message = e.getMessage();
         }
+        return message;
     }
 
     public User getUserByEmail(String email) {

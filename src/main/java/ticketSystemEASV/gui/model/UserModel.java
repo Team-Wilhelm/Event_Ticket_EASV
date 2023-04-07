@@ -69,10 +69,11 @@ public class UserModel implements Model {
     }
 
     @Override
-    public void delete(Object objectToDelete) {
+    public String delete(Object objectToDelete) {
         User user = (User) objectToDelete;
-        userManager.deleteUser(user);
+        String message = userManager.deleteUser(user);
         getAllEventCoordinatorsFromManager(new CountDownLatch(0));
+        return message;
     }
 
     public Map<UUID, User> getAllEventCoordinators() {

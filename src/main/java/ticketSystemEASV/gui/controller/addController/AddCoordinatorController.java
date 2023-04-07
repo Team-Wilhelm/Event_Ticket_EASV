@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
+import ticketSystemEASV.gui.tasks.DeleteTask;
 import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
 import javafx.fxml.FXML;
@@ -34,8 +36,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
@@ -50,7 +50,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private int IMAGE_SIZE;
     private User coordinatorToEdit;
     private ImageView imgViewProfilePicture;
-    private SaveTask saveTask;
+    private Task task;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -113,11 +113,9 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             User user = new User(coordinatorName, username, password[0], role, finalProfilePicture);
             if (isEditing) user.setId(coordinatorToEdit.getId());
 
-            saveTask = new SaveTask(user, isEditing, userModel);
-            setUpTask(saveTask, actionEvent, manageCoordinatorsController);
-            ExecutorService executorService = Executors.newFixedThreadPool(1);
-            executorService.execute(saveTask);
-            shutdownExecutorService(executorService);
+            task = new SaveTask(user, isEditing, userModel);
+            setUpSaveTask(task, actionEvent, manageCoordinatorsController);
+            executeTask(task);
         }
     }
 
@@ -126,8 +124,9 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this coordinator?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                manageCoordinatorsController.deleteCard(coordinatorToEdit);
-                userModel.delete(coordinatorToEdit);
+                task = new DeleteTask(coordinatorToEdit, userModel);
+                setUpDeleteTask(task, actionEvent, manageCoordinatorsController);
+                executeTask(task);
             }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();

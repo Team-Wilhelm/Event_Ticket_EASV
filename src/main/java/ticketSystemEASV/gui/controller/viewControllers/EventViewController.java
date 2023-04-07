@@ -2,6 +2,7 @@ package ticketSystemEASV.gui.controller.viewControllers;
 
 import io.github.palexdev.materialfx.controls.*;
 import javafx.beans.binding.Bindings;
+import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
@@ -22,6 +23,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import ticketSystemEASV.gui.tasks.SaveTask;
+import ticketSystemEASV.gui.tasks.TaskState;
 
 import java.io.IOException;
 import java.net.URL;
@@ -133,8 +135,8 @@ public class EventViewController extends MotherController implements Initializab
     }
 
     @Override
-    public void bindSpinnerToTask(SaveTask saveTask) {
-        progressSpinner.progressProperty().bind(saveTask.progressProperty());
+    public void bindSpinnerToTask(Task task) {
+        progressSpinner.progressProperty().bind(task.progressProperty());
     }
 
     @Override

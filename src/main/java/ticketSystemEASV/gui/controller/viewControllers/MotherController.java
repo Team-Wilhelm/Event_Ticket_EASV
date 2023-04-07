@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.controller.viewControllers;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -30,7 +31,7 @@ public abstract class MotherController {
 
     public abstract void setProgressSpinnerVisibility(boolean isVisible);
 
-    public abstract void bindSpinnerToTask(SaveTask constructCoordinatorCardTask);
+    public abstract void bindSpinnerToTask(Task task);
 
     public abstract void unbindSpinnerFromTask();
 
