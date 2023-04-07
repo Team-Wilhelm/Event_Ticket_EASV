@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
-<BorderPane minHeight="400.0" minWidth="600.0"
-            prefHeight="600.0" prefWidth="900.0"
-            stylesheets="/css/style.css"
-            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.LoginViewController">
+<BorderPane minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.LoginViewController">
    <center>
       <HBox>
          <children>
@@ -22,7 +19,7 @@
                            <children>
                               <MFXTextField fx:id="emailInput" floatingText="Email" prefHeight="40.0" prefWidth="200.0" />
                               <MFXPasswordField fx:id="passwordInput" floatingText="Password" prefHeight="40.0" prefWidth="200.0" />
-                              <MFXButton prefWidth="200.0" onAction="#loginUser"/>
+                              <MFXButton onAction="#loginUser" prefWidth="200.0" text="Log In" />
                            </children></VBox>
                      </children>
                   </HBox>

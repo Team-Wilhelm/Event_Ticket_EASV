@@ -8,6 +8,7 @@ import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.viewControllers.MotherController;
+import ticketSystemEASV.gui.model.UserModel;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -157,5 +158,10 @@ public class EventViewController extends MotherController implements Initializab
     public void setFilteredEvents(List<Event> searchEvents) {
         eventCards.clear();
         eventCards.addAll(searchEvents.stream().map(EventCard::new).toList());
+    }
+
+    public void showMyEvents(List<Event> eventsToDisplay) {
+        eventCards.clear();
+        eventCards.addAll(eventsToDisplay.stream().map(EventCard::new).toList());
     }
 }
