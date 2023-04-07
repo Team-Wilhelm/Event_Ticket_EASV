@@ -6,6 +6,8 @@ import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.tasks.SaveTask;
 
+import java.util.concurrent.ExecutorService;
+
 public abstract class AddObjectController {
     protected void setUpTask(SaveTask saveTask, ActionEvent actionEvent, MotherController controller){
 
@@ -25,8 +27,10 @@ public abstract class AddObjectController {
             controller.unbindSpinnerFromTask();
             if (saveTask.getValue() == SaveTask.TaskState.CHOSEN_NAME_ALREADY_EXISTS) {
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();
-            } else if (saveTask.getValue() == SaveTask.TaskState.SAVED) {
+            } else if (saveTask.getValue() == SaveTask.TaskState.SAVED && saveTask.isEditing()) {
                 controller.refreshLastFocusedCard();
+            } else if (saveTask.getValue() == SaveTask.TaskState.SAVED) {
+                controller.refreshItems();
             } else {
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
             }
@@ -34,4 +38,17 @@ public abstract class AddObjectController {
     }
 
     protected abstract void setIsEditing(Object objectToEdit);
+
+    /**
+     * Try to softly shut down the executor service, if it fails, force shutdown
+     */
+    protected void shutdownExecutorService(ExecutorService executorService){
+        try {
+            executorService.shutdown();
+        } finally {
+            if (!executorService.isShutdown()) {
+                executorService.shutdownNow();
+            }
+        }
+    }
 }

@@ -119,17 +119,9 @@ public class AddEventController extends AddObjectController implements Initializ
 
             saveTask = new SaveTask(event, isEditing, eventModel);
             setUpTask(saveTask, actionEvent, eventViewController);
-
             ExecutorService executorService = Executors.newFixedThreadPool(1);
             executorService.execute(saveTask);
-
-            // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
-            try {
-                executorService.shutdown();
-            } finally {
-                if (!executorService.isShutdown())
-                    executorService.shutdownNow();
-            }
+            shutdownExecutorService(executorService);
         }
     }
 

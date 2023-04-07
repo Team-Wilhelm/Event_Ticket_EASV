@@ -119,3 +119,7 @@
     -fx-border-color: derive(-fx-red, 60%);
     -fx-border-radius: 3;
 }
+
+.menuButtons {
+    -fx-border-color: transparent;
+}

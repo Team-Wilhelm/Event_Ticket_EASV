@@ -6,7 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
+import ticketSystemEASV.gui.controller.addController.AddObjectController;
 import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -19,19 +22,21 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class RootController implements Initializable {
     @FXML
     private GridPane gridPane;
     @FXML
-    private Button btnManageCoordinators;
+    private Button btnManageCoordinators, btnEvents, btnMyProfile;
+    @FXML
+    private ImageView imgManageCoordinators, imgEvents, imgLogo, imgMyProfile;
     private final TicketModel ticketModel;
     private UserModel userModel;
     private final EventModel eventModel;
-    private Node eventsScene, coordinatorsScene;
+    private Node eventsScene, coordinatorsScene, myProfileScene, currentScene;
     private EventViewController eventViewController;
     private ManageCoordinatorsController manageCoordinatorsController;
+    private AddCoordinatorController addCoordinatorController;
 
     public RootController() {
         Callable<TicketModel> ticketModelCallable = TicketModel::new;
@@ -66,10 +71,29 @@ public class RootController implements Initializable {
             coordinatorsScene = coordinatorsLoader.load();
             manageCoordinatorsController = coordinatorsLoader.getController();
 
-            gridPane.add(eventsScene, 1, 0);
+            FXMLLoader myProfileLoader = new FXMLLoader(getClass().getResource("/views/add...views/AddCoordinatorView.fxml"));
+            myProfileScene = myProfileLoader.load();
+            addCoordinatorController = myProfileLoader.getController();
+            myProfileScene.lookup("#btnGoBack").setVisible(false);
+
+            currentScene = eventsScene;
+            gridPane.add(currentScene, 1, 0, 1,gridPane.getRowCount());
+            setUpMenuButtons();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setUpMenuButtons() {
+        btnManageCoordinators.setText("");
+        btnEvents.setText("");
+        btnMyProfile.setText("");
+
+        gridPane.getRowConstraints().get(2).prefHeightProperty().bind(btnEvents.heightProperty().add(10));
+        gridPane.getRowConstraints().get(3).prefHeightProperty().bind(btnManageCoordinators.heightProperty().add(10));
+        gridPane.getRowConstraints().get(5).prefHeightProperty().bind(btnMyProfile.heightProperty().add(10));
+
+        //TODO size bindings
     }
 
     public void manageCoordinatorsAction(ActionEvent actionEvent) throws IOException {
@@ -81,14 +105,15 @@ public class RootController implements Initializable {
     }
 
     private void switchView(Node scene) {
-        if (scene == eventsScene && !gridPane.getChildren().contains(eventsScene)){
-            gridPane.getChildren().remove(coordinatorsScene);
-            gridPane.add(eventsScene, 1, 0);
+        gridPane.getChildren().remove(currentScene);
+        if (scene == eventsScene && currentScene != eventsScene) {
+            currentScene = eventsScene;
+        } else if (scene == coordinatorsScene && currentScene != coordinatorsScene) {
+            currentScene = coordinatorsScene;
+        } else if (scene == myProfileScene && currentScene != myProfileScene) {
+           currentScene = myProfileScene;
         }
-        else if (scene == coordinatorsScene && !gridPane.getChildren().contains(coordinatorsScene)){
-            gridPane.getChildren().remove(eventsScene);
-            gridPane.add(coordinatorsScene, 1, 0);
-        }
+        gridPane.add(currentScene, 1, 0, 1, gridPane.getRowCount());
     }
 
     public void setUserModel(UserModel userModel) {
@@ -97,5 +122,12 @@ public class RootController implements Initializable {
         if (userModel.isAdmin())
             manageCoordinatorsController.setModels(userModel);
         else btnManageCoordinators.setVisible(false);
+
+        addCoordinatorController.setModel(userModel);
+        addCoordinatorController.setIsEditing(userModel.getLoggedInUser());
+    }
+
+    public void myProfileAction(ActionEvent actionEvent) {
+        switchView(myProfileScene);
     }
 }

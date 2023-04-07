@@ -31,6 +31,8 @@ public class SaveTask extends Task<SaveTask.TaskState> {
             else
                 message = model.add(objectToSave, latch);
 
+            System.out.println(message);
+
             if (message.isEmpty())
                 return TaskState.SAVED;
             else if (message.contains("Violation of UNIQUE KEY constraint"))
@@ -38,5 +40,9 @@ public class SaveTask extends Task<SaveTask.TaskState> {
             else
                 return TaskState.NOT_SAVED;
         }
+    }
+
+    public boolean isEditing() {
+        return isEditing;
     }
 }

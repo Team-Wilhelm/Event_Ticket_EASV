@@ -27,9 +27,9 @@
       <RowConstraints maxHeight="30.0" minHeight="10.0" percentHeight="10.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Button mnemonicParsing="false" onAction="#cancelAction" styleClass="backButton" GridPane.halignment="LEFT">
+      <Button fx:id="btnGoBack" mnemonicParsing="false" onAction="#cancelAction" styleClass="backButton" GridPane.halignment="LEFT">
          <graphic>
-            <ImageView fx:id="btnGoBack" fitHeight="25.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgGoBack" fitHeight="25.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../images/icons/arrow-left.png" />
                </image>

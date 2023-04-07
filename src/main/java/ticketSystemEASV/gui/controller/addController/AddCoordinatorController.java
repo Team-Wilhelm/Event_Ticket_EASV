@@ -46,7 +46,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private GridPane gridPane;
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
-    private boolean isEditing = false;
+    private boolean isEditing;
     private int IMAGE_SIZE;
     private User coordinatorToEdit;
     private ImageView imgViewProfilePicture;
@@ -54,6 +54,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        isEditing = false;
         setUpProfilePicture();
     }
 
@@ -116,15 +117,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             setUpTask(saveTask, actionEvent, manageCoordinatorsController);
             ExecutorService executorService = Executors.newFixedThreadPool(1);
             executorService.execute(saveTask);
-
-            // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
-            try {
-                executorService.shutdown();
-            } finally {
-                if (!executorService.isTerminated()) {
-                    executorService.shutdownNow();
-                }
-            }
+            shutdownExecutorService(executorService);
         }
     }
 

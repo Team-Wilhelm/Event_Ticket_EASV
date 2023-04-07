@@ -86,10 +86,9 @@ public class ManageCoordinatorsController extends MotherController implements In
     @Override
     public void refreshItems() {
         coordinatorCards.clear();
-        HashMap<User, CoordinatorCard> loadedCards = userModel.getLoadedCoordinatorCards();
-        HashMap<UUID, User> coordinators = (HashMap<UUID, User>) userModel.getAllEventCoordinators();
 
-        for (User user : coordinators.values()) {
+        HashMap<User, CoordinatorCard> loadedCards = userModel.getLoadedCoordinatorCards();
+        for (User user : userModel.getAllEventCoordinators().values()) {
 
             CoordinatorCard coordinatorCard = loadedCards.get(user);
             if (loadedCards.get(user) == null || lastFocusedCoordinator == coordinatorCard) {
