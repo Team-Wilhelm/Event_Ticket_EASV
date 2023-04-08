@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class AddObjectController {
-    protected void setUpSaveTask(Task saveTask, ActionEvent actionEvent, MotherController controller){
+    protected void setUpSaveTask(Task<TaskState> saveTask, ActionEvent actionEvent, MotherController controller){
 
         saveTask.setOnRunning(event -> {
             controller.bindSpinnerToTask(saveTask);
@@ -40,7 +40,7 @@ public abstract class AddObjectController {
         });
     }
 
-    protected void setUpDeleteTask(Task deleteTask, ActionEvent actionEvent, MotherController controller){
+    protected void setUpDeleteTask(Task<TaskState> deleteTask, ActionEvent actionEvent, MotherController controller){
         deleteTask.setOnRunning(event -> {
             controller.bindSpinnerToTask(deleteTask);
             controller.setProgressSpinnerVisibility(true);
@@ -68,7 +68,7 @@ public abstract class AddObjectController {
     /**
      * Try to softly shut down the executor service, if it fails, force shutdown
      */
-    protected void shutdownExecutorService(ExecutorService executorService){
+    private void shutdownExecutorService(ExecutorService executorService){
         try {
             executorService.shutdown();
         } finally {
@@ -78,7 +78,7 @@ public abstract class AddObjectController {
         }
     }
 
-    protected void executeTask(Task task){
+    protected void executeTask(Task<TaskState> task){
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(task);
         shutdownExecutorService(executorService);

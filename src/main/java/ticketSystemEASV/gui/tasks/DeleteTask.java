@@ -1,17 +1,15 @@
 package ticketSystemEASV.gui.tasks;
 
 import javafx.concurrent.Task;
-import ticketSystemEASV.gui.model.Model;
-
-import java.util.concurrent.CountDownLatch;
+import ticketSystemEASV.gui.model.IModel;
 
 public class DeleteTask extends Task<TaskState> {
     protected final Object objectToDelete;
-    protected final Model model;
+    protected final IModel IModel;
 
-    public DeleteTask(Object objectToDelete, Model model) {
+    public DeleteTask(Object objectToDelete, IModel IModel) {
         this.objectToDelete = objectToDelete;
-        this.model = model;
+        this.IModel = IModel;
     }
 
     @Override
@@ -21,7 +19,7 @@ public class DeleteTask extends Task<TaskState> {
             return TaskState.NOT_SUCCESSFUL;
         }
         else {
-            String message = model.delete(objectToDelete);
+            String message = IModel.delete(objectToDelete);
 
             if (message.isEmpty())
                 return TaskState.SUCCESSFUL;

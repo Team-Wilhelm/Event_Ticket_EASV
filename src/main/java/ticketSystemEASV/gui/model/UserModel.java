@@ -9,7 +9,7 @@ import ticketSystemEASV.gui.tasks.ConstructCoordinatorCardTask;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class UserModel implements Model {
+public class UserModel extends Model {
     private final UserManager userManager = new UserManager();
     private static User loggedInUser;
     private HashMap<UUID, User> allUsers = new HashMap<>();
@@ -105,14 +105,7 @@ public class UserModel implements Model {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-
-        // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
-        try {
-            executorService.shutdown();
-        } finally {
-            if (!executorService.isShutdown())
-                executorService.shutdownNow();
-        }
+        shutdownExecutorService(executorService);
     }
 
     public User getUser(UUID userID) {

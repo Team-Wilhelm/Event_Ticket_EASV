@@ -8,7 +8,6 @@ import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
-import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -22,8 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
-import ticketSystemEASV.gui.tasks.SaveTask;
-import ticketSystemEASV.gui.tasks.TaskState;
 
 import java.io.IOException;
 import java.net.URL;

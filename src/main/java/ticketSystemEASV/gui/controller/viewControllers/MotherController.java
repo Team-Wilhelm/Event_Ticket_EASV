@@ -7,8 +7,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
-import ticketSystemEASV.gui.model.Model;
-import ticketSystemEASV.gui.tasks.SaveTask;
 
 import java.io.IOException;
 import java.util.Objects;

@@ -18,8 +18,6 @@ import javafx.fxml.Initializable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static javafx.scene.input.KeyCode.ENTER;
 
@@ -53,7 +51,6 @@ public class LoginViewController implements Initializable {
 
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));
-            System.out.println("Time to log in: " + (System.currentTimeMillis() - timeMilis));
             stage.show();
         }
         else

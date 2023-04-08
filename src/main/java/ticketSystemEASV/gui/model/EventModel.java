@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class EventModel implements Model {
+public class EventModel extends Model {
     private final EventManager eventManager = new EventManager();
     private HashMap<Integer, Event> allEvents = new HashMap<>();
-    private HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
+    private final HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
 
     public EventModel() {
         getAllEventsFromManager();
@@ -72,13 +72,7 @@ public class EventModel implements Model {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        try {
-            executorService.shutdown();
-        }
-        finally {
-            if (!executorService.isShutdown())
-                executorService.shutdown();
-        }
+        shutdownExecutorService(executorService);
     }
 
     public Event getEvent(int id) {

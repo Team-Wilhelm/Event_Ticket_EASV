@@ -187,8 +187,6 @@ public class UserDAO implements IUserDAO {
                 User u = constructEventCoordinator(resultSet);
                 eventCoordinators.put(u.getId(), u);
             }
-
-            System.out.println("Time to get all event coordinators: " + (System.currentTimeMillis() - startTime) + "ms");
             return eventCoordinators;
         } catch (SQLException e) {
             e.printStackTrace();
