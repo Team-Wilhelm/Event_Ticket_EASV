@@ -13,11 +13,8 @@ public class EventDAO {
     private final DBConnection dbConnection = new DBConnection();
 
     public String addEvent(Event event) {
-        UserDAO userDAO = new UserDAO();
-        User loggedInUser = userDAO.getUserByEmail("admin");
+        User loggedInUser = UserModel.getLoggedInUser();
         String message="";
-        //TODO unique Event names?
-        //TODO be able to add multiple coordinators for one event (fucking pain in the ass, i think, respectfully)
         String sql = "DECLARE @EventID int;" +
                 "INSERT INTO Event (startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance) " +
                 "VALUES (?,?,?,?,?,?,?,?) " +

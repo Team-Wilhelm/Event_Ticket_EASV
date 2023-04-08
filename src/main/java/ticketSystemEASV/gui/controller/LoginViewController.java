@@ -43,13 +43,6 @@ public class LoginViewController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        /*try {
-            executorService.shutdown();
-        } finally {
-            if (!executorService.isShutdown()) {
-                executorService.shutdownNow();
-            }
-        }*/
     }
 
     public void loginUser(Event event) throws IOException {

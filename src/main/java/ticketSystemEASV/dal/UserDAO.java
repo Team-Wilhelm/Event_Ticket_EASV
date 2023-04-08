@@ -12,12 +12,19 @@ import java.util.*;
 
 public class UserDAO implements IUserDAO {
     //TODO caching
-    private DBConnection dbConnection = new DBConnection();
-    private EventDAO eventDAO = new EventDAO();
-    private UserBuilder userBuilder = new UserBuilder();
-    private RoleDAO roleDAO = new RoleDAO();
-    private Map<UUID, User> users = refreshUsers();
-    private Map<UUID, Role> roles = roleDAO.getAllRoles();
+    private DBConnection dbConnection;
+    private EventDAO eventDAO;
+    private UserBuilder userBuilder;
+    private RoleDAO roleDAO;
+    private Map<String, Role> roles;
+
+    public UserDAO() {
+        dbConnection = new DBConnection();
+        roleDAO = new RoleDAO();
+        roles = roleDAO.getAllRoles();
+        userBuilder = new UserBuilder();
+        eventDAO = new EventDAO();
+    }
 
     public User getUser(UUID userID) {
         String sql = "SELECT * FROM [User] " +
@@ -27,8 +34,13 @@ public class UserDAO implements IUserDAO {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, userID.toString());
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return constructEventCoordinator(resultSet);
+            while (resultSet.next()) {
+                User user = constructEventCoordinator(resultSet);
+                if (Objects.equals(resultSet.getString("RoleName"), "Admin")) {
+                    user.setRole(roles.get("Admin"));
+                    break;
+                }
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,7 +49,7 @@ public class UserDAO implements IUserDAO {
     }
 
     public boolean isInRole(UUID userID, String role) {
-        String sql = "SELECT * FROM UserRole\n" +
+        String sql = "SELECT * FROM UserRole " +
                 "JOIN Role ON UserRole.RoleId = Role.Id\n" +
                 "WHERE UserId=? AND Role.RoleName=?";
 
@@ -114,7 +126,11 @@ public class UserDAO implements IUserDAO {
     }
 
     public User getUserByEmail(String email) {
-        String sql = "SELECT * FROM [User] RIGHT JOIN UserRole ON [User].Id = UserRole.UserId WHERE UserName=?;";
+
+        String sql = "SELECT * FROM [User] " +
+                "RIGHT JOIN UserRole ON [User].Id = UserRole.UserId " +
+                "LEFT JOIN Role R2 on R2.Id = UserRole.RoleId " +
+                "WHERE UserName=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, email);
             statement.execute();
@@ -146,20 +162,32 @@ public class UserDAO implements IUserDAO {
     }
 
     // Event coordinators
-    public HashMap<UUID, User> refreshUsers() {
-        users = new HashMap<>();
+    public HashMap<UUID, User> getAllEventCoordinators() {
         long startTime = System.currentTimeMillis();
         HashMap<UUID, User> eventCoordinators = new HashMap<>();
         String sql = "SELECT * FROM [User] " +
                 "JOIN UserRole ON [User].ID = UserRole.UserID " +
                 "JOIN [Role] ON UserRole.RoleID = Role.ID " +
-                "WHERE [User].deleted=0 AND Role.RoleName='EventCoordinator';";
+                "WHERE [User].deleted=0;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
+                if (eventCoordinators.containsKey(UUID.fromString(resultSet.getString("Id")))) {
+                    if (eventCoordinators.get(UUID.fromString(resultSet.getString("Id"))).getRole() == roles.get("EventCoordinator")
+                            && Objects.equals(resultSet.getString("RoleName"), "Admin")) {
+                        eventCoordinators.get(UUID.fromString(resultSet.getString("Id"))).setRole(roles.get("Admin"));
+                    }
+                    if (eventCoordinators.get(UUID.fromString(resultSet.getString("Id"))).getRole() == roles.get("Admin")
+                            && Objects.equals(resultSet.getString("RoleName"), "EventCoordinator")) {
+                        eventCoordinators.get(UUID.fromString(resultSet.getString("Id"))).setRole(roles.get("Admin"));
+                    }
+                    continue;
+                }
+
                 User u = constructEventCoordinator(resultSet);
                 eventCoordinators.put(u.getId(), u);
             }
+
             System.out.println("Time to get all event coordinators: " + (System.currentTimeMillis() - startTime) + "ms");
             return eventCoordinators;
         } catch (SQLException e) {
@@ -202,19 +230,13 @@ public class UserDAO implements IUserDAO {
                 .setUsername( resultSet.getString("UserName"))
                 .setPassword(resultSet.getString("Password"))
                 .setProfilePicture(resultSet.getBytes("profilePicture"))
-                .setRole(roles.get(UUID.fromString(resultSet.getString("RoleID"))))
+                .setRole(roles.get(resultSet.getString("RoleName")))
                 .build();
-        System.out.println(user.getRole().getName());
-        //TODO roles are not being set correctly
         getEventsAssignedToEventCoordinator(user);
         return user;
     }
 
-    public Map<UUID, Role> getAllRoles() {
+    public Map<String , Role> getAllRoles() {
         return roles;
-    }
-
-    public Map<UUID, User> getAllEventCoordinators() {
-        return users;
     }
 }

@@ -6,10 +6,11 @@ import ticketSystemEASV.dal.RoleDAO;
 import ticketSystemEASV.dal.UserDAO;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class UserManager {
     private final UserDAO userDAO = new UserDAO();
-    private final RoleDAO roleDAO = new RoleDAO();
 
     public boolean logIn(String name, String password) {
         return userDAO.logIn(name, password);
@@ -25,10 +26,6 @@ public class UserManager {
 
     public User getUser(UUID userID) {
         return userDAO.getUser(userID);
-    }
-
-    public User getUserByEmail(String email) {
-        return userDAO.getUserByEmail(email);
     }
 
     public List<User> searchUsers(String query) {
@@ -47,7 +44,7 @@ public class UserManager {
         return userDAO.getAllEventCoordinators();
     }
 
-    public Map<UUID, Role> getAllRoles() {
+    public Map<String , Role> getAllRoles() {
         return userDAO.getAllRoles();
     }
 }

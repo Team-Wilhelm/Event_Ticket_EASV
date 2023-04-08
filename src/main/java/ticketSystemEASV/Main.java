@@ -30,9 +30,8 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        //TODO loading screen ?
         //StartUp.configure();
-        UserDAO userDAO = new UserDAO();
-        System.out.println(userDAO.getUserByEmail("admin").getRole().getName());
         launch(args);
     }
 }

@@ -111,6 +111,7 @@ public class AddEventController extends AddObjectController implements Initializ
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
         }
         else {
+            //TODO Unique event name check
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
 
             Event event = new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance);

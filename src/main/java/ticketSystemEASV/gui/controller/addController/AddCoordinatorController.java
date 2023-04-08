@@ -104,8 +104,8 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         } else {
             source.getWindow().hide();
 
-            //TODO improve role handling
-            Role role = userModel.getAllRoles().values().stream().filter(r -> r.getName().equals("EventCoordinator")).findFirst().get();
+            //TODO Unique username check
+            Role role = userModel.getAllRoles().get("EventCoordinator");
             byte[] finalProfilePicture = getProfilePictureAsBytes();
 
             if (password[0].isEmpty())

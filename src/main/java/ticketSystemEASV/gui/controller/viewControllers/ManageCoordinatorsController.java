@@ -18,16 +18,13 @@ import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
-import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.model.UserModel;
-import ticketSystemEASV.gui.tasks.SaveTask;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class ManageCoordinatorsController extends MotherController implements Initializable {
     @FXML
@@ -89,7 +86,7 @@ public class ManageCoordinatorsController extends MotherController implements In
         coordinatorCards.clear();
 
         HashMap<User, CoordinatorCard> loadedCards = userModel.getLoadedCoordinatorCards();
-        for (User user : userModel.getAllEventCoordinators().values()) {
+        for (User user : userModel.getAllUsers().values()) {
 
             CoordinatorCard coordinatorCard = loadedCards.get(user);
             if (loadedCards.get(user) == null || lastFocusedCoordinator == coordinatorCard) {
