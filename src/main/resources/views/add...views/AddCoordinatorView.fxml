@@ -38,7 +38,7 @@
       </Button>
       <MFXTextField fx:id="txtCoordinatorName" floatMode="BORDER" floatingText="Coordinator name" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2" />
       <MFXTextField fx:id="txtUsername" floatMode="BORDER" floatingText="Username" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
-      <MFXTextField fx:id="txtPassword" floatMode="BORDER" floatingText="Password (optional)" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
+      <MFXTextField fx:id="txtPassword" floatMode="BORDER" floatingText="Password" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
       <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#generatePassword" text="Generate password" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
       <HBox alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>

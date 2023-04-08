@@ -4,6 +4,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
@@ -13,7 +14,8 @@
 <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="75.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -29,21 +31,26 @@
                </padding></FlowPane>
          </content>
       </ScrollPane>
-      <MFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCoordinatorAction" text="+ Add coordinator" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <MFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCoordinatorAction" text="+ Add coordinator" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="15.0" right="15.0" />
          </GridPane.margin>
       </MFXButton>
-       <MFXTextField fx:id="searchBar" floatingText="Search for coordinators..." maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
+       <MFXTextField fx:id="searchBar" floatingText="Search for coordinators..." maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2">
            <GridPane.margin>
                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
            </GridPane.margin>
        </MFXTextField>
-      <MFXProgressSpinner fx:id="progressSpinner" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+      <MFXProgressSpinner fx:id="progressSpinner" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="15.0" right="15.0" />
          </GridPane.margin>
       </MFXProgressSpinner>
+      <Label text="Label" fx:id="progressLabel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="15.0" right="15.0" />
+         </GridPane.margin>
+      </Label>
    </children>
    <padding>
       <Insets bottom="10.0" top="10.0" />

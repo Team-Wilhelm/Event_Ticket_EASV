@@ -31,8 +31,6 @@ public class SaveTask extends Task<TaskState> {
             else
                 message = IModel.add(objectToSave, latch);
 
-            System.out.println("Message: " + message);
-
             if (message.isEmpty()) {
                 updateMessage("Saved successfully");
                 return TaskState.SUCCESSFUL;

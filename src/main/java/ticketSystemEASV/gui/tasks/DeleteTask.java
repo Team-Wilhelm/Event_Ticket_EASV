@@ -15,16 +15,21 @@ public class DeleteTask extends Task<TaskState> {
     @Override
     protected TaskState call() {
         if (isCancelled()) {
-            updateMessage("User was not deleted");
+            updateMessage("Deleting cancelled");
             return TaskState.NOT_SUCCESSFUL;
         }
         else {
+            updateMessage("Deleting...");
             String message = IModel.delete(objectToDelete);
 
-            if (message.isEmpty())
+            if (message.isEmpty()) {
+                updateMessage("Deleted successfully");
                 return TaskState.SUCCESSFUL;
-            else
+            }
+            else {
+                updateMessage("Deleting was not successful");
                 return TaskState.NOT_SUCCESSFUL;
+            }
         }
     }
 }

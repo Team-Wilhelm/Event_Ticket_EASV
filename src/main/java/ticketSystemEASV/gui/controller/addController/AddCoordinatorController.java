@@ -142,6 +142,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         txtUsername.setText(coordinator.getUsername());
         imgViewProfilePicture.setImage(CropImageToCircle.getRoundedImage(
                 new Image(new ByteArrayInputStream(coordinator.getProfilePicture()), IMAGE_SIZE, IMAGE_SIZE, true, true), IMAGE_SIZE/2));
+        txtPassword.setPromptText("Leave blank to keep current password");
     }
 
     public void setModel(UserModel userModel) {

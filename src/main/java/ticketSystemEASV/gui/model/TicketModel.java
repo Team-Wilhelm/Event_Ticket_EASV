@@ -27,7 +27,6 @@ public class TicketModel extends Model {
             shutdownExecutorService(executorService);
         }
         getTicketsFromManager(new CountDownLatch(0));
-        System.out.println(allTickets.size());
     }
 
 

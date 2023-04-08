@@ -4,6 +4,7 @@ import io.github.palexdev.materialfx.controls.*;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
@@ -39,6 +40,8 @@ public class EventViewController extends MotherController implements Initializab
     private MFXTextField searchBar;
     @FXML
     private MFXProgressSpinner progressSpinner;
+    @FXML
+    private Label progressLabel;
     private final ObservableList<EventCard> eventCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private TicketModel ticketModel;
@@ -58,6 +61,7 @@ public class EventViewController extends MotherController implements Initializab
         eventFlowPane.prefWidthProperty().bind(eventScrollPane.widthProperty());
 
         progressSpinner.setVisible(false);
+        progressLabel.setVisible(false);
 
        /* Platform.runLater(() -> {
             MFXDatePicker datePicker = new MFXDatePicker();
@@ -129,16 +133,23 @@ public class EventViewController extends MotherController implements Initializab
     @Override
     public void setProgressSpinnerVisibility(boolean isVisible) {
         progressSpinner.setVisible(isVisible);
+        progressLabel.setVisible(isVisible);
     }
 
     @Override
     public void bindSpinnerToTask(Task task) {
         progressSpinner.progressProperty().bind(task.progressProperty());
+        progressLabel.textProperty().bind(task.messageProperty());
     }
 
     @Override
     public void unbindSpinnerFromTask() {
         progressSpinner.progressProperty().unbind();
+        progressSpinner.progressProperty().set(100);
+    }
+
+    public void unbindLabelFromTask() {
+        progressLabel.textProperty().unbind();
     }
 
     @Override

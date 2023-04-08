@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
@@ -35,6 +36,8 @@ public class ManageCoordinatorsController extends MotherController implements In
     private MFXTextField searchBar;
     @FXML
     private MFXProgressSpinner progressSpinner;
+    @FXML
+    private Label progressLabel;
     private final ObservableList<CoordinatorCard> coordinatorCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private UserModel userModel;
@@ -51,6 +54,7 @@ public class ManageCoordinatorsController extends MotherController implements In
         flowPane.prefWidthProperty().bind(coordinatorScrollPane.widthProperty());
 
         progressSpinner.setVisible(false);
+        progressLabel.setVisible(false);
     }
 
     private void setFilteredUsers(List<User> searchUsers) {
@@ -130,13 +134,20 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void setProgressSpinnerVisibility(boolean isVisible) {
         progressSpinner.setVisible(isVisible);
+        progressLabel.setVisible(isVisible);
     }
 
     public void bindSpinnerToTask(Task task) {
         progressSpinner.progressProperty().bind(task.progressProperty());
+        progressLabel.textProperty().bind(task.messageProperty());
     }
 
     public void unbindSpinnerFromTask() {
         progressSpinner.progressProperty().unbind();
+        progressSpinner.progressProperty().set(100);
+    }
+
+    public void unbindLabelFromTask() {
+        progressLabel.textProperty().unbind();
     }
 }

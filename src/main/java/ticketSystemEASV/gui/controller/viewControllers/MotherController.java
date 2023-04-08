@@ -34,4 +34,5 @@ public abstract class MotherController {
     public abstract void unbindSpinnerFromTask();
 
     public abstract void refreshLastFocusedCard();
+    public abstract void unbindLabelFromTask();
 }
