@@ -5,11 +5,13 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
@@ -17,16 +19,13 @@ import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
-import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.model.UserModel;
-import ticketSystemEASV.gui.tasks.SaveTask;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class ManageCoordinatorsController extends MotherController implements Initializable {
     @FXML
@@ -37,6 +36,8 @@ public class ManageCoordinatorsController extends MotherController implements In
     private MFXTextField searchBar;
     @FXML
     private MFXProgressSpinner progressSpinner;
+    @FXML
+    private Label progressLabel;
     private final ObservableList<CoordinatorCard> coordinatorCards = FXCollections.observableArrayList();
     private final AlertManager alertManager = AlertManager.getInstance();
     private UserModel userModel;
@@ -53,6 +54,7 @@ public class ManageCoordinatorsController extends MotherController implements In
         flowPane.prefWidthProperty().bind(coordinatorScrollPane.widthProperty());
 
         progressSpinner.setVisible(false);
+        progressLabel.setVisible(false);
     }
 
     private void setFilteredUsers(List<User> searchUsers) {
@@ -88,7 +90,7 @@ public class ManageCoordinatorsController extends MotherController implements In
         coordinatorCards.clear();
 
         HashMap<User, CoordinatorCard> loadedCards = userModel.getLoadedCoordinatorCards();
-        for (User user : userModel.getAllEventCoordinators().values()) {
+        for (User user : userModel.getAllUsers().values()) {
 
             CoordinatorCard coordinatorCard = loadedCards.get(user);
             if (loadedCards.get(user) == null || lastFocusedCoordinator == coordinatorCard) {
@@ -132,13 +134,20 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void setProgressSpinnerVisibility(boolean isVisible) {
         progressSpinner.setVisible(isVisible);
+        progressLabel.setVisible(isVisible);
     }
 
-    public void bindSpinnerToTask(SaveTask saveTask) {
-        progressSpinner.progressProperty().bind(saveTask.progressProperty());
+    public void bindSpinnerToTask(Task task) {
+        progressSpinner.progressProperty().bind(task.progressProperty());
+        progressLabel.textProperty().bind(task.messageProperty());
     }
 
     public void unbindSpinnerFromTask() {
         progressSpinner.progressProperty().unbind();
+        progressSpinner.progressProperty().set(100);
+    }
+
+    public void unbindLabelFromTask() {
+        progressLabel.textProperty().unbind();
     }
 }

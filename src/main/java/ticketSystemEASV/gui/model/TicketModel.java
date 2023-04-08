@@ -4,14 +4,11 @@ import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.bll.TicketManager;
-import ticketSystemEASV.dal.EventDAO;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.*;
 
-public class TicketModel {
+public class TicketModel extends Model {
     private final TicketManager bll;;
     private List<Ticket> allTickets;
 
@@ -26,38 +23,66 @@ public class TicketModel {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not create TicketManager");
-        }
-
-        // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
-        try {
-            executorService.shutdown();
         } finally {
-            if (!executorService.isShutdown())
-                executorService.shutdownNow();
+            shutdownExecutorService(executorService);
         }
-        getTicketsFromManager();
+        getTicketsFromManager(new CountDownLatch(0));
     }
 
-    public void generateTicket(Event event, Customer customer) {
-        bll.addTicket(new Ticket(event, customer));
-        getTicketsFromManager();
+
+    @Override
+    public String add(Object objectToAdd, CountDownLatch latch) {
+        Ticket ticket = (Ticket) objectToAdd;
+        String message = bll.addTicket(ticket);
+        getTicketsFromManager(latch);
+        return message;
+    }
+
+    @Override
+    public String update(Object objectToUpdate, CountDownLatch latch) {
+        //TODO Perhaps to do
+        /*Ticket ticket = (Ticket) objectToUpdate;
+        String message = bll.update(ticket);
+        getTicketsFromManager(latch);
+        return message;*/
+        return null;
+    }
+
+    @Override
+    public String delete(Object objectToDelete) {
+        Ticket ticket = (Ticket) objectToDelete;
+        String message = bll.deleteTicket(ticket);
+        getTicketsFromManager(new CountDownLatch(0));
+        return message;
     }
 
     public List<Ticket> getAllTicketsForEvent(Event event) {
-        return allTickets;
+        return allTickets.stream().filter(ticket -> ticket.getEvent().getId() == event.getId()).toList();
     }
 
     public void openTicket(Ticket ticket) {
         bll.openTicket(ticket);
     }
 
-    public void getTicketsFromManager() {
+    public void getTicketsFromManager(CountDownLatch latch) {
         Callable<List<Ticket>> setAllTicketsRunnable = bll::getAllTickets;
-        try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
-            Future<List<Ticket>> future = executorService.submit(setAllTicketsRunnable);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        Future<List<Ticket>> future = executorService.submit(() -> {
+            List<Ticket> result = setAllTicketsRunnable.call();
+            latch.countDown();
+            return result;
+        });
+
+        try {
+            latch.await();
             allTickets = future.get();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            shutdownExecutorService(executorService);
         }
     }
 }

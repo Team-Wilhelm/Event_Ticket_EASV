@@ -25,6 +25,8 @@ public class LoginViewController implements Initializable {
     private final UserModel userModel = new UserModel();
     @FXML private MFXTextField emailInput;
     @FXML private MFXPasswordField passwordInput;
+    private Parent root;
+    private FXMLLoader fxmlLoader;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -32,20 +34,23 @@ public class LoginViewController implements Initializable {
         //TODO delete
         emailInput.setText("admin");
         passwordInput.setText("admin");
+
+        try {
+            fxmlLoader = new FXMLLoader(Main.class.getResource("/views/Root.fxml"));
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void loginUser(Event event) throws IOException {
         long timeMilis = System.currentTimeMillis();
         if(userModel.logIn(emailInput.getText(), passwordInput.getText())) {
             userModel.setLoggedInUser(userModel.getUserByEmail(emailInput.getText()));
-
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/views/Root.fxml"));
-            Parent root = fxmlLoader.load();
             ((RootController) fxmlLoader.getController()).setUserModel(userModel);
 
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));
-            System.out.println("Time to log in: " + (System.currentTimeMillis() - timeMilis));
             stage.show();
         }
         else

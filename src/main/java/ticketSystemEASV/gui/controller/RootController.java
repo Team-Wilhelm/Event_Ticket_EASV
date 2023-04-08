@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
-import ticketSystemEASV.gui.controller.addController.AddObjectController;
 import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -75,6 +74,7 @@ public class RootController implements Initializable {
             myProfileScene = myProfileLoader.load();
             addCoordinatorController = myProfileLoader.getController();
             myProfileScene.lookup("#btnGoBack").setVisible(false);
+            //TODO add log out option
 
             currentScene = eventsScene;
             gridPane.add(currentScene, 1, 0, 1,gridPane.getRowCount());

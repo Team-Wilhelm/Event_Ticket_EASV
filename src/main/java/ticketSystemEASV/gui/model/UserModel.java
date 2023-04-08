@@ -1,7 +1,5 @@
 package ticketSystemEASV.gui.model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
@@ -11,19 +9,19 @@ import ticketSystemEASV.gui.tasks.ConstructCoordinatorCardTask;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class UserModel implements Model {
+public class UserModel extends Model {
     private final UserManager userManager = new UserManager();
-    private User loggedInUser;
-    private HashMap<UUID, User> allEventCoordinators = new HashMap<>();
-    private final ObservableList<Role> allRoles = FXCollections.observableArrayList();
+    private static User loggedInUser;
+    private HashMap<UUID, User> allUsers = new HashMap<>();
+    private HashMap<String, Role> allRoles;
     private final HashMap<User, CoordinatorCard> loadedCoordinatorCards = new HashMap<>();
 
     public UserModel() {
-        allRoles.setAll(userManager.getAllRoles());
-        getAllEventCoordinatorsFromManager(new CountDownLatch(0));
+        allRoles = (HashMap<String , Role>) userManager.getAllRoles();
+        setAllEventCoordinatorsFromManager(new CountDownLatch(0));
 
         // Create a new task and construct the CoordinatorCards
-        ConstructCoordinatorCardTask task = new ConstructCoordinatorCardTask(List.copyOf(allEventCoordinators.values()), this);
+        ConstructCoordinatorCardTask task = new ConstructCoordinatorCardTask(List.copyOf(allUsers.values()), this);
 
         // Start the task
         try (ExecutorService executorService = Executors.newFixedThreadPool(1)) {
@@ -36,16 +34,16 @@ public class UserModel implements Model {
         return userManager.logIn(name, password);
     }
 
-    public User getLoggedInUser() {
+    public static User getLoggedInUser() {
         return loggedInUser;
     }
 
     public void setLoggedInUser(User loggedInUser) {
-        this.loggedInUser = loggedInUser;
+        UserModel.loggedInUser = loggedInUser;
     }
 
     public User getUserByEmail(String email) {
-        return userManager.getUserByEmail(email);
+        return allUsers.values().stream().filter(user -> user.getUsername().equals(email)).findFirst().orElse(null);
     }
 
     public List<User> searchUsers(String query) {
@@ -56,7 +54,7 @@ public class UserModel implements Model {
     public String add(Object objectToAdd, CountDownLatch latch) {
         User user = (User) objectToAdd;
         String message = userManager.signUp(user);
-        getAllEventCoordinatorsFromManager(latch);
+        setAllEventCoordinatorsFromManager(latch);
         return message;
     }
 
@@ -64,22 +62,23 @@ public class UserModel implements Model {
     public String update(Object objectToUpdate, CountDownLatch latch) {
         User user = (User) objectToUpdate;
         String message = userManager.updateUser(user);
-        getAllEventCoordinatorsFromManager(latch);
+        setAllEventCoordinatorsFromManager(latch);
         return message;
     }
 
     @Override
-    public void delete(Object objectToDelete) {
+    public String delete(Object objectToDelete) {
         User user = (User) objectToDelete;
-        userManager.deleteUser(user);
-        getAllEventCoordinatorsFromManager(new CountDownLatch(0));
+        String message = userManager.deleteUser(user);
+        setAllEventCoordinatorsFromManager(new CountDownLatch(0));
+        return message;
     }
 
-    public Map<UUID, User> getAllEventCoordinators() {
-        return allEventCoordinators;
+    public Map<UUID, User> getAllUsers() {
+        return allUsers;
     }
 
-    public List<Role> getAllRoles() {
+    public HashMap<String, Role> getAllRoles() {
         return allRoles;
     }
 
@@ -87,7 +86,7 @@ public class UserModel implements Model {
         return loadedCoordinatorCards;
     }
 
-    public void getAllEventCoordinatorsFromManager(CountDownLatch latch) {
+    public void setAllEventCoordinatorsFromManager(CountDownLatch latch) {
         Callable<HashMap<UUID, User>> setAllEventCoordinatorsRunnable = ()
                 -> (HashMap<UUID, User>) userManager.getAllEventCoordinators();
 
@@ -100,20 +99,13 @@ public class UserModel implements Model {
 
         try {
             latch.await();
-            allEventCoordinators = future.get();
+            allUsers = future.get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-
-        // Try to shut down the executor service, if it fails, throw a runtime exception and force shutdown
-        try {
-            executorService.shutdown();
-        } finally {
-            if (!executorService.isShutdown())
-                executorService.shutdownNow();
-        }
+        shutdownExecutorService(executorService);
     }
 
     public User getUser(UUID userID) {

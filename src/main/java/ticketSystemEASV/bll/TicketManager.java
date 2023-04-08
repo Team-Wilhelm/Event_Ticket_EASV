@@ -41,13 +41,13 @@ public class TicketManager {
         }
     }
 
-    public void addTicket(Ticket ticketToAdd) {
+    public String addTicket(Ticket ticketToAdd) {
         try {
             ticketToAdd.setTicketQR(ticketGenerator.generateQRCode(ticketToAdd, 150));
         } catch (WriterException e) {
             e.printStackTrace();
         }
-        ticketDAO.addTicket(ticketToAdd);
+        return ticketDAO.addTicket(ticketToAdd);
     }
 
     public void addMultipleTickets(List<Ticket> tickets, Customer customer) {
@@ -70,8 +70,8 @@ public class TicketManager {
         return ticketDAO.getAllTicketsForCustomer(customer);
     }
 
-    public void deleteTicket(Ticket ticketToDelete) {
-        ticketDAO.deleteTicket(ticketToDelete);
+    public String deleteTicket(Ticket ticketToDelete) {
+        return ticketDAO.deleteTicket(ticketToDelete);
     }
 
     public void addVoucher(Voucher voucherToAdd) {

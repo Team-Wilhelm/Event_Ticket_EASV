@@ -11,8 +11,9 @@ import java.util.UUID;
 public class TicketDAO {
     private final DBConnection dbConnection = new DBConnection();
 
-    public void addTicket(Ticket ticket){
+    public String addTicket(Ticket ticket){
         String SQL = "SELECT id FROM Customer WHERE CustomerName = ? AND email = ?";
+        String message = "";
         try (Connection connection = dbConnection.getConnection()) {
             PreparedStatement idStatement = connection.prepareStatement(SQL);
             idStatement.setString(1, ticket.getCustomer().getName());
@@ -46,7 +47,9 @@ public class TicketDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            message = "Could not add ticket to database";
         }
+        return message;
     }
 
     public void addMultipleTickets(List<Ticket> tickets, Customer customer){
@@ -67,14 +70,17 @@ public class TicketDAO {
         }
     }
 
-    public void deleteTicket(Ticket ticket){
+    public String deleteTicket(Ticket ticket){
         String sql = "DELETE FROM Ticket WHERE id=?;";
+        String message = "";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, ticket.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            message = "Could not delete ticket from database";
         }
+        return message;
     }
 
     public Ticket getTicket(UUID ticketId){

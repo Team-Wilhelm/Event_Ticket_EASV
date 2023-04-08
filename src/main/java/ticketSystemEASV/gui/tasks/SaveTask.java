@@ -1,44 +1,48 @@
 package ticketSystemEASV.gui.tasks;
 
 import javafx.concurrent.Task;
-import ticketSystemEASV.gui.model.Model;
+import ticketSystemEASV.gui.model.IModel;
 
 import java.util.concurrent.CountDownLatch;
 
-public class SaveTask extends Task<SaveTask.TaskState> {
-    public enum TaskState {SAVED, CHOSEN_NAME_ALREADY_EXISTS, NOT_SAVED}
+public class SaveTask extends Task<TaskState> {
     protected final Object objectToSave;
     protected final boolean isEditing;
-    protected final Model model;
+    protected final IModel IModel;
 
-    public SaveTask(Object objectToSave, boolean isEditing, Model model) {
+    public SaveTask(Object objectToSave, boolean isEditing, IModel IModel) {
         this.objectToSave = objectToSave;
         this.isEditing = isEditing;
-        this.model = model;
+        this.IModel = IModel;
     }
 
     @Override
-    protected SaveTask.TaskState call() {
+    protected TaskState call() {
         CountDownLatch latch = new CountDownLatch(1);
         if (isCancelled()) {
-            updateMessage("User was not saved");
-            return TaskState.NOT_SAVED;
+            updateMessage("Saving was not successful");
+            return TaskState.NOT_SUCCESSFUL;
         }
         else {
+            updateMessage("Saving...");
             String message;
             if (isEditing)
-                message = model.update(objectToSave, latch);
+                message = IModel.update(objectToSave, latch);
             else
-                message = model.add(objectToSave, latch);
+                message = IModel.add(objectToSave, latch);
 
-            System.out.println(message);
-
-            if (message.isEmpty())
-                return TaskState.SAVED;
-            else if (message.contains("Violation of UNIQUE KEY constraint"))
+            if (message.isEmpty()) {
+                updateMessage("Saved successfully");
+                return TaskState.SUCCESSFUL;
+            }
+            else if (message.contains("Violation of UNIQUE KEY constraint")) {
+                updateMessage("Name already exists");
                 return TaskState.CHOSEN_NAME_ALREADY_EXISTS;
-            else
-                return TaskState.NOT_SAVED;
+            }
+            else {
+                updateMessage("Saving was not successful");
+                return TaskState.NOT_SUCCESSFUL;
+            }
         }
     }
 

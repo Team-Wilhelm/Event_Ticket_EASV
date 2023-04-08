@@ -1,52 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXTableView?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<GridPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.TicketController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="450.0" minWidth="900.0" prefWidth="900.0" stylesheets="@../css/style.css" vgap="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.TicketController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+      <ColumnConstraints halignment="LEFT" hgrow="NEVER" percentWidth="5.0" />
+      <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="75.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <VBox spacing="10.0" stylesheets="@../css/style.css">
+      <MFXTableView fx:id="tblTickets" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#tableViewDoubleClickAction" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS" />
+      <MFXTextField fx:id="txtEventId" allowEdit="false" floatMode="BORDER" floatingText="EventID" maxWidth="1.7976931348623157E308" prefWidth="95.0" selectable="false" textLimit="30" GridPane.columnSpan="2">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXTextField>
+      <MFXTextField fx:id="txtNumberOfGeneratedTickets" allowEdit="false" floatMode="BORDER" floatingText="Tickets generated" maxWidth="1.7976931348623157E308" prefWidth="0.0" selectable="false" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXTextField>
+      <MFXTextField fx:id="txtCustomerName" floatMode="BORDER" floatingText="Customer name" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXTextField>
+      <MFXTextField fx:id="txtCustomerEmail" floatMode="BORDER" floatingText="Customer e-mail" maxWidth="1.7976931348623157E308" prefWidth="254.0" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXTextField>
+    <MFXButton onAction="#generateTicket" text="Generate ticket" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXButton>
+      <HBox alignment="CENTER" spacing="10.0" GridPane.rowIndex="5">
          <children>
-            <MFXTextField fx:id="txtEventId" allowEdit="false" floatMode="BORDER" floatingText="EventID" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
-            <MFXTextField fx:id="txtNumberOfGeneratedTickets" allowEdit="false" floatMode="BORDER" floatingText="Number of tickets generated for this event" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
-            <MFXTextField fx:id="txtCustomerName" floatMode="BORDER" floatingText="Customer name" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
-            <MFXTextField fx:id="txtCustomerEmail" floatMode="BORDER" floatingText="Customer e-mail" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
-            <HBox>
-               <children>
-                  <Region HBox.hgrow="ALWAYS" />
-                <MFXButton onAction="#generateTicket" text="Generate ticket" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                <MFXTextField fx:id="txtNumberOfTickets" floatMode="BORDER" floatingText="Number of tickets" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
-                <MFXButton onAction="#generateEmptyTickets" text="Generate tickets" />
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </HBox>
+          <MFXTextField fx:id="txtNumberOfTickets" floatMode="BORDER" floatingText="Number of tickets" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" />
          </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
-      <MFXTableView fx:id="tblTickets" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#tableViewDoubleClickAction" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+      </HBox>
+      <MFXProgressSpinner fx:id="progressSpinner" prefWidth="46.0" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets right="5.0" />
+         </GridPane.margin></MFXProgressSpinner>
+      <Label fx:id="progressLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></Label>
+    <MFXButton onAction="#generateEmptyTickets" text="Generate tickets" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXButton>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

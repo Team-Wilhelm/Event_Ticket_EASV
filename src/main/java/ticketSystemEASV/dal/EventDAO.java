@@ -7,16 +7,14 @@ import ticketSystemEASV.gui.model.UserModel;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EventDAO {
     private final DBConnection dbConnection = new DBConnection();
 
     public String addEvent(Event event) {
-        UserDAO userDAO = new UserDAO();
-        User loggedInUser = userDAO.getUserByEmail("admin");
+        User loggedInUser = UserModel.getLoggedInUser();
         String message="";
-        //TODO unique Event names?
-        //TODO be able to add multiple coordinators for one event (fucking pain in the ass, i think, respectfully)
         String sql = "DECLARE @EventID int;" +
                 "INSERT INTO Event (startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance) " +
                 "VALUES (?,?,?,?,?,?,?,?) " +
@@ -49,14 +47,17 @@ public class EventDAO {
         return message;
     }
 
-    public void deleteEvent(Event eventToDelete) {
+    public String deleteEvent(Event eventToDelete) {
         String sql = "UPDATE Event SET deleted=1 WHERE id=?;";
+        String message = "";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, eventToDelete.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            message = e.getMessage();
         }
+        return message;
     }
 
     private void fillPreparedStatement(Event event, PreparedStatement statement) throws SQLException {
@@ -147,5 +148,29 @@ public class EventDAO {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<Event> getEventsByIds(List<Integer> eventIDs) {
+        List<Event> events = new ArrayList<>();
+        if (eventIDs == null || eventIDs.isEmpty()) {
+            return events;
+        }
+
+        // create comma-separated string of event IDs
+        String ids = eventIDs.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
+
+        String sql = "SELECT * FROM Event WHERE deleted=0 AND id IN (" + ids + ")";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Event event = constructEvent(resultSet);
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
     }
 }

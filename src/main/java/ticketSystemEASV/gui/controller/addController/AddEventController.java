@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import ticketSystemEASV.gui.tasks.DeleteTask;
 import ticketSystemEASV.gui.tasks.SaveTask;
 
 import java.io.IOException;
@@ -33,9 +35,6 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class AddEventController extends AddObjectController implements Initializable {
     private TicketModel ticketModel;
@@ -53,7 +52,7 @@ public class AddEventController extends AddObjectController implements Initializ
     private VBox leftVBox;
     @FXML
     private MFXComboBox<String> comboStartTime, comboEndTime;
-    private SaveTask saveTask;
+    private Task task;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -112,16 +111,15 @@ public class AddEventController extends AddObjectController implements Initializ
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
         }
         else {
+            //TODO Unique event name check
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
 
             Event event = new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance);
             if (isEditing) event.setId(eventToEdit.getId());
 
-            saveTask = new SaveTask(event, isEditing, eventModel);
-            setUpTask(saveTask, actionEvent, eventViewController);
-            ExecutorService executorService = Executors.newFixedThreadPool(1);
-            executorService.execute(saveTask);
-            shutdownExecutorService(executorService);
+            task = new SaveTask(event, isEditing, eventModel);
+            setUpSaveTask(task, actionEvent, eventViewController);
+            executeTask(task);
         }
     }
 
@@ -130,8 +128,9 @@ public class AddEventController extends AddObjectController implements Initializ
             Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                eventModel.delete(eventToEdit);
-                eventViewController.refreshItems();
+                task = new DeleteTask(eventToEdit, eventModel);
+                setUpDeleteTask(task, actionEvent, eventViewController);
+                executeTask(task);
             }
         }
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
