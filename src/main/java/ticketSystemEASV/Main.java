@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import ticketSystemEASV.dal.UserDAO;
 
 import java.util.Objects;
 
@@ -30,6 +31,8 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         //StartUp.configure();
+        UserDAO userDAO = new UserDAO();
+        System.out.println(userDAO.getUserByEmail("admin").getRole().getName());
         launch(args);
     }
 }

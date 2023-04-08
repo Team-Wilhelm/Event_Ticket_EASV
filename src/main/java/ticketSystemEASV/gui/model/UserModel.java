@@ -15,11 +15,11 @@ public class UserModel implements Model {
     private final UserManager userManager = new UserManager();
     private User loggedInUser;
     private HashMap<UUID, User> allEventCoordinators = new HashMap<>();
-    private final ObservableList<Role> allRoles = FXCollections.observableArrayList();
+    private HashMap<UUID, Role> allRoles;
     private final HashMap<User, CoordinatorCard> loadedCoordinatorCards = new HashMap<>();
 
     public UserModel() {
-        allRoles.setAll(userManager.getAllRoles());
+        allRoles = (HashMap<UUID, Role>) userManager.getAllRoles();
         getAllEventCoordinatorsFromManager(new CountDownLatch(0));
 
         // Create a new task and construct the CoordinatorCards
@@ -80,7 +80,7 @@ public class UserModel implements Model {
         return allEventCoordinators;
     }
 
-    public List<Role> getAllRoles() {
+    public HashMap<UUID, Role> getAllRoles() {
         return allRoles;
     }
 

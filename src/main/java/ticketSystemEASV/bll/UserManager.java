@@ -47,7 +47,7 @@ public class UserManager {
         return userDAO.getAllEventCoordinators();
     }
 
-    public List<Role> getAllRoles() {
+    public Map<UUID, Role> getAllRoles() {
         return userDAO.getAllRoles();
     }
 }

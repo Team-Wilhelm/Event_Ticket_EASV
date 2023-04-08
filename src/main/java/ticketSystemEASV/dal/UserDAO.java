@@ -11,9 +11,13 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class UserDAO implements IUserDAO {
+    //TODO caching
     private DBConnection dbConnection = new DBConnection();
     private EventDAO eventDAO = new EventDAO();
     private UserBuilder userBuilder = new UserBuilder();
+    private RoleDAO roleDAO = new RoleDAO();
+    private Map<UUID, User> users = refreshUsers();
+    private Map<UUID, Role> roles = roleDAO.getAllRoles();
 
     public User getUser(UUID userID) {
         String sql = "SELECT * FROM [User] " +
@@ -114,15 +118,8 @@ public class UserDAO implements IUserDAO {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, email);
             statement.execute();
-            while (statement.getResultSet().next()) {
-                User user = new User(UUID.fromString(statement.getResultSet().getString("Id")),
-                        statement.getResultSet().getString("Name"),
-                        statement.getResultSet().getString("UserName"),
-                        statement.getResultSet().getString("Password"),
-                        null,
-                        statement.getResultSet().getBytes("profilePicture"));
-                assignRoleToUser(user);
-                return user;
+            if (statement.getResultSet().next()) {
+                return constructEventCoordinator(statement.getResultSet());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,14 +136,7 @@ public class UserDAO implements IUserDAO {
             statement.setString(3, "%" + query + "%");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
-                User user = new User(UUID.fromString(statement.getResultSet().getString("Id")),
-                        statement.getResultSet().getString("Name"),
-                        statement.getResultSet().getString("UserName"),
-                        statement.getResultSet().getString("Password"),
-                        null,
-                        statement.getResultSet().getBytes("profilePicture"));
-                assignRoleToUser(user);
-                users.add(user);
+                users.add(constructEventCoordinator(resultSet));
             }
             return users;
         } catch (SQLException e) {
@@ -156,7 +146,8 @@ public class UserDAO implements IUserDAO {
     }
 
     // Event coordinators
-    public HashMap<UUID, User> getAllEventCoordinators() {
+    public HashMap<UUID, User> refreshUsers() {
+        users = new HashMap<>();
         long startTime = System.currentTimeMillis();
         HashMap<UUID, User> eventCoordinators = new HashMap<>();
         String sql = "SELECT * FROM [User] " +
@@ -198,38 +189,11 @@ public class UserDAO implements IUserDAO {
     }
 
     // Helper methods
-    private void assignRoleToUser(User user){
-        String sql = "SELECT RoleName, Id FROM UserRole JOIN Role ON UserRole.RoleId = Role.Id WHERE UserID=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)){
-            statement.setString(1, user.getId().toString());
-            statement.execute();
-            while (statement.getResultSet().next()){
-                user.setRole(new Role(UUID.fromString(statement.getResultSet().getString("Id")),
-                        statement.getResultSet().getString("RoleName")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void fillPreparedStatement(PreparedStatement statement, User user) throws SQLException {
         statement.setString(1, user.getName());
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
         statement.setBytes(4, user.getProfilePicture());
-    }
-
-    public String getRoleId(String role) {
-        String sql = "SELECT Id FROM Role WHERE RoleName=?";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, role);
-            statement.execute();
-            if (statement.getResultSet().next())
-                return statement.getResultSet().getString("Id");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private User constructEventCoordinator(ResultSet resultSet) throws SQLException {
@@ -238,25 +202,19 @@ public class UserDAO implements IUserDAO {
                 .setUsername( resultSet.getString("UserName"))
                 .setPassword(resultSet.getString("Password"))
                 .setProfilePicture(resultSet.getBytes("profilePicture"))
-                .setRole(new Role(UUID.fromString(resultSet.getString("RoleID")), resultSet.getString("RoleName")))
+                .setRole(roles.get(UUID.fromString(resultSet.getString("RoleID"))))
                 .build();
+        System.out.println(user.getRole().getName());
+        //TODO roles are not being set correctly
         getEventsAssignedToEventCoordinator(user);
         return user;
     }
 
-    //TODO remove this and getAllRoles from RoleDAO instead?
-    public List<Role> getAllRoles() {
-        String sql = "SELECT * FROM Role;";
-        List<Role> roles = new ArrayList<>();
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                roles.add(new Role(UUID.fromString(resultSet.getString("Id")), resultSet.getString("RoleName")));
-            }
-            return roles;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Map<UUID, Role> getAllRoles() {
+        return roles;
+    }
+
+    public Map<UUID, User> getAllEventCoordinators() {
+        return users;
     }
 }
