@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="$MODULE_DIR$/pom.xml" external.system.module.type="SINGLE_MODULE" external.system.module.version="223-2" org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_19">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre18" level="project" />
+    <orderEntry type="library" name="Maven: io.github.palexdev:materialfx:11.13.5" level="project" />
+    <orderEntry type="library" name="Maven: io.github.palexdev:virtualizedfx:11.2.6" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:barcodes:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.13" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:font-asian:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:forms:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:hyph:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:io:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:kernel:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:layout:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:pdfa:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.itextpdf:sign:7.0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.google.zxing:core:3.3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.zxing:javase:3.3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.beust:jcommander:1.48" level="project" />
+    <orderEntry type="library" name="Maven: com.github.jai-imageio:jai-imageio-core:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.passay:passay:1.6.3" level="project" />
+  </component>
+</module>
