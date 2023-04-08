@@ -7,6 +7,7 @@ import ticketSystemEASV.gui.model.UserModel;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EventDAO {
     private final DBConnection dbConnection = new DBConnection();
@@ -150,5 +151,29 @@ public class EventDAO {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<Event> getEventsByIds(List<Integer> eventIDs) {
+        List<Event> events = new ArrayList<>();
+        if (eventIDs == null || eventIDs.isEmpty()) {
+            return events;
+        }
+
+        // create comma-separated string of event IDs
+        String ids = eventIDs.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
+
+        String sql = "SELECT * FROM Event WHERE deleted=0 AND id IN (" + ids + ")";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Event event = constructEvent(resultSet);
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
     }
 }

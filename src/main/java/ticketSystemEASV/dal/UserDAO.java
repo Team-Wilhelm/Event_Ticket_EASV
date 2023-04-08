@@ -13,21 +13,18 @@ import java.util.*;
 public class UserDAO implements IUserDAO {
     private DBConnection dbConnection = new DBConnection();
     private EventDAO eventDAO = new EventDAO();
+    private UserBuilder userBuilder = new UserBuilder();
 
     public User getUser(UUID userID) {
-        String sql = "SELECT * FROM [User] WHERE Id=?;";
+        String sql = "SELECT * FROM [User] " +
+                "LEFT JOIN UserRole ON UserRole.UserID = [User].Id " +
+                "LEFT JOIN Role ON Role.Id = UserRole.RoleId " +
+                "WHERE [User].Id=?";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, userID.toString());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                User user = new User(UUID.fromString(resultSet.getString("Id")),
-                        resultSet.getString("Name"),
-                        resultSet.getString("UserName"),
-                        resultSet.getString("Password"),
-                        null,
-                        resultSet.getBytes("profilePicture"));
-                assignRoleToUser(user);
-                return user;
+                return constructEventCoordinator(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,17 +157,19 @@ public class UserDAO implements IUserDAO {
 
     // Event coordinators
     public HashMap<UUID, User> getAllEventCoordinators() {
+        long startTime = System.currentTimeMillis();
         HashMap<UUID, User> eventCoordinators = new HashMap<>();
         String sql = "SELECT * FROM [User] " +
-                "JOIN UserRole ON [User].ID = UserRole.UserID, " +
-                "(SELECT Id FROM Role WHERE RoleName LIKE 'EventCoordinator') Role " +
-                "WHERE [User].deleted=0 AND UserRole.RoleID = Role.ID;";
+                "JOIN UserRole ON [User].ID = UserRole.UserID " +
+                "JOIN [Role] ON UserRole.RoleID = Role.ID " +
+                "WHERE [User].deleted=0 AND Role.RoleName='EventCoordinator';";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 User u = constructEventCoordinator(resultSet);
                 eventCoordinators.put(u.getId(), u);
             }
+            System.out.println("Time to get all event coordinators: " + (System.currentTimeMillis() - startTime) + "ms");
             return eventCoordinators;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -183,10 +182,15 @@ public class UserDAO implements IUserDAO {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getId().toString());
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
-                int eventID = resultSet.getInt("eventID"); //todo batch?
-                Event event = eventDAO.getEvent(eventID);
-                eventCoordinator.getAssignedEvents().add(event);
+            List<Integer> eventIds = new ArrayList<>();
+            while (resultSet.next()) {
+                int eventID = resultSet.getInt("eventID");
+                eventIds.add(eventID);
+            }
+            if (!eventIds.isEmpty()) {
+                // Batch get events by IDs
+                List<Event> events = eventDAO.getEventsByIds(eventIds);
+                eventCoordinator.setAssignedEvents(events);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -229,15 +233,15 @@ public class UserDAO implements IUserDAO {
     }
 
     private User constructEventCoordinator(ResultSet resultSet) throws SQLException {
-        UUID id = (UUID.fromString(resultSet.getString("id")));
-        String name = resultSet.getString("Name");
-        String username = resultSet.getString("UserName");
-        String password = resultSet.getString("Password");
-        byte[] profilePicture = resultSet.getBytes("profilePicture");
-        User coordinator = new User(id, name, username, password, null, profilePicture);
-        coordinator.setRole(new Role(UUID.fromString(getRoleId("EventCoordinator")), "EventCoordinator"));
-        getEventsAssignedToEventCoordinator(coordinator);
-        return coordinator;
+        User user = userBuilder.setId(UUID.fromString(resultSet.getString("Id")))
+                .setName(resultSet.getString("Name"))
+                .setUsername( resultSet.getString("UserName"))
+                .setPassword(resultSet.getString("Password"))
+                .setProfilePicture(resultSet.getBytes("profilePicture"))
+                .setRole(new Role(UUID.fromString(resultSet.getString("RoleID")), resultSet.getString("RoleName")))
+                .build();
+        getEventsAssignedToEventCoordinator(user);
+        return user;
     }
 
     //TODO remove this and getAllRoles from RoleDAO instead?

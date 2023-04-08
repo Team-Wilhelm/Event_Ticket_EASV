@@ -75,6 +75,7 @@ public class RootController implements Initializable {
             myProfileScene = myProfileLoader.load();
             addCoordinatorController = myProfileLoader.getController();
             myProfileScene.lookup("#btnGoBack").setVisible(false);
+            //TODO add log out option
 
             currentScene = eventsScene;
             gridPane.add(currentScene, 1, 0, 1,gridPane.getRowCount());

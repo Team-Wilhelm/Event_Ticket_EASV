@@ -62,6 +62,11 @@ public class User {
         return assignedEvents;
     }
 
+    public void setAssignedEvents(List<Event> assignedEvents) {
+        this.assignedEvents.clear();
+        this.assignedEvents.addAll(assignedEvents);
+    }
+
     public byte[] getProfilePicture() {
         return profilePicture;
     }
