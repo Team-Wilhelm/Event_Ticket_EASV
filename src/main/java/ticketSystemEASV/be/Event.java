@@ -9,7 +9,6 @@ import java.util.UUID;
 public class Event {
     //Required information
     private int id;
-    private List<UUID> coordinatorIdList;
     private Date startDate;
     private Time startTime;
     private String eventName, location, notes;
@@ -21,7 +20,6 @@ public class Event {
     private String locationGuidance;
 
     public Event(String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
-        this.coordinatorIdList = new ArrayList<>();
         this.eventName = eventName;
         this.startDate = startDate;
         this.startTime = startTime;
@@ -109,7 +107,4 @@ public class Event {
         this.id = id;
     }
 
-    public List<UUID> getCoordinatorIdList() {
-        return coordinatorIdList;
-    }
 }

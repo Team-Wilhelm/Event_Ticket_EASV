@@ -105,6 +105,5 @@ public abstract class AddObjectController {
             controller.unbindSpinnerFromTask();
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
         });
-
     }
 }

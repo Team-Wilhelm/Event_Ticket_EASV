@@ -70,8 +70,6 @@ public class TicketController extends AddObjectController implements Initializab
 
     public void setEvent(Event event) {
         this.event = event;
-
-        //TODO multithreading
         refreshTableView();
         txtEventId.setText(event.getId() + " - " + event.getEventName());
     }

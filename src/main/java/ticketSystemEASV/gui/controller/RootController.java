@@ -74,7 +74,13 @@ public class RootController implements Initializable {
             FXMLLoader myProfileLoader = new FXMLLoader(getClass().getResource("/views/add...views/AddCoordinatorView.fxml"));
             myProfileScene = myProfileLoader.load();
             addCoordinatorController = myProfileLoader.getController();
+            addCoordinatorController.setIsManagingOwnAccount(true);
+
             myProfileScene.lookup("#btnGoBack").setVisible(false);
+            myProfileScene.lookup("#btnGoBack").setManaged(false);
+            myProfileScene.lookup("#btnDelete").setVisible(false);
+            myProfileScene.lookup("#btnDelete").setManaged(false);
+            myProfileScene.lookup("#btnCancel").setVisible(false);
             //TODO add log out option
 
             currentScene = eventsScene;
@@ -128,8 +134,8 @@ public class RootController implements Initializable {
         manageCoordinatorsController.setModels(userModel);
         eventViewController.refreshItems(List.copyOf(UserModel.getLoggedInUser().getAssignedEvents().values()));
 
+        addCoordinatorController.setIsEditing(UserModel.getLoggedInUser());
         addCoordinatorController.setModel(userModel);
-        addCoordinatorController.setIsEditing(userModel.getLoggedInUser());
     }
 
     public void myProfileAction(ActionEvent actionEvent) {
