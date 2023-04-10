@@ -196,7 +196,7 @@ public class AddEventController extends AddObjectController implements Initializ
         endDate = dateEndDate.getValue() != null ? Date.valueOf(dateEndDate.getValue()) : null;
         endTime = !(comboEndTime.getValue() == null) ? Time.valueOf(comboEndTime.getValue()+":00") : null;
 
-        if (eventModel.getAllEvents().values().stream().anyMatch(event -> event.getEventName().equals(eventName))) {
+        if (eventModel.getAllEvents().values().stream().anyMatch(event -> event.getEventName().equals(eventName) && !eventName.equals(eventToEdit.getEventName()))) {
             txtEventName.setPromptText("Event name already exists, please choose another");
             alertManager.getAlert(Alert.AlertType.ERROR, "Event with this name already exists, \nplease choose a different name", actionEvent).showAndWait();
             return false;

@@ -33,6 +33,10 @@ public class EventManager {
         eventDAO.getEventsAssignedToEventCoordinator(UserModel.getLoggedInUser());
     }
 
+    public void getEventsAssignedToEventCoordinator(User user){
+        eventDAO.getEventsAssignedToEventCoordinator(user);
+    }
+
     public void assignCoordinatorToEvent(User user, Event event){
         eventDAO.assignCoordinatorToEvent(user, event);
     }

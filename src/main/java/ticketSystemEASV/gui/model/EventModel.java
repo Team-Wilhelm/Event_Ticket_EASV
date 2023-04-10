@@ -71,6 +71,7 @@ public class EventModel extends Model {
     public void getAllEventsFromManager() {
         getEventsAssignedToEventCoordinator();
         allEvents = UserModel.getLoggedInUser().getAssignedEvents();
+
         /*Callable<HashMap<Integer, Event>> setAllEventsRunnable = ()
                 -> (HashMap<Integer, Event>) eventManager.getAllEvents();
 
@@ -89,6 +90,7 @@ public class EventModel extends Model {
 
     public void assignCoordinatorToEvent(User user, Event event){
         eventManager.assignCoordinatorToEvent(user, event);
+        eventManager.getEventsAssignedToEventCoordinator(user);
     }
 
     public Event getEvent(int id) {
@@ -97,5 +99,6 @@ public class EventModel extends Model {
 
     public void unassignCoordinatorFromEvent(User user, Event event) {
         eventManager.unassignCoordinatorFromEvent(user, event);
+        eventManager.getEventsAssignedToEventCoordinator(user);
     }
 }
