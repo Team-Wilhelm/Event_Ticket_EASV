@@ -78,6 +78,7 @@ public class RootController implements Initializable {
 
             myProfileScene.lookup("#btnGoBack").setVisible(false);
             myProfileScene.lookup("#btnDelete").setVisible(false);
+            myProfileScene.lookup("#btnDelete").setManaged(false);
             myProfileScene.lookup("#btnCancel").setVisible(false);
             //TODO add log out option
 

@@ -9,14 +9,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="gridPane" hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/css/style.css" vgap="10.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddCoordinatorController">
+<GridPane fx:id="gridPane" hgap="30.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/css/style.css" vgap="10.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddCoordinatorController">
   <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="300.0" minWidth="10.0" percentWidth="40.0" />
-    <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="60.0" />
+    <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" percentWidth="15.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
       <RowConstraints minHeight="10.0" percentHeight="10.0" vgrow="SOMETIMES" />
@@ -40,15 +41,10 @@
       <MFXTextField fx:id="txtUsername" floatMode="BORDER" floatingText="Username" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
       <MFXTextField fx:id="txtPassword" floatMode="BORDER" floatingText="Password" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
       <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#generatePassword" text="Generate password" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-      <HBox alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-         <children>
-            <MFXButton fx:id="btnDelete" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#deleteCoordinatorAction" text="Delete" />
-            <Region HBox.hgrow="ALWAYS" />
-            <MFXButton fx:id="btnCancel" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#cancelAction" text="Cancel" />
-            <MFXButton fx:id="btnSave" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#saveAction" text="Save" />
-         </children>
-      </HBox>
-      <MFXTableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowSpan="5" GridPane.vgrow="ALWAYS" />
+      <MFXButton fx:id="btnDelete" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#deleteCoordinatorAction" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <MFXButton fx:id="btnCancel" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#cancelAction" text="Cancel" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+      <MFXButton fx:id="btnSave" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#saveAction" text="Save" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+      <MFXTableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowSpan="5" GridPane.vgrow="ALWAYS" />
    </children>
    <padding>
       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />

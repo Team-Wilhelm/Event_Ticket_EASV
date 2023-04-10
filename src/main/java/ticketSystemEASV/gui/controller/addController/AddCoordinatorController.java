@@ -1,18 +1,22 @@
 package ticketSystemEASV.gui.controller.addController;
 
+import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
@@ -22,6 +26,7 @@ import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.bll.CropImageToCircle;
+import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.tasks.DeleteTask;
 import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
@@ -37,6 +42,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
@@ -45,6 +51,8 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private MFXTextField txtCoordinatorName, txtPassword, txtUsername;
     @FXML
     private GridPane gridPane;
+    private Label progressLabel;
+    private MFXProgressSpinner progressSpinner;
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
     private boolean isEditing, isManagingOwnAccount;
@@ -115,8 +123,14 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             User user = new User(coordinatorName, username, passwordFinal[0], role, finalProfilePicture);
             if (isEditing) user.setId(coordinatorToEdit.getId());
 
-            task = new SaveTask(user, isEditing, userModel);
-            setUpSaveTask(task, actionEvent, manageCoordinatorsController);
+            if (isManagingOwnAccount) {
+                task = new SaveTask(user, isEditing, userModel);
+                setUpTaskWhileManagingOwnAccount(task, actionEvent);
+            }
+            else {
+                task = new SaveTask(user, isEditing, userModel);
+                setUpSaveTask(task, actionEvent, manageCoordinatorsController);
+            }
             executeTask(task);
         }
     }
@@ -217,5 +231,61 @@ public class AddCoordinatorController extends AddObjectController implements Ini
 
     public void setIsManagingOwnAccount(boolean isManagingOwnAccount) {
         this.isManagingOwnAccount = isManagingOwnAccount;
+        progressLabel = new Label("");
+        progressLabel.setId("progressLabel");
+        progressSpinner = new MFXProgressSpinner();
+        progressSpinner.setId("progressSpinner");
+        HBox hbox = new HBox(5, progressSpinner, progressLabel);
+        hbox.setAlignment(Pos.CENTER);
+
+        if (isManagingOwnAccount) {
+            gridPane.add(hbox, 1, 5);
+
+            progressSpinner.setVisible(false);
+            progressLabel.setVisible(false);
+            txtPassword.setPromptText("Leave blank to keep current password");
+        }
+    }
+
+    private void setUpTaskWhileManagingOwnAccount(Task<TaskState> task, ActionEvent actionEvent) {
+        task.setOnRunning(event -> {
+            progressSpinner.progressProperty().bind(task.progressProperty());
+            progressSpinner.setVisible(true);
+            progressLabel.setVisible(true);
+            progressLabel.textProperty().bind(task.messageProperty());
+        });
+
+        task.setOnFailed(event -> {
+            progressSpinner.setVisible(false);
+            progressLabel.setVisible(false);
+            progressSpinner.progressProperty().unbind();
+            progressLabel.textProperty().unbind();
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
+        });
+
+        task.setOnSucceeded(event -> {
+            // unbind the progress label from the task and set it to full
+            progressSpinner.progressProperty().unbind();
+            progressSpinner.setProgress(100);
+
+            // after 3 seconds, the progress bar will be hidden
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            progressSpinner.setVisible(false);
+                            progressLabel.setVisible(false);
+                            progressLabel.textProperty().unbind();
+                        }
+                    },
+                    3000
+            );
+
+            if (task.getValue() == TaskState.CHOSEN_NAME_ALREADY_EXISTS) {
+                AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();
+            } else if (task.getValue() == TaskState.NOT_SUCCESSFUL) {
+                AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
+            }
+        });
     }
 }
