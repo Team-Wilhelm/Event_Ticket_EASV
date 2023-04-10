@@ -51,6 +51,9 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private User coordinatorToEdit;
     private ImageView imgViewProfilePicture;
     private Task task;
+    private String coordinatorName, username, password;
+    private byte[] profilePicture;
+    private final AlertManager alertManager = AlertManager.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -93,25 +96,21 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     }
 
     public void saveAction(ActionEvent actionEvent) {
-        Scene source = ((Node) actionEvent.getSource()).getScene();
+        coordinatorName = txtCoordinatorName.getText();
+        username = txtUsername.getText();
+        password = txtPassword.getText();
 
-        String coordinatorName = txtCoordinatorName.getText();
-        String username = txtUsername.getText();
-        final String[] password = {txtPassword.getText()};
+        if (checkInput(actionEvent)) {
+            final String[] passwordFinal = {password};
+            ((Node) actionEvent.getSource()).getScene().getWindow().hide();
 
-        if (coordinatorName.isEmpty() || username.isEmpty() || (password[0].isEmpty() && !isEditing)) {
-            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill out all required fields!", actionEvent).showAndWait();
-        } else {
-            source.getWindow().hide();
-
-            //TODO Unique username check
             Role role = userModel.getAllRoles().get("EventCoordinator");
             byte[] finalProfilePicture = getProfilePictureAsBytes();
 
-            if (password[0].isEmpty())
-                password[0] = coordinatorToEdit.getPassword();
+            if (passwordFinal[0].isEmpty())
+                passwordFinal[0] = coordinatorToEdit.getPassword();
 
-            User user = new User(coordinatorName, username, password[0], role, finalProfilePicture);
+            User user = new User(coordinatorName, username, passwordFinal[0], role, finalProfilePicture);
             if (isEditing) user.setId(coordinatorToEdit.getId());
 
             task = new SaveTask(user, isEditing, userModel);
@@ -199,5 +198,17 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             e.printStackTrace();
         }
         return profilePicture;
+    }
+
+    private boolean checkInput(ActionEvent actionEvent) {
+        if (userModel.getAllUsers().values().stream().anyMatch(user -> user.getUsername().equals(username))) {
+            alertManager.getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();
+            return false;
+        }
+        if (coordinatorName.isEmpty() || username.isEmpty() || (password.isEmpty() && !isEditing)) {
+            alertManager.getAlert(Alert.AlertType.ERROR, "Please, fill out all required fields!", actionEvent).showAndWait();
+            return false;
+        }
+        return true;
     }
 }

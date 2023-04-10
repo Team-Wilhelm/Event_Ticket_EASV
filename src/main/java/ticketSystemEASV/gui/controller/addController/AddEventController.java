@@ -53,6 +53,10 @@ public class AddEventController extends AddObjectController implements Initializ
     @FXML
     private MFXComboBox<String> comboStartTime, comboEndTime;
     private Task task;
+    private final AlertManager alertManager = AlertManager.getInstance();
+    private String eventName, location, locationGuidance, notes;
+    private Date startingDate, endDate;
+    private Time startingTime, endTime;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -91,27 +95,12 @@ public class AddEventController extends AddObjectController implements Initializ
     }
 
     public void saveAction(ActionEvent actionEvent) {
-        String eventName = txtEventName.getText();
-        String location = txtLocation.getText();
-        String notes = txtNotes.getText();
-        String locationGuidance = txtLocationGuidance.getText();
+        eventName = txtEventName.getText();
+        location = txtLocation.getText();
+        notes = txtNotes.getText();
+        locationGuidance = txtLocationGuidance.getText();
 
-        //Check if the field has a value, if not, set it to null, otherwise, an exception will be thrown
-        Time startingTime = !(comboStartTime.getValue() == null) ? Time.valueOf(comboStartTime.getValue()+":00") : null;
-        Date startingDate = dateStartDate.getValue() != null ? Date.valueOf(dateStartDate.getValue()) : null;
-        Date endDate = dateEndDate.getValue() != null ? Date.valueOf(dateEndDate.getValue()) : null;
-        Time endTime = !(comboEndTime.getValue() == null) ? Time.valueOf(comboEndTime.getValue()+":00") : null;
-
-        if (eventName.isEmpty() || location.isEmpty() || comboStartTime.getValue().isEmpty()
-                || dateStartDate.getValue() == null) {
-            txtEventName.setPromptText("Field cannot be empty, please enter a name");
-            txtLocation.setPromptText("Field cannot be empty, please enter a location");
-            comboStartTime.setPromptText("Field cannot be empty, please enter a starting time");
-            dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
-            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
-        }
-        else {
-            //TODO Unique event name check
+        if (checkInput(actionEvent)) {
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
 
             Event event = new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance);
@@ -168,5 +157,42 @@ public class AddEventController extends AddObjectController implements Initializ
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
+    }
+
+    private boolean checkInput(ActionEvent actionEvent) {
+        //Check if the field has a value, if not, set it to null, otherwise, an exception will be thrown
+        startingTime = !(comboStartTime.getValue() == null) ? Time.valueOf(comboStartTime.getValue()+":00") : null;
+        startingDate = dateStartDate.getValue() != null ? Date.valueOf(dateStartDate.getValue()) : null;
+        endDate = dateEndDate.getValue() != null ? Date.valueOf(dateEndDate.getValue()) : null;
+        endTime = !(comboEndTime.getValue() == null) ? Time.valueOf(comboEndTime.getValue()+":00") : null;
+
+        if (eventModel.getAllEvents().values().stream().anyMatch(event -> event.getEventName().equals(eventName))) {
+            txtEventName.setPromptText("Event name already exists, please choose another");
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Event with this name already exists, \nplease choose a different name", actionEvent).showAndWait();
+            return false;
+        }
+
+        if (endDate != null && startingDate != null && endDate.before(startingDate)) {
+            dateEndDate.setPromptText("End date cannot be before start date");
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "End date cannot be before start date", actionEvent).showAndWait();
+            return false;
+        }
+
+        if (endTime != null && startingTime != null && endTime.before(startingTime) && endDate.equals(startingDate)) {
+            comboEndTime.setPromptText("End time cannot be before start time");
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "End time cannot be before start time", actionEvent).showAndWait();
+            return false;
+        }
+
+        if (eventName.isEmpty() || location.isEmpty() || comboStartTime.getValue().isEmpty()
+                || dateStartDate.getValue() == null) {
+            txtEventName.setPromptText("Field cannot be empty, please enter a name");
+            txtLocation.setPromptText("Field cannot be empty, please enter a location");
+            comboStartTime.setPromptText("Field cannot be empty, please enter a starting time");
+            dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
+            return false;
+        }
+        return true;
     }
 }
