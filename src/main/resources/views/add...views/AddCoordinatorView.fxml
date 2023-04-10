@@ -42,10 +42,10 @@
       <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#generatePassword" text="Generate password" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
       <HBox alignment="BOTTOM_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>
-            <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#deleteCoordinatorAction" text="Delete" />
+            <MFXButton fx:id="btnDelete" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#deleteCoordinatorAction" text="Delete" />
             <Region HBox.hgrow="ALWAYS" />
-            <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#cancelAction" text="Cancel" />
-            <MFXButton maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#saveAction" text="Save" />
+            <MFXButton fx:id="btnCancel" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#cancelAction" text="Cancel" />
+            <MFXButton fx:id="btnSave" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#saveAction" text="Save" />
          </children>
       </HBox>
       <MFXTableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowSpan="5" GridPane.vgrow="ALWAYS" />

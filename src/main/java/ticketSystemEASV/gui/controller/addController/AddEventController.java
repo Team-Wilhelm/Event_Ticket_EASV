@@ -25,6 +25,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import ticketSystemEASV.gui.tasks.DeleteTask;
 import ticketSystemEASV.gui.tasks.SaveTask;
+import ticketSystemEASV.gui.tasks.TaskState;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,7 +53,7 @@ public class AddEventController extends AddObjectController implements Initializ
     private VBox leftVBox;
     @FXML
     private MFXComboBox<String> comboStartTime, comboEndTime;
-    private Task task;
+    private Task<TaskState> task;
     private final AlertManager alertManager = AlertManager.getInstance();
     private String eventName, location, locationGuidance, notes;
     private Date startingDate, endDate;
@@ -114,7 +115,7 @@ public class AddEventController extends AddObjectController implements Initializ
 
     public void deleteEventAction(ActionEvent actionEvent) {
         if (isEditing){
-            Alert alert = AlertManager.getInstance().getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
+            Alert alert = alertManager.getAlert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this event?", actionEvent);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 task = new DeleteTask(eventToEdit, eventModel);
@@ -168,19 +169,19 @@ public class AddEventController extends AddObjectController implements Initializ
 
         if (eventModel.getAllEvents().values().stream().anyMatch(event -> event.getEventName().equals(eventName))) {
             txtEventName.setPromptText("Event name already exists, please choose another");
-            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Event with this name already exists, \nplease choose a different name", actionEvent).showAndWait();
+            alertManager.getAlert(Alert.AlertType.ERROR, "Event with this name already exists, \nplease choose a different name", actionEvent).showAndWait();
             return false;
         }
 
         if (endDate != null && startingDate != null && endDate.before(startingDate)) {
             dateEndDate.setPromptText("End date cannot be before start date");
-            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "End date cannot be before start date", actionEvent).showAndWait();
+            alertManager.getAlert(Alert.AlertType.ERROR, "End date cannot be before start date", actionEvent).showAndWait();
             return false;
         }
 
         if (endTime != null && startingTime != null && endTime.before(startingTime) && endDate.equals(startingDate)) {
             comboEndTime.setPromptText("End time cannot be before start time");
-            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "End time cannot be before start time", actionEvent).showAndWait();
+            alertManager.getAlert(Alert.AlertType.ERROR, "End time cannot be before start time", actionEvent).showAndWait();
             return false;
         }
 
@@ -190,7 +191,7 @@ public class AddEventController extends AddObjectController implements Initializ
             txtLocation.setPromptText("Field cannot be empty, please enter a location");
             comboStartTime.setPromptText("Field cannot be empty, please enter a starting time");
             dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
-            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
+            alertManager.getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
             return false;
         }
         return true;

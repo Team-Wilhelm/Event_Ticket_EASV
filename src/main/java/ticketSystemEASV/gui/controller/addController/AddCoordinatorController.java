@@ -27,6 +27,7 @@ import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
 import javafx.fxml.FXML;
 import ticketSystemEASV.gui.model.UserModel;
+import ticketSystemEASV.gui.tasks.TaskState;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -46,18 +47,18 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private GridPane gridPane;
     private UserModel userModel;
     private ManageCoordinatorsController manageCoordinatorsController;
-    private boolean isEditing;
+    private boolean isEditing, isManagingOwnAccount;
     private int IMAGE_SIZE;
     private User coordinatorToEdit;
     private ImageView imgViewProfilePicture;
-    private Task task;
+    private Task<TaskState> task;
     private String coordinatorName, username, password;
-    private byte[] profilePicture;
     private final AlertManager alertManager = AlertManager.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEditing = false;
+        isManagingOwnAccount = false;
         setUpProfilePicture();
     }
 
@@ -101,10 +102,11 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         password = txtPassword.getText();
 
         if (checkInput(actionEvent)) {
-            final String[] passwordFinal = {password};
-            ((Node) actionEvent.getSource()).getScene().getWindow().hide();
+            if (!isManagingOwnAccount)
+                ((Node) actionEvent.getSource()).getScene().getWindow().hide();
 
-            Role role = userModel.getAllRoles().get("EventCoordinator");
+            final String[] passwordFinal = {password};
+            Role role = coordinatorToEdit.getRole() != null ? coordinatorToEdit.getRole() : userModel.getAllRoles().get("EventCoordinator");
             byte[] finalProfilePicture = getProfilePictureAsBytes();
 
             if (passwordFinal[0].isEmpty())
@@ -149,7 +151,6 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     }
 
     private String createRandomPassword(){
-        //TODO maybe change this
         PasswordGenerator gen = new PasswordGenerator();
         CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
         CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
@@ -201,7 +202,9 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     }
 
     private boolean checkInput(ActionEvent actionEvent) {
-        if (userModel.getAllUsers().values().stream().anyMatch(user -> user.getUsername().equals(username))) {
+        //TODO disable save button while input is invalid
+        if (userModel.getAllUsers().values().stream().anyMatch(user -> user.getUsername().equals(username)
+        && !isManagingOwnAccount)) {
             alertManager.getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();
             return false;
         }
@@ -210,5 +213,9 @@ public class AddCoordinatorController extends AddObjectController implements Ini
             return false;
         }
         return true;
+    }
+
+    public void setIsManagingOwnAccount(boolean isManagingOwnAccount) {
+        this.isManagingOwnAccount = isManagingOwnAccount;
     }
 }
