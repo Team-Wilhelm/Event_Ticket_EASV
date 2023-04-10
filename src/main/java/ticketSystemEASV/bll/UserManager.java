@@ -28,10 +28,6 @@ public class UserManager {
         return userDAO.getUser(userID);
     }
 
-    public List<User> searchUsers(String query) {
-        return userDAO.searchUsers(query);
-    }
-
     public String updateUser(User user) {
         return userDAO.updateUser(user);
     }

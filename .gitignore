@@ -2,3 +2,5 @@ target/
 target\
 /target/
 *.class
+/.idea/modules.xml
+/.idea/

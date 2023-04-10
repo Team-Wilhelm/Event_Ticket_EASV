@@ -5,6 +5,7 @@ import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.EventManager;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
@@ -54,7 +55,12 @@ public class EventModel extends Model {
     }
 
     public List<Event> searchEvents(String query) {
-        return eventManager.searchEvents(query);
+        List<Event> filteredEvents = new ArrayList<>();
+        allEvents.values().stream().filter(event -> event.getEventName().toLowerCase().contains(query.toLowerCase())
+        || event.getLocation().toLowerCase().contains(query.toLowerCase())
+        || event.getStartDate().toString().contains(query.toLowerCase()))
+                .forEach(filteredEvents::add);
+        return filteredEvents;
     }
 
     public HashMap<Event, EventCard> getLoadedEventCards() {

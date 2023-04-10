@@ -143,24 +143,6 @@ public class UserDAO implements IUserDAO {
         return null;
     }
 
-    public List<User> searchUsers(String query) {
-        List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM [User] WHERE [User].Name LIKE ? OR [User].UserName LIKE ? OR Id LIKE ?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, "%" + query + "%");
-            statement.setString(2, "%" + query + "%");
-            statement.setString(3, "%" + query + "%");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
-                users.add(constructEventCoordinator(resultSet));
-            }
-            return users;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     // Event coordinators
     public HashMap<UUID, User> getAllEventCoordinators() {
         long startTime = System.currentTimeMillis();

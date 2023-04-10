@@ -153,23 +153,6 @@ public class EventDAO {
         return new Event(id, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
     }
 
-    public List<Event> searchEvents(String query) {
-        List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM Event WHERE eventName LIKE ? OR eventLocation LIKE ?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, "%" + query + "%");
-            statement.setString(2, "%" + query + "%");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
-                events.add(constructEvent(resultSet));
-            }
-            return events;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public HashMap<Integer, Event> getEventsByIds(List<Integer> eventIDs) {
         HashMap<Integer, Event> events = new HashMap<>();
         if (eventIDs == null || eventIDs.isEmpty()) {

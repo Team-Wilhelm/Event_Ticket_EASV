@@ -32,10 +32,6 @@ public class EventManager {
         eventDAO.getEventsAssignedToEventCoordinator(UserModel.getLoggedInUser());
     }
 
-    public List<Event> searchEvents(String query) {
-        return eventDAO.searchEvents(query);
-    }
-
     public Event getEvent(int id) {
         return eventDAO.getEvent(id);
     }

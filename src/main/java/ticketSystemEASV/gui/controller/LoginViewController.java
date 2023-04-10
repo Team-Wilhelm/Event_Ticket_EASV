@@ -32,8 +32,8 @@ public class LoginViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Platform.runLater(this::setEnterKeyAction);
         //TODO delete
-        emailInput.setText("uwe@uwe.com");
-        passwordInput.setText("1234");
+        emailInput.setText("admin");
+        passwordInput.setText("admin");
 
         try {
             fxmlLoader = new FXMLLoader(Main.class.getResource("/views/Root.fxml"));
@@ -51,6 +51,7 @@ public class LoginViewController implements Initializable {
 
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         }
         else

@@ -46,7 +46,6 @@ public class EventViewController extends MotherController implements Initializab
     private final AlertManager alertManager = AlertManager.getInstance();
     private TicketModel ticketModel;
     private EventModel eventModel;
-    //private UserModel userModel;
     private EventCard lastFocusedEvent;
     private ConstructEventCardTask task;
 
@@ -174,6 +173,4 @@ public class EventViewController extends MotherController implements Initializab
         eventCards.clear();
         eventCards.addAll(searchEvents.stream().map(EventCard::new).toList());
     }
-
-
 }
