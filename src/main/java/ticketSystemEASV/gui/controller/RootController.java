@@ -119,7 +119,7 @@ public class RootController implements Initializable {
 
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
-        eventViewController.setModels(ticketModel, eventModel);
+        eventViewController.setModels(ticketModel, eventModel, this.userModel);
 
         if (userModel.isAdmin()) {
             manageCoordinatorsController.setModels(userModel);

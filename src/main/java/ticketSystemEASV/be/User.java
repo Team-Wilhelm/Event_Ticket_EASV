@@ -71,4 +71,9 @@ public class User {
     public byte[] getProfilePicture() {
         return profilePicture;
     }
+
+    @Override
+    public String toString() {
+        return name + " (" + username + ")";
+    }
 }

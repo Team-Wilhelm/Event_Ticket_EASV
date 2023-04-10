@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.model;
 
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.EventManager;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
@@ -80,7 +81,15 @@ public class EventModel extends Model {
         eventManager.getEventsAssignedToEventCoordinator();
     }
 
+    public void assignCoordinatorToEvent(User user, Event event){
+        eventManager.assignCoordinatorToEvent(user, event);
+    }
+
     public Event getEvent(int id) {
         return eventManager.getEvent(id);
+    }
+
+    public void unassignCoordinatorFromEvent(User user, Event event) {
+        eventManager.unassignCoordinatorFromEvent(user, event);
     }
 }

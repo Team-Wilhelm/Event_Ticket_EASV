@@ -140,6 +140,28 @@ public class EventDAO {
         }
     }
 
+    public void assignCoordinatorToEvent(User user, Event event){
+        String sql = "INSERT INTO User_Event_Link (UserID, EventID) VALUES (?, ?);";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, user.getId().toString());
+            statement.setInt(2, event.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unassignCoordinatorFromEvent(User user, Event event) {
+        String sql = "DELETE FROM User_Event_Link WHERE UserID = ? AND EventID =?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, user.getId().toString());
+            statement.setInt(2, event.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Event constructEvent(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         String eventName = resultSet.getString("eventName");
@@ -193,4 +215,5 @@ public class EventDAO {
         }
         return events;
     }
+
 }

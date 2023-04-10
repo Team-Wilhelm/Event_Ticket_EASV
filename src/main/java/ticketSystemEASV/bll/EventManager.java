@@ -1,6 +1,7 @@
 package ticketSystemEASV.bll;
 
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.User;
 import ticketSystemEASV.dal.EventDAO;
 import ticketSystemEASV.gui.model.UserModel;
 
@@ -32,11 +33,19 @@ public class EventManager {
         eventDAO.getEventsAssignedToEventCoordinator(UserModel.getLoggedInUser());
     }
 
+    public void assignCoordinatorToEvent(User user, Event event){
+        eventDAO.assignCoordinatorToEvent(user, event);
+    }
+
     public List<Event> searchEvents(String query) {
         return eventDAO.searchEvents(query);
     }
 
     public Event getEvent(int id) {
         return eventDAO.getEvent(id);
+    }
+
+    public void unassignCoordinatorFromEvent(User user, Event event) {
+        eventDAO.unassignCoordinatorFromEvent(user, event);
     }
 }

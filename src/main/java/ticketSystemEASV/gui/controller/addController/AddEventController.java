@@ -1,6 +1,9 @@
 package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.AlertManager;
 import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.TicketController;
@@ -23,6 +27,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import ticketSystemEASV.gui.model.UserModel;
 import ticketSystemEASV.gui.tasks.DeleteTask;
 import ticketSystemEASV.gui.tasks.SaveTask;
 
@@ -39,6 +44,7 @@ import java.util.ResourceBundle;
 public class AddEventController extends AddObjectController implements Initializable {
     private TicketModel ticketModel;
     private EventModel eventModel;
+    private UserModel userModel;
     private EventViewController eventViewController;
     private boolean isEditing = false;
     private Event eventToEdit;
@@ -52,6 +58,9 @@ public class AddEventController extends AddObjectController implements Initializ
     private VBox leftVBox;
     @FXML
     private MFXComboBox<String> comboStartTime, comboEndTime;
+    @FXML
+    private MFXFilterComboBox<User> comboAssignCoordinator;
+    private ObservableList<User> allCoordinators = FXCollections.observableArrayList();
     private Task task;
 
     @Override
@@ -66,8 +75,14 @@ public class AddEventController extends AddObjectController implements Initializ
                 comboEndTime.getItems().add(formatTime(i + ":" + j + ":00"));
             }
         }
-    }
 
+        comboAssignCoordinator.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                assignCoordinator(newValue);
+                comboAssignCoordinator.getSelectionModel().clearSelection();
+            }
+        });
+    }
     @Override
     public void setIsEditing(Object object) {
         isEditing = true;
@@ -117,6 +132,7 @@ public class AddEventController extends AddObjectController implements Initializ
             Event event = new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance);
             if (isEditing) event.setId(eventToEdit.getId());
 
+
             task = new SaveTask(event, isEditing, eventModel);
             setUpSaveTask(task, actionEvent, eventViewController);
             executeTask(task);
@@ -136,9 +152,22 @@ public class AddEventController extends AddObjectController implements Initializ
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-    public void setModels(TicketModel ticketModel, EventModel eventModel) {
+    public void setModels(TicketModel ticketModel, EventModel eventModel, UserModel userModel) {
         this.ticketModel = ticketModel;
         this.eventModel = eventModel;
+        this.userModel = userModel;
+        populateAssignCoordinatorComboBox();
+    }
+
+    private void populateAssignCoordinatorComboBox(){
+        for(User user : userModel.getAllUsers().values()) {
+            if (!(user.getRole().getName().equals("Admin") || user.equals(UserModel.getLoggedInUser()))) {
+                allCoordinators.add(user);
+
+            }
+        }
+
+        comboAssignCoordinator.setItems(allCoordinators);
     }
 
     public void setMainViewController(EventViewController eventViewController) {
@@ -169,4 +198,14 @@ public class AddEventController extends AddObjectController implements Initializ
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
+
+    private void assignCoordinator(User user) {
+        Event event = eventToEdit;
+
+        if(!user.getAssignedEvents().containsKey(event.getId())){
+            eventModel.assignCoordinatorToEvent(user, event);
+        }
+        else eventModel.unassignCoordinatorFromEvent(user, event);
+    }
+
 }

@@ -51,6 +51,7 @@ public class LoginViewController implements Initializable {
 
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
             stage.show();
         }
         else

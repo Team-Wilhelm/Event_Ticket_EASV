@@ -82,12 +82,12 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void setModels(UserModel userModel) {
         this.userModel = userModel;
-        refreshItems((List<?>) userModel.getAllUsers().values());
+        refreshItems(List.copyOf(userModel.getAllUsers().values()));
     }
 
     @Override
     public void refreshItems() {
-        refreshItems((List<?>) userModel.getAllUsers().values());
+        refreshItems(List.copyOf(userModel.getAllUsers().values()));
     }
 
     @Override
