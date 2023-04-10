@@ -44,7 +44,7 @@
       <MFXButton fx:id="btnDelete" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#deleteCoordinatorAction" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <MFXButton fx:id="btnCancel" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#cancelAction" text="Cancel" GridPane.columnIndex="3" GridPane.rowIndex="5" />
       <MFXButton fx:id="btnSave" maxHeight="30.0" maxWidth="1.7976931348623157E308" onAction="#saveAction" text="Save" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-      <MFXTableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowSpan="5" GridPane.vgrow="ALWAYS" />
+      <MFXTableView fx:id="tblViewEvents" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowSpan="5" GridPane.vgrow="ALWAYS" />
    </children>
    <padding>
       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />

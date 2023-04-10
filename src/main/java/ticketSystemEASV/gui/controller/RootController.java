@@ -134,8 +134,8 @@ public class RootController implements Initializable {
         manageCoordinatorsController.setModels(userModel);
         eventViewController.refreshItems(List.copyOf(UserModel.getLoggedInUser().getAssignedEvents().values()));
 
-        addCoordinatorController.setModel(userModel);
         addCoordinatorController.setIsEditing(UserModel.getLoggedInUser());
+        addCoordinatorController.setModel(userModel);
     }
 
     public void myProfileAction(ActionEvent actionEvent) {

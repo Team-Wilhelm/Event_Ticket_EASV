@@ -20,6 +20,7 @@ public class EventCard extends VBox {
     private final Image mapPin = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/map-pin.png")));
     private final Image calendar = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/calendar.png")));
     private final Image clock = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/clock.png")));
+    private final Image name = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/rename.png")));
     private Label nameLabel, dateLabel, timeLabel, locationLabel;
 
     public EventCard(Event event) {
@@ -34,7 +35,7 @@ public class EventCard extends VBox {
         top.setPrefHeight(100);
 
         // Name of the event
-        ImageView nameIV = new ImageView();
+        ImageView nameIV = new ImageView(name);
         nameLabel = new Label(event.getEventName());
         nameLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
         nameLabel.maxWidthProperty().bind(top.prefWidthProperty());
