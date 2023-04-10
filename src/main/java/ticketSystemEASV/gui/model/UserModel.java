@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.model;
 
+import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
@@ -47,7 +48,13 @@ public class UserModel extends Model {
     }
 
     public List<User> searchUsers(String query) {
-        return userManager.searchUsers(query);
+        List<User> filteredUsers = new ArrayList<>();
+        allUsers.values().stream().filter(user ->
+                        user.getName().toLowerCase().contains(query.toLowerCase())
+                                || user.getUsername().contains(query.toLowerCase())
+                                || user.getId().toString().toLowerCase().contains(query.toLowerCase()))
+                .forEach(filteredUsers::add);
+        return filteredUsers;
     }
 
     @Override

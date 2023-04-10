@@ -15,6 +15,4 @@ public interface IUserDAO {
     User getUser(UUID userID);
 
     User getUserByEmail(String email);
-
-    List<User> searchUsers(String query);
 }

@@ -103,6 +103,11 @@ public class EventDAO {
     }
 
     public void getEventsAssignedToEventCoordinator(User eventCoordinator){
+        if (Objects.equals(eventCoordinator.getRole().getName(), "Admin")) {
+            eventCoordinator.setAssignedEvents((HashMap<Integer, Event>) getAllEvents());
+            return;
+        }
+
         String sql = "SELECT eventID FROM User_Event_Link WHERE userID=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getId().toString());
@@ -173,23 +178,6 @@ public class EventDAO {
         Time endTime = resultSet.getTime("endTime");
         String locationGuidance = resultSet.getString("locationGuidance");
         return new Event(id, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
-    }
-
-    public List<Event> searchEvents(String query) {
-        List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM Event WHERE eventName LIKE ? OR eventLocation LIKE ?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setString(1, "%" + query + "%");
-            statement.setString(2, "%" + query + "%");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
-                events.add(constructEvent(resultSet));
-            }
-            return events;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public HashMap<Integer, Event> getEventsByIds(List<Integer> eventIDs) {

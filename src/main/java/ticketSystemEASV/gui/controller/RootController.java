@@ -121,15 +121,12 @@ public class RootController implements Initializable {
         this.userModel = userModel;
         eventViewController.setModels(ticketModel, eventModel, this.userModel);
 
-        if (userModel.isAdmin()) {
-            manageCoordinatorsController.setModels(userModel);
-            eventViewController.refreshItems(List.copyOf(eventModel.getAllEvents().values()));
-        }
-        else {
+        if (!userModel.isAdmin()) {
             btnManageCoordinators.setVisible(false);
-            //TODO find out why this is not working
-            eventViewController.refreshItems(List.copyOf(UserModel.getLoggedInUser().getAssignedEvents().values()));
         }
+
+        manageCoordinatorsController.setModels(userModel);
+        eventViewController.refreshItems(List.copyOf(UserModel.getLoggedInUser().getAssignedEvents().values()));
 
         addCoordinatorController.setModel(userModel);
         addCoordinatorController.setIsEditing(userModel.getLoggedInUser());

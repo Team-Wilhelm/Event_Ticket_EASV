@@ -37,10 +37,6 @@ public class EventManager {
         eventDAO.assignCoordinatorToEvent(user, event);
     }
 
-    public List<Event> searchEvents(String query) {
-        return eventDAO.searchEvents(query);
-    }
-
     public Event getEvent(int id) {
         return eventDAO.getEvent(id);
     }

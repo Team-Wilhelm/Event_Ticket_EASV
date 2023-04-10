@@ -176,6 +176,4 @@ public class EventViewController extends MotherController implements Initializab
         eventCards.clear();
         eventCards.addAll(searchEvents.stream().map(EventCard::new).toList());
     }
-
-
 }
