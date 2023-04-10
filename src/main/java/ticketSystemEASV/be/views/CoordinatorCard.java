@@ -47,7 +47,7 @@ public class CoordinatorCard extends VBox {
         usernameLabel = new Label(coordinator.getUsername());
         usernameLabel.getStyleClass().add("info-label");
 
-        mostRecent = coordinator.getAssignedEvents().size() > 0 ? ((Event) coordinator.getAssignedEvents().toArray()[0]).getEventName() : "No events assigned";
+        //mostRecent = coordinator.getAssignedEvents().size() > 0 ? ((Event) coordinator.getAssignedEvents().toArray()[0]).getEventName() : "No events assigned";
         mostRecentEvent = new Label(mostRecent);
         mostRecentEvent.getStyleClass().add("info-label");
 
@@ -94,7 +94,7 @@ public class CoordinatorCard extends VBox {
 
         nameLabel.setText(coordinator.getName());
         usernameLabel.setText(coordinator.getUsername());
-        mostRecent = coordinator.getAssignedEvents().size() > 0 ? ((Event) coordinator.getAssignedEvents().toArray()[0]).getEventName() : "No events assigned";
+        //mostRecent = coordinator.getAssignedEvents().size() > 0 ? ((Event) coordinator.getAssignedEvents().toArray()[0]).getEventName() : "No events assigned";
         mostRecentEvent.setText(mostRecent);
     }
 }

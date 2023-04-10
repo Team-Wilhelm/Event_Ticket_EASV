@@ -82,15 +82,20 @@ public class ManageCoordinatorsController extends MotherController implements In
 
     public void setModels(UserModel userModel) {
         this.userModel = userModel;
-        refreshItems();
+        refreshItems((List<?>) userModel.getAllUsers().values());
     }
 
     @Override
     public void refreshItems() {
+        refreshItems((List<?>) userModel.getAllUsers().values());
+    }
+
+    @Override
+    public void refreshItems(List<?> usersToDisplay) {
         coordinatorCards.clear();
 
         HashMap<User, CoordinatorCard> loadedCards = userModel.getLoadedCoordinatorCards();
-        for (User user : userModel.getAllUsers().values()) {
+        for (User user : (List<User>) usersToDisplay) {
 
             CoordinatorCard coordinatorCard = loadedCards.get(user);
             if (loadedCards.get(user) == null || lastFocusedCoordinator == coordinatorCard) {

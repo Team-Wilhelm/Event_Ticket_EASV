@@ -15,7 +15,7 @@ public class EventModel extends Model {
     private final HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
 
     public EventModel() {
-        getAllEventsFromManager();
+        //getAllEventsFromManager();
 
         // Create a new task and bind it to the eventCards list
         ConstructEventCardTask task = new ConstructEventCardTask(List.copyOf(allEvents.values()), this);
@@ -62,7 +62,9 @@ public class EventModel extends Model {
     }
 
     public void getAllEventsFromManager() {
-        Callable<HashMap<Integer, Event>> setAllEventsRunnable = ()
+        getEventsAssignedToEventCoordinator();
+        allEvents = UserModel.getLoggedInUser().getAssignedEvents();
+        /*Callable<HashMap<Integer, Event>> setAllEventsRunnable = ()
                 -> (HashMap<Integer, Event>) eventManager.getAllEvents();
 
         ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -72,7 +74,10 @@ public class EventModel extends Model {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        shutdownExecutorService(executorService);
+        shutdownExecutorService(executorService);*/
+    }
+    public void getEventsAssignedToEventCoordinator(){
+        eventManager.getEventsAssignedToEventCoordinator();
     }
 
     public Event getEvent(int id) {

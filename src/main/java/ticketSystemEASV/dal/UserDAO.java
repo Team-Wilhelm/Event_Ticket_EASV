@@ -206,7 +206,7 @@ public class UserDAO implements IUserDAO {
             }
             if (!eventIds.isEmpty()) {
                 // Batch get events by IDs
-                List<Event> events = eventDAO.getEventsByIds(eventIds);
+                HashMap<Integer, Event> events = eventDAO.getEventsByIds(eventIds);
                 eventCoordinator.setAssignedEvents(events);
             }
         } catch (SQLException e) {

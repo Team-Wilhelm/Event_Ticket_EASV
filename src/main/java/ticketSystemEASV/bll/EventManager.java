@@ -2,6 +2,7 @@ package ticketSystemEASV.bll;
 
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.dal.EventDAO;
+import ticketSystemEASV.gui.model.UserModel;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +26,10 @@ public class EventManager {
 
     public Map<Integer, Event> getAllEvents() {
         return eventDAO.getAllEvents();
+    }
+
+    public void getEventsAssignedToEventCoordinator() {
+        eventDAO.getEventsAssignedToEventCoordinator(UserModel.getLoggedInUser());
     }
 
     public List<Event> searchEvents(String query) {

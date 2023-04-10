@@ -1,6 +1,7 @@
 package ticketSystemEASV.be;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,7 +9,7 @@ public class User {
     private UUID id;
     private String name, username, password;
     private Role role;
-    private final List<Event> assignedEvents;
+    private final HashMap<Integer, Event> assignedEvents;
     private byte[] profilePicture;
 
     public User(String name, String username, String password, Role role, byte[] profilePicture) {
@@ -16,7 +17,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.assignedEvents = new ArrayList<>();
+        this.assignedEvents = new HashMap<Integer, Event>();
         this.profilePicture = profilePicture;
     }
 
@@ -58,13 +59,13 @@ public class User {
         this.role = role;
     }
 
-    public List<Event> getAssignedEvents() {
+    public HashMap<Integer, Event> getAssignedEvents() {
         return assignedEvents;
     }
 
-    public void setAssignedEvents(List<Event> assignedEvents) {
+    public void setAssignedEvents(HashMap<Integer, Event> assignedEvents) {
         this.assignedEvents.clear();
-        this.assignedEvents.addAll(assignedEvents);
+        this.assignedEvents.putAll(assignedEvents);
     }
 
     public byte[] getProfilePicture() {

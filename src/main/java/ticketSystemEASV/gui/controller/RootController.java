@@ -17,6 +17,7 @@ import ticketSystemEASV.gui.model.UserModel;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -122,12 +123,12 @@ public class RootController implements Initializable {
 
         if (userModel.isAdmin()) {
             manageCoordinatorsController.setModels(userModel);
-            eventViewController.refreshItems();
+            eventViewController.refreshItems(List.copyOf(eventModel.getAllEvents().values()));
         }
         else {
             btnManageCoordinators.setVisible(false);
             //TODO find out why this is not working
-            eventViewController.showMyEvents(userModel.getLoggedInUser().getAssignedEvents());
+            eventViewController.refreshItems(List.copyOf(UserModel.getLoggedInUser().getAssignedEvents().values()));
         }
 
         addCoordinatorController.setModel(userModel);

@@ -102,6 +102,26 @@ public class EventDAO {
         return null;
     }
 
+    public void getEventsAssignedToEventCoordinator(User eventCoordinator){
+        String sql = "SELECT eventID FROM User_Event_Link WHERE userID=?;";
+        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+            statement.setString(1, eventCoordinator.getId().toString());
+            ResultSet resultSet = statement.executeQuery();
+            List<Integer> eventIds = new ArrayList<>();
+            while (resultSet.next()) {
+                int eventID = resultSet.getInt("eventID");
+                eventIds.add(eventID);
+            }
+            if (!eventIds.isEmpty()) {
+                // Batch get events by IDs
+                HashMap<Integer, Event> events = getEventsByIds(eventIds);
+                eventCoordinator.setAssignedEvents(events);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Collection<User> getCoordinatorsAssignedToEvent(int eventID) {
         UserDAO userDAO = new UserDAO();
         List<User> eventCoordinators = new ArrayList<>();
@@ -150,8 +170,8 @@ public class EventDAO {
         }
     }
 
-    public List<Event> getEventsByIds(List<Integer> eventIDs) {
-        List<Event> events = new ArrayList<>();
+    public HashMap<Integer, Event> getEventsByIds(List<Integer> eventIDs) {
+        HashMap<Integer, Event> events = new HashMap<>();
         if (eventIDs == null || eventIDs.isEmpty()) {
             return events;
         }
@@ -166,7 +186,7 @@ public class EventDAO {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Event event = constructEvent(resultSet);
-                events.add(event);
+                events.put(event.getId(), event);
             }
         } catch (SQLException e) {
             e.printStackTrace();

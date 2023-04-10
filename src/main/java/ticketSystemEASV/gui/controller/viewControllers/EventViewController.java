@@ -9,7 +9,6 @@ import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.AlertManager;
-import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -47,6 +46,7 @@ public class EventViewController extends MotherController implements Initializab
     private final AlertManager alertManager = AlertManager.getInstance();
     private TicketModel ticketModel;
     private EventModel eventModel;
+    //private UserModel userModel;
     private EventCard lastFocusedEvent;
     private ConstructEventCardTask task;
 
@@ -97,10 +97,15 @@ public class EventViewController extends MotherController implements Initializab
 
     @Override
     public void refreshItems() {
+        refreshItems(List.copyOf(eventModel.getAllEvents().values()));
+    }
+
+    @Override
+    public void refreshItems(List<?> eventsToDisplay) {
         eventCards.clear();
 
         HashMap<Event, EventCard> loadedCards = eventModel.getLoadedEventCards();
-        for (Event event : eventModel.getAllEvents().values()) {
+        for (Event event : (List<Event>) eventsToDisplay) {
 
             EventCard eventCard = loadedCards.get(event);
             if (loadedCards.get(event) == null) {
@@ -162,7 +167,7 @@ public class EventViewController extends MotherController implements Initializab
     public void setModels(TicketModel ticketModel, EventModel eventModel) {
         this.ticketModel = ticketModel;
         this.eventModel = eventModel;
-        refreshItems();
+        refreshItems(List.copyOf(eventModel.getAllEvents().values()));
     }
 
     public void setFilteredEvents(List<Event> searchEvents) {
@@ -170,8 +175,5 @@ public class EventViewController extends MotherController implements Initializab
         eventCards.addAll(searchEvents.stream().map(EventCard::new).toList());
     }
 
-    public void showMyEvents(List<Event> eventsToDisplay) {
-        eventCards.clear();
-        eventCards.addAll(eventsToDisplay.stream().map(EventCard::new).toList());
-    }
+
 }

@@ -9,10 +9,12 @@ import javafx.stage.Stage;
 import ticketSystemEASV.Main;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class MotherController {
     public abstract void refreshItems();
+    public abstract void refreshItems(List<?> obejectList);
 
     protected FXMLLoader openNewWindow(String resource, Modality modalityType) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resource));
