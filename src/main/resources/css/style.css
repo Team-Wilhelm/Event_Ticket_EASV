@@ -123,3 +123,8 @@
 .menuButtons {
     -fx-border-color: transparent;
 }
+
+.createButton {
+    -fx-background-color: -fx-yellow;
+    -fx-border-color: -fx-yellow;
+}

@@ -99,6 +99,8 @@ public class RootController implements Initializable {
         gridPane.getRowConstraints().get(3).prefHeightProperty().bind(btnManageCoordinators.heightProperty().add(10));
         gridPane.getRowConstraints().get(5).prefHeightProperty().bind(btnMyProfile.heightProperty().add(10));
 
+
+        //imgLogo.fitWidthProperty().bind(btnEvents.widthProperty().divide(2));
         //TODO size bindings
     }
 

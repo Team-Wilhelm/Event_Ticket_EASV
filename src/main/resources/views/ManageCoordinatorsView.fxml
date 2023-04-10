@@ -31,7 +31,7 @@
                </padding></FlowPane>
          </content>
       </ScrollPane>
-      <MFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCoordinatorAction" text="+ Add coordinator" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+      <MFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCoordinatorAction" text="+ Add coordinator" styleClass="createButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="15.0" right="15.0" />
          </GridPane.margin>

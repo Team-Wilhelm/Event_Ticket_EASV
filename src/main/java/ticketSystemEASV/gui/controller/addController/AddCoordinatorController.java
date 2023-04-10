@@ -109,7 +109,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Choose profile picture");
                 fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.jpeg"),
                         new FileChooser.ExtensionFilter("All Files", "*.*"));
                 File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
                 if (selectedFile != null) {
