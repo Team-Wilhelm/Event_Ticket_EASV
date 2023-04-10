@@ -77,6 +77,7 @@ public class RootController implements Initializable {
             addCoordinatorController.setIsManagingOwnAccount(true);
 
             myProfileScene.lookup("#btnGoBack").setVisible(false);
+            myProfileScene.lookup("#btnGoBack").setManaged(false);
             myProfileScene.lookup("#btnDelete").setVisible(false);
             myProfileScene.lookup("#btnDelete").setManaged(false);
             myProfileScene.lookup("#btnCancel").setVisible(false);

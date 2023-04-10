@@ -1,11 +1,15 @@
 package ticketSystemEASV.gui.controller.addController;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -39,6 +44,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -218,7 +224,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private boolean checkInput(ActionEvent actionEvent) {
         //TODO disable save button while input is invalid
         if (userModel.getAllUsers().values().stream().anyMatch(user -> user.getUsername().equals(username)
-        && !isManagingOwnAccount)) {
+        && !username.equals(coordinatorToEdit.getUsername()))) {
             alertManager.getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();
             return false;
         }
@@ -231,6 +237,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
 
     public void setIsManagingOwnAccount(boolean isManagingOwnAccount) {
         this.isManagingOwnAccount = isManagingOwnAccount;
+
         progressLabel = new Label("");
         progressLabel.setId("progressLabel");
         progressSpinner = new MFXProgressSpinner();
@@ -238,8 +245,23 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         HBox hbox = new HBox(5, progressSpinner, progressLabel);
         hbox.setAlignment(Pos.CENTER);
 
+        MFXButton btnLogOut = new MFXButton("Log out");
+        btnLogOut.setId("btnLogOut");
+
+        btnLogOut.setOnAction(event -> {
+            Stage stage = (Stage) btnLogOut.getScene().getWindow();
+            try {
+               stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/views/LoginView.fxml"))));
+               stage.centerOnScreen();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        
         if (isManagingOwnAccount) {
             gridPane.add(hbox, 1, 5);
+            gridPane.add(btnLogOut, 0, 0);
+            GridPane.setHalignment(btnLogOut, HPos.LEFT);
 
             progressSpinner.setVisible(false);
             progressLabel.setVisible(false);
