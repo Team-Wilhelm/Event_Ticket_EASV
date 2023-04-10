@@ -4,3 +4,4 @@ target\
 *.class
 /.idea/modules.xml
 /.idea/
+/target/classes/

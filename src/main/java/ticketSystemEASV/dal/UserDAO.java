@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class UserDAO implements IUserDAO {
-    //TODO caching
     private DBConnection dbConnection;
     private EventDAO eventDAO;
     private UserBuilder userBuilder;
@@ -177,6 +176,11 @@ public class UserDAO implements IUserDAO {
     }
 
     public void getEventsAssignedToEventCoordinator(User eventCoordinator){
+        if (eventCoordinator.getRole() == roles.get("Admin")) {
+            eventCoordinator.setAssignedEvents((HashMap<Integer, Event>) eventDAO.getAllEvents());
+            return;
+        }
+
         String sql = "SELECT eventID FROM User_Event_Link WHERE userID=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getId().toString());

@@ -103,6 +103,11 @@ public class EventDAO {
     }
 
     public void getEventsAssignedToEventCoordinator(User eventCoordinator){
+        if (Objects.equals(eventCoordinator.getRole().getName(), "Admin")) {
+            eventCoordinator.setAssignedEvents((HashMap<Integer, Event>) getAllEvents());
+            return;
+        }
+
         String sql = "SELECT eventID FROM User_Event_Link WHERE userID=?;";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, eventCoordinator.getId().toString());
