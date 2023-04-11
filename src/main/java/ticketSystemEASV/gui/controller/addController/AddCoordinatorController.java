@@ -180,7 +180,6 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         txtPassword.setPromptText("Leave blank to keep current password");
 
         Bindings.bindContentBidirectional(tblViewEvents.getItems(), FXCollections.observableArrayList(coordinatorToEdit.getAssignedEvents().values()));
-        System.out.println(coordinatorToEdit.getAssignedEvents().values().size());
     }
 
     public void setModel(UserModel userModel) {

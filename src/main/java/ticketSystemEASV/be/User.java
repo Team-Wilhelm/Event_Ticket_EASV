@@ -1,8 +1,6 @@
 package ticketSystemEASV.be;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class User {
@@ -70,6 +68,12 @@ public class User {
 
     public byte[] getProfilePicture() {
         return profilePicture;
+    }
+
+    public String getAssignation(Event event){
+        if (assignedEvents.containsValue(event))
+            return "ASSIGNED:";
+        else return "";
     }
 
     @Override
