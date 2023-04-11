@@ -3,18 +3,23 @@ package ticketSystemEASV.dal;
 import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
+import ticketSystemEASV.dal.Interfaces.DAO;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TicketDAO {
-    private final DBConnection dbConnection = new DBConnection();
+public class TicketDAO extends DAO<Ticket> {
+    private final DBConnection dbConnection = DBConnection.getInstance();
 
     public String addTicket(Ticket ticket){
         String SQL = "SELECT id FROM Customer WHERE CustomerName = ? AND email = ?";
         String message = "";
-        try (Connection connection = dbConnection.getConnection()) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
             PreparedStatement idStatement = connection.prepareStatement(SQL);
             idStatement.setString(1, ticket.getCustomer().getName());
             idStatement.setString(2, ticket.getCustomer().getEmail());
@@ -48,6 +53,8 @@ public class TicketDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             message = "Could not add ticket to database";
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
@@ -55,7 +62,11 @@ public class TicketDAO {
     public void addMultipleTickets(List<Ticket> tickets, Customer customer){
         int customerId = customer.getId();
         String sql = "INSERT INTO Ticket (eventID, customerID, ticketType, ticketQR) VALUES (?,?,?,?);";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
 
             for (Ticket ticket : tickets) {
                 statement.setInt(1, ticket.getEvent().getId());
@@ -67,25 +78,37 @@ public class TicketDAO {
             statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
     }
 
     public String deleteTicket(Ticket ticket){
         String sql = "DELETE FROM Ticket WHERE id=?;";
         String message = "";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, ticket.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             message = "Could not delete ticket from database";
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
 
     public Ticket getTicket(UUID ticketId){
         String sql = "SELECT * FROM Ticket WHERE Id = ?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, ticketId.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -99,6 +122,8 @@ public class TicketDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return null;
     }
@@ -121,7 +146,10 @@ public class TicketDAO {
     }
 
     public void getTickets(List<Ticket> tickets, String sql, int id){
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -135,13 +163,18 @@ public class TicketDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
     }
 
     public List<Ticket> getAllTickets() {
         List<Ticket> tickets = new ArrayList<>();
         String sql = "SELECT * FROM Ticket;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 tickets.add(new Ticket(
@@ -154,6 +187,8 @@ public class TicketDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return tickets;
     }

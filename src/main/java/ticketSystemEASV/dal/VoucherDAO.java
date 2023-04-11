@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class VoucherDAO {
-    private final DBConnection dbConnection = new DBConnection();
+    private final DBConnection dbConnection = DBConnection.getInstance();
 
     public void addVoucher(Voucher voucher){
         String sql = "INSERT INTO Voucher (VoucherType, Restrictions, Redeemed, VoucherQR) VALUES (?,?,?,?);";

@@ -2,6 +2,7 @@ package ticketSystemEASV.dal;
 
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
+import ticketSystemEASV.dal.Interfaces.DAO;
 import ticketSystemEASV.gui.model.UserModel;
 
 import java.sql.*;
@@ -9,8 +10,8 @@ import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EventDAO {
-    private final DBConnection dbConnection = new DBConnection();
+public class EventDAO extends DAO<Event> {
+    private final DBConnection dbConnection = DBConnection.getInstance();
 
     public String addEvent(Event event) {
         User loggedInUser = UserModel.getLoggedInUser();
@@ -21,7 +22,11 @@ public class EventDAO {
                 "SET @EventID = (SELECT ID FROM Event WHERE EventName = ?)" +
                 "INSERT INTO User_Event_Link (UserID, EventId)" +
                 "VALUES (?, @EventID);";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             fillPreparedStatement(event, statement);
             statement.setString(9, event.getEventName());
             statement.setString(10, loggedInUser.getId().toString()); //TODO logged in users
@@ -29,6 +34,8 @@ public class EventDAO {
         } catch (SQLException e) {
             message = e.getMessage();
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
@@ -36,13 +43,19 @@ public class EventDAO {
     public String updateEvent(Event event) {
         String message = "";
         String sql = "UPDATE Event SET startDate=?, startTime=?, eventName=?, eventLocation=?, notes=?, endDate=?, endTime=?, locationGuidance=? WHERE id=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             fillPreparedStatement(event, statement);
             statement.setInt(9, event.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             message = e.getMessage();
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
@@ -50,12 +63,18 @@ public class EventDAO {
     public String deleteEvent(Event eventToDelete) {
         String sql = "UPDATE Event SET deleted=1 WHERE id=?;";
         String message = "";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, eventToDelete.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             message = e.getMessage();
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
@@ -74,7 +93,11 @@ public class EventDAO {
     public Map<Integer, Event> getAllEvents() {
         HashMap<Integer, Event> events = new HashMap<>();
         String sql = "SELECT * FROM Event WHERE deleted=0;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 Event e = constructEvent(resultSet);
@@ -84,12 +107,18 @@ public class EventDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            releaseConnection(connection);
         }
     }
 
     public Event getEvent(int eventID) {
         String sql = "SELECT * FROM Event WHERE id=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, eventID);
             statement.execute();
             ResultSet resultSet = statement.getResultSet();
@@ -98,6 +127,8 @@ public class EventDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return null;
     }
@@ -109,7 +140,10 @@ public class EventDAO {
         }
 
         String sql = "SELECT eventID FROM User_Event_Link WHERE userID=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, eventCoordinator.getId().toString());
             ResultSet resultSet = statement.executeQuery();
             List<Integer> eventIds = new ArrayList<>();
@@ -124,46 +158,40 @@ public class EventDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    public Collection<User> getCoordinatorsAssignedToEvent(int eventID) {
-        UserDAO userDAO = new UserDAO();
-        List<User> eventCoordinators = new ArrayList<>();
-        String sql = "SELECT * FROM User_Event_Link WHERE EventID=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setInt(1, eventID);
-            statement.execute();
-            ResultSet resultSet = statement.getResultSet();
-            while (resultSet.next()) {
-                eventCoordinators.add(userDAO.getUser(UUID.fromString(resultSet.getString("UserID"))));
-            }
-            return eventCoordinators;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+        } finally {
+            releaseConnection(connection);
         }
     }
 
     public void assignCoordinatorToEvent(User user, Event event){
         String sql = "INSERT INTO User_Event_Link (UserID, EventID) VALUES (?, ?);";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getId().toString());
             statement.setInt(2, event.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        }  finally {
+            releaseConnection(connection);
         }
     }
 
     public void unassignCoordinatorFromEvent(User user, Event event) {
         String sql = "DELETE FROM User_Event_Link WHERE UserID = ? AND EventID =?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getId().toString());
             statement.setInt(2, event.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
     }
 
@@ -192,7 +220,10 @@ public class EventDAO {
                 .collect(Collectors.joining(","));
 
         String sql = "SELECT * FROM Event WHERE deleted=0 AND id IN (" + ids + ")";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Event event = constructEvent(resultSet);
@@ -200,8 +231,9 @@ public class EventDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return events;
     }
-
 }

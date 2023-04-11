@@ -3,14 +3,16 @@ package ticketSystemEASV.dal;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
+import ticketSystemEASV.dal.Interfaces.DAO;
 import ticketSystemEASV.dal.Interfaces.IUserDAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class UserDAO implements IUserDAO {
+public class UserDAO extends DAO<User> implements IUserDAO {
     private DBConnection dbConnection;
     private EventDAO eventDAO;
     private UserBuilder userBuilder;
@@ -18,7 +20,7 @@ public class UserDAO implements IUserDAO {
     private Map<String, Role> roles;
 
     public UserDAO() {
-        dbConnection = new DBConnection();
+        dbConnection = DBConnection.getInstance();
         roleDAO = new RoleDAO();
         roles = roleDAO.getAllRoles();
         userBuilder = new UserBuilder();
@@ -30,7 +32,11 @@ public class UserDAO implements IUserDAO {
                 "LEFT JOIN UserRole ON UserRole.UserID = [User].Id " +
                 "LEFT JOIN Role ON Role.Id = UserRole.RoleId " +
                 "WHERE [User].Id=?";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, userID.toString());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -43,6 +49,8 @@ public class UserDAO implements IUserDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return null;
     }
@@ -52,26 +60,36 @@ public class UserDAO implements IUserDAO {
                 "JOIN Role ON UserRole.RoleId = Role.Id\n" +
                 "WHERE UserId=? AND Role.RoleName=?";
 
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, userID.toString());
             statement.setString(2, role);
             statement.execute();
             return statement.getResultSet().next();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return false;
     }
 
     public boolean logIn(String name, String password) {
         String sql = "SELECT * FROM [User] WHERE UserName=? AND Password=?";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, name);
             statement.setString(2, password);
             statement.execute();
             return statement.getResultSet().next();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return false;
     }
@@ -85,7 +103,10 @@ public class UserDAO implements IUserDAO {
                 "INSERT INTO UserRole (UserID, RoleID)" +
                 "VALUES (@UserID,(SELECT Id FROM Role WHERE RoleName LIKE 'EventCoordinator'));";
 
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getName());
             statement.setString(2, user.getUsername());
             statement.setString(3, user.getPassword());
@@ -94,6 +115,8 @@ public class UserDAO implements IUserDAO {
             statement.execute();
         } catch (SQLException e) {
             message = e.getMessage();
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
@@ -101,12 +124,17 @@ public class UserDAO implements IUserDAO {
     public String updateUser(User user) {
         String message = "";
         String sql = "UPDATE [User] SET name=?, userName=?, password=?, profilePicture=? WHERE id=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             fillPreparedStatement(statement, user);
             statement.setString(5, user.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             message = e.getMessage();
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
@@ -114,23 +142,30 @@ public class UserDAO implements IUserDAO {
     public String deleteUser(User user) {
         String sql = "UPDATE [User] SET deleted=1 WHERE id=?;";
         String message = "";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             message = e.getMessage();
+        } finally {
+            releaseConnection(connection);
         }
         return message;
     }
 
     public User getUserByEmail(String email) {
-
         String sql = "SELECT * FROM [User] " +
                 "RIGHT JOIN UserRole ON [User].Id = UserRole.UserId " +
                 "LEFT JOIN Role R2 on R2.Id = UserRole.RoleId " +
                 "WHERE UserName=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, email);
             statement.execute();
             if (statement.getResultSet().next()) {
@@ -138,19 +173,24 @@ public class UserDAO implements IUserDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
         return null;
     }
 
     // Event coordinators
     public HashMap<UUID, User> getAllEventCoordinators() {
-        long startTime = System.currentTimeMillis();
         HashMap<UUID, User> eventCoordinators = new HashMap<>();
         String sql = "SELECT * FROM [User] " +
                 "JOIN UserRole ON [User].ID = UserRole.UserID " +
                 "JOIN [Role] ON UserRole.RoleID = Role.ID " +
                 "WHERE [User].deleted=0;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 if (eventCoordinators.containsKey(UUID.fromString(resultSet.getString("Id")))) {
@@ -172,6 +212,8 @@ public class UserDAO implements IUserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            releaseConnection(connection);
         }
     }
 
@@ -182,7 +224,10 @@ public class UserDAO implements IUserDAO {
         }
 
         String sql = "SELECT eventID FROM User_Event_Link WHERE userID=?;";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, eventCoordinator.getId().toString());
             ResultSet resultSet = statement.executeQuery();
             List<Integer> eventIds = new ArrayList<>();
@@ -197,6 +242,8 @@ public class UserDAO implements IUserDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
         }
     }
 
