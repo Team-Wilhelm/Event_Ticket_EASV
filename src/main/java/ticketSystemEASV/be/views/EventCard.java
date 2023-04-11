@@ -17,15 +17,22 @@ import java.util.Objects;
 
 public class EventCard extends VBox {
     private Event event;
-    private final Image mapPin = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/map-pin.png")));
-    private final Image calendar = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/calendar.png")));
-    private final Image clock = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/clock.png")));
-    private final Image name = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/rename.png")));
+    private final Image mapPin;
+    private final Image calendar;
+    private final Image clock;
+    private final Image name;
+    private final IconFactory iconFactory;
     private Label nameLabel, dateLabel, timeLabel, locationLabel;
 
     public EventCard(Event event) {
         super();
         this.event = event;
+
+        iconFactory = new IconFactory();
+        name = iconFactory.create(IconFactory.Icon.NAME);
+        mapPin = iconFactory.create(IconFactory.Icon.MAP_PIN);
+        clock = iconFactory.create(IconFactory.Icon.CLOCK);
+        calendar = iconFactory.create(IconFactory.Icon.CALENDAR);
 
         this.getStyleClass().add("event-view");
         //
