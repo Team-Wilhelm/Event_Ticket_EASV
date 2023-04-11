@@ -2,6 +2,7 @@ package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.cell.MFXComboBoxCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -13,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
@@ -153,10 +155,8 @@ public class AddEventController extends AddObjectController implements Initializ
         for(User user : userModel.getAllUsers().values()) {
             if (!(user.getRole().getName().equals("Admin") || user.equals(UserModel.getLoggedInUser()))) {
                 allCoordinators.add(user);
-
             }
         }
-
         comboAssignCoordinator.setItems(allCoordinators);
     }
 

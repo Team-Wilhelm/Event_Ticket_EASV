@@ -1,5 +1,7 @@
 package ticketSystemEASV.gui.controller.viewControllers;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -7,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
+import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +29,17 @@ public abstract class MotherController {
         stage.centerOnScreen();
         stage.initModality(modalityType);
         stage.show();
+
+        if (resource.equals("/views/add...views/AddCoordinatorView.fxml")) {
+            AddCoordinatorController addCoordinatorController = fxmlLoader.getController();
+            Platform.runLater(() -> {
+                ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->
+                        addCoordinatorController.autosizeTableColumns();
+                stage.widthProperty().addListener(stageSizeListener);
+                stage.heightProperty().addListener(stageSizeListener);
+            });
+        }
+
         return fxmlLoader;
     }
 

@@ -38,7 +38,7 @@ public class EventCard extends VBox {
         //
         HBox top = new HBox();
         top.getStyleClass().add("event-view-top");
-        top.setPrefWidth(200);
+        top.setPrefWidth(250);
         top.setPrefHeight(100);
 
         // Name of the event

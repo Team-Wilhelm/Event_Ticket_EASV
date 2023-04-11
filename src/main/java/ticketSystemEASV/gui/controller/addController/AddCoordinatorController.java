@@ -4,6 +4,7 @@ import io.github.palexdev.materialfx.controls.*;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
@@ -80,7 +81,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private Task<TaskState> task;
     private String coordinatorName, username, password;
     private final AlertManager alertManager = AlertManager.getInstance();
-    private Scene scene;
+    private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -180,7 +181,6 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         txtPassword.setPromptText("Leave blank to keep current password");
 
         Bindings.bindContentBidirectional(tblViewEvents.getItems(), FXCollections.observableArrayList(coordinatorToEdit.getAssignedEvents().values()));
-        System.out.println(coordinatorToEdit.getAssignedEvents().values().size());
     }
 
     public void setModel(UserModel userModel) {
@@ -329,6 +329,8 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     }
 
     private void setUpTableView() {
+        tblViewEvents.autosizeColumnsOnInitialization();
+
         tblColEventID = new MFXTableColumn<>("Event ID", true);
         tblColEventName = new MFXTableColumn<>("Event name", true);
         tblColLocation = new MFXTableColumn<>("Location", true);
@@ -338,5 +340,10 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         tblColLocation.setRowCellFactory(event -> new MFXTableRowCell<>(Event::getLocation));
 
         tblViewEvents.getTableColumns().addAll(tblColEventID, tblColEventName, tblColLocation);
+    }
+
+    public void autosizeTableColumns() {
+        tblViewEvents.autosizeColumns();
+        tblViewEvents.autosize();
     }
 }
