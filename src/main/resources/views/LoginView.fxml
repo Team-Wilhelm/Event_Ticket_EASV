@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.LoginViewController">
+<BorderPane minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.LoginViewController">
    <center>
       <HBox>
          <children>

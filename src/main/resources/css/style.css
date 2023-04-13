@@ -9,6 +9,10 @@
     -fx-accent: derive(-fx-red, 130%);
 }
 
+.background {
+    -fx-background-color: white;
+}
+
 .event-view {
     -fx-border-radius: 10px;
     -fx-padding: 10px;
