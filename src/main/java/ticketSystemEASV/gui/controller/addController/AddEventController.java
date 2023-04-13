@@ -87,6 +87,22 @@ public class AddEventController extends AddObjectController implements Initializ
             if (newValue != null) {
                 assignCoordinator(newValue);
                 comboAssignCoordinator.getSelectionModel().clearSelection();
+
+                populateAssignCoordinatorComboBox();
+            }
+        });
+
+        comboAssignCoordinator.setConverter(new StringConverter<User>() {
+            @Override
+            public String toString(User object) {
+                if (!(object == null))
+                return object.getAssignation(object.getAssignedEvents().get(eventToEdit.getId())) + " " + object.getName() + " (" + object.getUsername() + ")";
+                else return "";
+            }
+
+            @Override
+            public User fromString(String string) {
+                return null;
             }
         });
     }
@@ -152,9 +168,11 @@ public class AddEventController extends AddObjectController implements Initializ
     }
 
     private void populateAssignCoordinatorComboBox(){
+        allCoordinators.clear();
         for(User user : userModel.getAllUsers().values()) {
             if (!(user.getRole().getName().equals("Admin") || user.equals(UserModel.getLoggedInUser()))) {
                 allCoordinators.add(user);
+
             }
         }
         comboAssignCoordinator.setItems(allCoordinators);
