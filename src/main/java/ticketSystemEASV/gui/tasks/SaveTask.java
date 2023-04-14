@@ -6,9 +6,9 @@ import ticketSystemEASV.gui.model.IModel;
 import java.util.concurrent.CountDownLatch;
 
 public class SaveTask extends Task<TaskState> {
-    protected final Object objectToSave;
-    protected final boolean isEditing;
-    protected final IModel IModel;
+    private final Object objectToSave;
+    private final boolean isEditing;
+    private final IModel IModel;
 
     public SaveTask(Object objectToSave, boolean isEditing, IModel IModel) {
         this.objectToSave = objectToSave;

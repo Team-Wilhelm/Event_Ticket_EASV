@@ -91,7 +91,6 @@ public abstract class AddObjectController {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(task);
         shutdownExecutorService(executorService);
-        shutdownExecutorService(executorService);
     }
 
     private void setUpTask(Task<TaskState> task, ActionEvent actionEvent, MotherController controller) {

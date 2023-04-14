@@ -46,6 +46,7 @@ public class RootController implements Initializable {
         try {
             ticketModel = executorService.submit(ticketModelCallable).get();
             eventModel = executorService.submit(eventModelCallable).get();
+            eventModel.setTicketModel(ticketModel);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize models");

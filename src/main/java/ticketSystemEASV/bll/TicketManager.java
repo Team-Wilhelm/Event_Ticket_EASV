@@ -89,9 +89,8 @@ public class TicketManager {
     public void openTicket(Ticket ticket) {
         if (Desktop.isDesktopSupported()) {
             try {
+                ticketGenerator.generateTicket(ticket);
                 File ticketPDF = new File("src/main/resources/tickets/" + ticket.getId() + ".pdf");
-                if (!ticketPDF.exists())
-                    ticketGenerator.generateTicket(ticket);
                 Desktop.getDesktop().open(ticketPDF);
             } catch (IOException ex) {
                 // no application registered for PDFs
@@ -101,5 +100,16 @@ public class TicketManager {
 
     public String update(Ticket ticket) {
         return ticketDAO.update(ticket);
+    }
+
+    public void updateTickets(List<Ticket> tickets) {
+        try {
+            for (Ticket ticket : tickets) {
+                ticket.setTicketQR(ticketGenerator.generateQRCode(ticket, 150));
+            }
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+        ticketDAO.updateTickets(tickets);
     }
 }

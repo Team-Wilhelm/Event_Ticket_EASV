@@ -10,6 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
+import ticketSystemEASV.gui.tasks.TaskState;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,13 +40,12 @@ public abstract class MotherController {
                 stage.heightProperty().addListener(stageSizeListener);
             });
         }
-
         return fxmlLoader;
     }
 
     public abstract void setProgressSpinnerVisibility(boolean isVisible);
 
-    public abstract void bindSpinnerToTask(Task task);
+    public abstract void bindSpinnerToTask(Task<TaskState> task);
 
     public abstract void unbindSpinnerFromTask();
 

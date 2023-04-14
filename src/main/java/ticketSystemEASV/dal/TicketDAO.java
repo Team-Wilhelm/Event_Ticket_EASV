@@ -242,4 +242,23 @@ public class TicketDAO extends DAO<Ticket> {
                 resultSet.getBytes("ticketQR")
         );
     }
+
+    public void updateTickets(List<Ticket> tickets) {
+        String sql = "UPDATE Ticket SET ticketQR=? WHERE id=?;";
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (Ticket ticket : tickets) {
+                statement.setBytes(1, ticket.getTicketQR());
+                statement.setString(2, ticket.getId().toString());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
+        }
+    }
 }
