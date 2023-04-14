@@ -27,6 +27,13 @@ public class Ticket {
         this.ticketType = "Classic";
     }
 
+    public Ticket(UUID id, Customer customer, String ticketType, byte[] ticketQR) {
+        this.id = id;
+        this.customer = customer;
+        this.ticketType = ticketType;
+        this.ticketQR = ticketQR;
+    }
+
     public Event getEvent() {
         return event;
     }

@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.model;
 
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.EventManager;
@@ -39,6 +40,10 @@ public class EventModel extends Model {
     @Override
     public String update(Object objectToUpdate, CountDownLatch latch) {
         Event eventToUpdate = (Event) objectToUpdate;
+
+        for (Ticket ticket : eventToUpdate.getTickets().values()) {
+            ticket.s(eventToUpdate);
+        }
         return eventManager.updateEvent(eventToUpdate);
     }
 

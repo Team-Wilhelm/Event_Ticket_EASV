@@ -2,7 +2,6 @@ package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
-import io.github.palexdev.materialfx.controls.cell.MFXComboBoxCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -56,7 +55,6 @@ public class AddEventController extends AddObjectController implements Initializ
     private MFXDatePicker dateStartDate, dateEndDate;
     @FXML
     private MFXTextField txtEventName, txtLocation, txtLocationGuidance, txtNotes;
-    //TODO Notes as TextArea-ish
     @FXML
     private VBox leftVBox;
     @FXML

@@ -6,12 +6,12 @@ import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.dal.Interfaces.DAO;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TicketDAO extends DAO<Ticket> {
     private final DBConnection dbConnection = DBConnection.getInstance();
+    private final CustomerDAO customerDAO = new CustomerDAO();
 
     public String addTicket(Ticket ticket){
         String SQL = "SELECT id FROM Customer WHERE CustomerName = ? AND email = ?";
@@ -112,13 +112,7 @@ public class TicketDAO extends DAO<Ticket> {
             statement.setString(1, ticketId.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                  return new Ticket(
-                        UUID.fromString(rs.getString("id")),
-                        new EventDAO().getEvent(rs.getInt("eventID")),
-                        new CustomerDAO().getCustomer(rs.getInt("customerID")),
-                        rs.getString("ticketType"),
-                        rs.getBytes("ticketQR")
-                );
+                  return constructTicket(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -153,13 +147,7 @@ public class TicketDAO extends DAO<Ticket> {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                tickets.add(new Ticket(
-                        UUID.fromString(rs.getString("id")),
-                        new EventDAO().getEvent(rs.getInt("eventID")),
-                        new CustomerDAO().getCustomer(rs.getInt("customerID")),
-                        rs.getString("ticketType"),
-                        rs.getBytes("ticketQR")
-                ));
+                tickets.add(constructTicket(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,13 +165,7 @@ public class TicketDAO extends DAO<Ticket> {
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                tickets.add(new Ticket(
-                        UUID.fromString(rs.getString("id")),
-                        new EventDAO().getEvent(rs.getInt("eventID")),
-                        new CustomerDAO().getCustomer(rs.getInt("customerID")),
-                        rs.getString("ticketType"),
-                        rs.getBytes("ticketQR")
-                ));
+                tickets.add(constructTicket(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -191,5 +173,73 @@ public class TicketDAO extends DAO<Ticket> {
             releaseConnection(connection);
         }
         return tickets;
+    }
+
+    public String update(Ticket ticket) {
+        String sql = "UPDATE Ticket SET eventID=?, customerID=?, ticketType=?, ticketQR=? WHERE id=?;";
+        String message = "";
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, ticket.getEvent().getId());
+            statement.setInt(2, ticket.getCustomer().getId());
+            statement.setString(3, ticket.getTicketType());
+            statement.setBytes(4, ticket.getTicketQR());
+            statement.setString(5, ticket.getId().toString());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            message = "Could not update ticket in database";
+        } finally {
+            releaseConnection(connection);
+        }
+        return message;
+    }
+
+    public synchronized HashMap<UUID, Ticket> getTicketsByIDs(List<UUID> ticketIDs) {
+        HashMap<UUID, Ticket> tickets = new HashMap<>();
+        if (ticketIDs == null || ticketIDs.isEmpty()) {
+            return tickets;
+        }
+
+        // create comma-separated string of event IDs
+        System.out.println("TicketDAO: " + ticketIDs.size() + " tickets to find");
+        String sql = "SELECT * FROM Ticket WHERE id IN ("
+                + String.join(",", Collections.nCopies(ticketIDs.size(), "?"))
+                + ")";
+        System.out.println("TicketDAO: " + sql);
+
+        Connection connection = null;
+        try {
+            System.out.println("TicketDAO: getting connection");
+            connection = dbConnection.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            for (int i = 0; i < ticketIDs.size(); i++) {
+                statement.setString(i+1, ticketIDs.get(i).toString());
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Ticket ticket = constructTicket(resultSet);
+                tickets.put(ticket.getId(), ticket);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
+        }
+        System.out.println("TicketDAO: " + tickets.size() + " tickets found");
+        return tickets;
+    }
+
+    private Ticket constructTicket(ResultSet resultSet) throws SQLException {
+        return new Ticket(
+                UUID.fromString(resultSet.getString("id")),
+                customerDAO.getCustomer(resultSet.getInt("customerID")),
+                resultSet.getString("ticketType"),
+                resultSet.getBytes("ticketQR")
+        );
     }
 }

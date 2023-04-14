@@ -1,6 +1,7 @@
 package ticketSystemEASV.dal;
 
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.dal.Interfaces.DAO;
 import ticketSystemEASV.gui.model.UserModel;
@@ -29,13 +30,11 @@ public class EventDAO extends DAO<Event> {
             PreparedStatement statement = connection.prepareStatement(sql);
             fillPreparedStatement(event, statement);
             statement.setString(9, event.getEventName());
-            statement.setString(10, loggedInUser.getId().toString()); //TODO logged in users
+            statement.setString(10, loggedInUser.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             message = e.getMessage();
             e.printStackTrace();
-        } finally {
-            releaseConnection(connection);
         }
         return message;
     }
@@ -54,8 +53,6 @@ public class EventDAO extends DAO<Event> {
         } catch (SQLException e) {
             e.printStackTrace();
             message = e.getMessage();
-        } finally {
-            releaseConnection(connection);
         }
         return message;
     }
@@ -73,8 +70,6 @@ public class EventDAO extends DAO<Event> {
         } catch (SQLException e) {
             e.printStackTrace();
             message = e.getMessage();
-        } finally {
-            releaseConnection(connection);
         }
         return message;
     }
@@ -107,8 +102,6 @@ public class EventDAO extends DAO<Event> {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        } finally {
-            releaseConnection(connection);
         }
     }
 
@@ -127,8 +120,6 @@ public class EventDAO extends DAO<Event> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            releaseConnection(connection);
         }
         return null;
     }
@@ -174,8 +165,6 @@ public class EventDAO extends DAO<Event> {
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-        }  finally {
-            releaseConnection(connection);
         }
     }
 
@@ -190,8 +179,6 @@ public class EventDAO extends DAO<Event> {
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            releaseConnection(connection);
         }
     }
 
@@ -205,7 +192,9 @@ public class EventDAO extends DAO<Event> {
         Date endDate = resultSet.getDate("endDate");
         Time endTime = resultSet.getTime("endTime");
         String locationGuidance = resultSet.getString("locationGuidance");
-        return new Event(id, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+        Event event = new Event(id, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+        getTicketsAssignedToEvent(event);
+        return event;
     }
 
     public HashMap<Integer, Event> getEventsByIds(List<Integer> eventIDs) {
@@ -236,4 +225,34 @@ public class EventDAO extends DAO<Event> {
         }
         return events;
     }
+
+    public synchronized void getTicketsAssignedToEvent(Event event) {
+        String sql = "SELECT * FROM Ticket WHERE eventID=?;";
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, event.getId());
+            ResultSet resultSet = statement.executeQuery();
+
+            List<UUID> ticketIDs = new ArrayList<>();
+            while (resultSet.next()) {
+                UUID ticketID = UUID.fromString(resultSet.getString("ID"));
+                ticketIDs.add(ticketID);
+            }
+
+            if (!ticketIDs.isEmpty()) {
+                TicketDAO ticketDAO = new TicketDAO();
+                // Batch get events by IDs
+                HashMap<UUID, Ticket> tickets = ticketDAO.getTicketsByIDs(ticketIDs);
+                event.setTickets(tickets);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
+        }
+    }
+
 }

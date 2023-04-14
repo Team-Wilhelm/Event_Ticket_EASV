@@ -86,20 +86,6 @@ public class TicketManager {
         voucherDAO.addMultipleVouchers(vouchers);
     }
 
-    public static void main(String[] args) throws IOException {
-        TicketGenerator ticketGenerator = new TicketGenerator();
-        TicketManager ticketManager = new TicketManager();
-        UserDAO userDAO = new UserDAO();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        BufferedImage bufferedImage = ImageIO.read(new File("src/main/resources/images/userProfilePictures/userIcon.png"));
-        ImageIO.write(bufferedImage, "png", baos);
-        byte[] profile = baos.toByteArray();
-        baos.close();
-        /*userDAO.signUp(new User("test", "test", "test",
-                new Role(UUID.fromString("DEF30627-B332-4C4A-AB14-801ED28E80BD"), "EventCoordinator"),
-                profile));*/
-    }
-
     public void openTicket(Ticket ticket) {
         if (Desktop.isDesktopSupported()) {
             try {
@@ -111,5 +97,9 @@ public class TicketManager {
                 // no application registered for PDFs
             }
         }
+    }
+
+    public String update(Ticket ticket) {
+        return ticketDAO.update(ticket);
     }
 }

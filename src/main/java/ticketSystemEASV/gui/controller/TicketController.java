@@ -59,11 +59,6 @@ public class TicketController extends AddObjectController implements Initializab
         executeTask(task);
     }
 
-    @FXML
-    private void generateEmptyTickets(ActionEvent actionEvent) {
-        //TODO not sure if needed
-    }
-
     public void setTicketModel(TicketModel ticketModel) {
         this.ticketModel = ticketModel;
     }
@@ -111,10 +106,7 @@ public class TicketController extends AddObjectController implements Initializab
     }
 
     private void refreshTableView(){
-        Runnable getAllTickets = () -> {
-            tickets.setAll(ticketModel.getAllTicketsForEvent(event));
-        };
-        getAllTickets.run();
+        tickets.setAll(event.getTickets().values());
     }
 
     @FXML

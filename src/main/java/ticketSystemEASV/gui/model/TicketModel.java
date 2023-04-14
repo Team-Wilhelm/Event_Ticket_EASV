@@ -41,11 +41,10 @@ public class TicketModel extends Model {
     @Override
     public String update(Object objectToUpdate, CountDownLatch latch) {
         //TODO Perhaps to do
-        /*Ticket ticket = (Ticket) objectToUpdate;
+        Ticket ticket = (Ticket) objectToUpdate;
         String message = bll.update(ticket);
         getTicketsFromManager(latch);
-        return message;*/
-        return null;
+        return message;
     }
 
     @Override
