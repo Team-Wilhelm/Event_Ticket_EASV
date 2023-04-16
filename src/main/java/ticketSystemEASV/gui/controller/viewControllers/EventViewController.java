@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
-import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.model.UserModel;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;

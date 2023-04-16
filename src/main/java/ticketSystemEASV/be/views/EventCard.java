@@ -8,12 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.User;
-import ticketSystemEASV.bll.CropImageToCircle;
 
-import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
-import java.util.Objects;
 
 public class EventCard extends VBox {
     private Event event;

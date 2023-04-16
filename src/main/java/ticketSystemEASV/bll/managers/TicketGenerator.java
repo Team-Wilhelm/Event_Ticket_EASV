@@ -1,4 +1,4 @@
-package ticketSystemEASV.bll;
+package ticketSystemEASV.bll.managers;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;

@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
-import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.model.UserModel;
 import javafx.fxml.Initializable;
 

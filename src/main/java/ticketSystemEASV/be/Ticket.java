@@ -2,35 +2,37 @@ package ticketSystemEASV.be;
 
 import java.util.UUID;
 
-public class Ticket {
+public class Ticket implements ITicket {
     private Event event;
     private Customer customer;
     private UUID id;
-    private String ticketType;
+    private TicketType ticketType;
     private byte[] ticketQR;
+    private boolean redeemed;
 
-    public Ticket(Event event, Customer customer, String ticketType, byte[] ticketQR) {
+    //TODO redeem ticket
+    public Ticket(Event event, Customer customer, byte[] ticketQR) {
         this.event = event;
         this.customer = customer;
-        this.ticketType = ticketType;
         this.ticketQR = ticketQR;
+        this.ticketType = TicketType.TICKET;
     }
 
-    public Ticket(UUID id, Event event, Customer customer, String ticketType, byte[] ticketQR) {
-        this(event, customer, ticketType, ticketQR);
+    public Ticket(UUID id, Event event, Customer customer, byte[] ticketQR) {
+        this(event, customer,ticketQR);
         this.id = id;
     }
 
     public Ticket(Event event, Customer customer) {
         this.event = event;
         this.customer = customer;
-        this.ticketType = "Classic";
+        this.ticketType = TicketType.TICKET;
     }
 
-    public Ticket(UUID id, Customer customer, String ticketType, byte[] ticketQR) {
+    public Ticket(UUID id, Customer customer, byte[] ticketQR) {
         this.id = id;
         this.customer = customer;
-        this.ticketType = ticketType;
+        this.ticketType = TicketType.TICKET;
         this.ticketQR = ticketQR;
     }
 
@@ -50,11 +52,11 @@ public class Ticket {
         this.customer = customer;
     }
 
-    public String getTicketType() {
+    public TicketType getTicketType() {
         return ticketType;
     }
 
-    public void setTicketType(String ticketType) {
+    public void setTicketType(TicketType ticketType) {
         this.ticketType = ticketType;
     }
 

@@ -1,28 +1,28 @@
 package ticketSystemEASV.be;
 
-public class Voucher {
-    private int id;
-    private String restrictions, voucherType, voucherQR;
+import java.util.Objects;
+import java.util.UUID;
+
+public class Voucher implements ITicket {
+    private UUID id;
+    private String voucherType, voucherQR;
+    private TicketType ticketType;
+    private Event event;
     private boolean redeemed;
 
-    public Voucher(int id, String restrictions, String voucherType, String voucherQR, boolean redeemed) {
-        this.id = id;
-        this.restrictions = restrictions;
+    public Voucher(String voucherType) {
         this.voucherType = voucherType;
-        this.voucherQR = voucherQR;
-        this.redeemed = redeemed;
+        this.redeemed = false;
+        this.ticketType = TicketType.VOUCHER;
     }
 
-    public int getId() {
+    public Voucher(Event event, String voucherType) {
+        this(voucherType);
+        this.event = event;
+    }
+
+    public UUID getId() {
         return id;
-    }
-
-    public String getRestrictions() {
-        return restrictions;
-    }
-
-    public void setRestrictions(String restrictions) {
-        this.restrictions = restrictions;
     }
 
     public String getVoucherType() {
@@ -50,5 +50,38 @@ public class Voucher {
             this.redeemed = true;
         }
         return false;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    public void setTicketType(TicketType ticketType) {
+        this.ticketType = ticketType;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Voucher voucher = (Voucher) o;
+        return Objects.equals(id, voucher.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

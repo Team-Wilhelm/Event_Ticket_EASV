@@ -1,10 +1,9 @@
 package ticketSystemEASV.gui.model;
 
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.EventCard;
-import ticketSystemEASV.bll.EventManager;
+import ticketSystemEASV.bll.managers.EventManager;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package ticketSystemEASV.bll;
+package ticketSystemEASV.bll.util;
 
 import javafx.event.Event;
 import javafx.scene.Node;

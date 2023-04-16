@@ -2,6 +2,7 @@ package ticketSystemEASV.dal;
 
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
+import ticketSystemEASV.be.TicketType;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.dal.Interfaces.DAO;
 import ticketSystemEASV.gui.model.UserModel;

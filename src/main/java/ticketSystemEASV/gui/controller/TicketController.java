@@ -1,11 +1,13 @@
 package ticketSystemEASV.gui.controller;
 
-import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
-import io.github.palexdev.materialfx.controls.MFXTableColumn;
-import io.github.palexdev.materialfx.controls.MFXTableView;
-import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.*;
+import io.github.palexdev.materialfx.controls.cell.MFXComboBoxCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -14,19 +16,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
-import ticketSystemEASV.be.Customer;
-import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.Ticket;
-import ticketSystemEASV.bll.AlertManager;
+import javafx.scene.layout.GridPane;
+import ticketSystemEASV.be.*;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddObjectController;
-import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.tasks.TaskState;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class TicketController extends AddObjectController implements Initializable {
     @FXML
@@ -36,9 +38,15 @@ public class TicketController extends AddObjectController implements Initializab
     @FXML
     private MFXProgressSpinner progressSpinner;
     @FXML
+    private MFXComboBox comboTicketType;
+    @FXML
+    private MFXButton btnGenerateTicket;
+    @FXML
     private Label progressLabel;
+    @FXML
+    private GridPane gridPane;
     private TicketModel ticketModel;
-    private ObservableList<Ticket> tickets = FXCollections.observableArrayList();
+    private ObservableList<ITicket> tickets = FXCollections.observableArrayList();
     private Event event;
     private Task<TaskState> task;
 
@@ -48,15 +56,25 @@ public class TicketController extends AddObjectController implements Initializab
         progressLabel.setVisible(false);
 
         setUpTableView();
+        setUpComboBox();
     }
 
     @FXML
     private void generateTicket(ActionEvent actionEvent) {
-        Ticket ticket = new Ticket(event, new Customer(txtCustomerName.getText().trim(), txtCustomerEmail.getText().trim()));
-        task = new SaveTask(ticket, false, ticketModel);
+        if (txtCustomerName.getText().trim().isEmpty() || txtCustomerEmail.getText().trim().isEmpty()) {
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please fill in all fields", actionEvent).showAndWait();
+            return;
+        }
 
-        setUpTask(task);
-        executeTask(task);
+        if (comboTicketType.getSelectionModel().getSelectedItem() == "Ticket") {
+            Ticket ticket = new Ticket(event, new Customer(txtCustomerName.getText().trim(), txtCustomerEmail.getText().trim()));
+            task = new SaveTask(ticket, false, ticketModel);
+            setUpTask(task);
+            executeTask(task);
+        } else if (comboTicketType.getSelectionModel().getSelectedItem() == "Voucher") {
+            Voucher voucher = new Voucher(event, txtCustomerEmail.getText().trim());
+            int amount = Integer.parseInt(txtCustomerName.getText().trim());
+        }
     }
 
     public void setTicketModel(TicketModel ticketModel) {
@@ -70,7 +88,7 @@ public class TicketController extends AddObjectController implements Initializab
     }
 
     private void setUpTableView() {
-        Bindings.bindContentBidirectional(tblTickets.getItems(), tickets);
+        //Bindings.bindContentBidirectional(tblTickets.getItems(), tickets);
         txtNumberOfGeneratedTickets.textProperty().bind(Bindings.size(tblTickets.getItems()).asString());
 
         MFXTableColumn<Ticket> customerID = new MFXTableColumn<>("Customer ID", true);
@@ -97,7 +115,7 @@ public class TicketController extends AddObjectController implements Initializab
         });
 
         ticketType.setRowCellFactory(type -> {
-            MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(Ticket::getTicketType);
+            MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(t -> t.getTicketType().toString());
             row.setOnMouseClicked(this::tableViewDoubleClickAction);
             return row;
         });
@@ -108,6 +126,80 @@ public class TicketController extends AddObjectController implements Initializab
     private void refreshTableView(){
         tickets.setAll(event.getTickets().values());
     }
+
+    private void setUpComboBox() {
+        comboTicketType.getItems().setAll("All", "Tickets", "Vouchers");
+        comboTicketType.selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switchScene(newValue.toString());
+        });
+        comboTicketType.getSelectionModel().selectFirst();
+    }
+
+    private void switchScene(String type) {
+        txtCustomerName.clear();
+        txtCustomerEmail.clear();
+        if (type.equals("All")) {
+            //txtCustomerName.setTextFormatter(null);
+
+            txtNumberOfGeneratedTickets.setFloatingText("Generated tickets and vouchers");
+            txtCustomerName.setFloatingText("Search...");
+
+            txtCustomerEmail.setVisible(false);
+            txtCustomerEmail.setManaged(false);
+
+            btnGenerateTicket.setVisible(false);
+            btnGenerateTicket.setManaged(false);
+        } else if (type.equals("Tickets")) {
+            //txtCustomerName.setTextFormatter(null);
+
+            txtNumberOfGeneratedTickets.setFloatingText("Number of generated tickets");
+            txtCustomerName.setFloatingText("Customer name");
+
+            txtCustomerEmail.setFloatingText("Customer e-mail");
+            txtCustomerEmail.setVisible(true);
+            txtCustomerEmail.setManaged(true);
+            txtCustomerEmail.clear();
+
+            btnGenerateTicket.setVisible(true);
+            btnGenerateTicket.setManaged(true);
+        } else if (type.equals("Vouchers")) {
+            //txtCustomerName.setTextFormatter(new TextFormatter<>(numberFilter));
+
+            txtNumberOfGeneratedTickets.setFloatingText("Number of generated vouchers");
+            txtCustomerName.setFloatingText("Number of vouchers");
+
+            txtCustomerEmail.setFloatingText("Voucher type");
+            txtCustomerEmail.setVisible(true);
+            txtCustomerEmail.setManaged(true);
+
+            btnGenerateTicket.setVisible(true);
+            btnGenerateTicket.setManaged(true);
+            btnGenerateTicket.setText("Generate vouchers");
+        }
+    }
+
+    private UnaryOperator<TextFormatter.Change> numberFilter = change -> {
+        String text = change.getText();
+
+        if (text.matches("\\d?")) { // this is the important line
+            return change;
+        }
+
+        return null;
+    };
+
+    private ChangeListener<String> numberListener = new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> observable,
+                            String oldValue, String newValue) {
+            System.out.println("Text changed from " + oldValue + " to " + newValue);
+            // Check if the new value matches the Integer pattern
+            if (!newValue.matches("\\d*")) {
+                // if the new value does not match the Integer pattern, revert to the old value
+                txtCustomerName.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        }
+    };
 
     @FXML
     private void tableViewDoubleClickAction(MouseEvent event) {

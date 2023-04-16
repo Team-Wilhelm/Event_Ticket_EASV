@@ -1,10 +1,9 @@
 package ticketSystemEASV.gui.model;
 
-import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
-import ticketSystemEASV.bll.UserManager;
+import ticketSystemEASV.bll.managers.UserManager;
 import ticketSystemEASV.gui.tasks.ConstructCoordinatorCardTask;
 
 import java.util.*;

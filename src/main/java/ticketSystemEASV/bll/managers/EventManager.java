@@ -1,4 +1,4 @@
-package ticketSystemEASV.bll;
+package ticketSystemEASV.bll.managers;
 
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;

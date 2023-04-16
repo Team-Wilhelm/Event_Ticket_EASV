@@ -17,7 +17,7 @@ import javafx.util.StringConverter;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
-import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.TicketController;
 import ticketSystemEASV.gui.model.EventModel;

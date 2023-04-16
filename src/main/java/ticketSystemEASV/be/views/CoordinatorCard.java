@@ -10,7 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
-import ticketSystemEASV.bll.CropImageToCircle;
+import ticketSystemEASV.bll.util.CropImageToCircle;
 
 import java.io.ByteArrayInputStream;
 
