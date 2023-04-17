@@ -3,7 +3,7 @@ package ticketSystemEASV.gui.controller.addController;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
-import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.controller.viewControllers.MotherController;
 import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.tasks.TaskState;

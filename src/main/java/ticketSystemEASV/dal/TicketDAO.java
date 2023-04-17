@@ -3,6 +3,7 @@ package ticketSystemEASV.dal;
 import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
+import ticketSystemEASV.be.TicketType;
 import ticketSystemEASV.dal.Interfaces.DAO;
 
 import java.sql.*;
@@ -201,15 +202,12 @@ public class TicketDAO extends DAO<Ticket> {
         }
 
         // create comma-separated string of event IDs
-        System.out.println("TicketDAO: " + ticketIDs.size() + " tickets to find");
         String sql = "SELECT * FROM Ticket WHERE id IN ("
                 + String.join(",", Collections.nCopies(ticketIDs.size(), "?"))
                 + ")";
-        System.out.println("TicketDAO: " + sql);
 
         Connection connection = null;
         try {
-            System.out.println("TicketDAO: getting connection");
             connection = dbConnection.getConnection();
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -227,7 +225,6 @@ public class TicketDAO extends DAO<Ticket> {
         } finally {
             releaseConnection(connection);
         }
-        System.out.println("TicketDAO: " + tickets.size() + " tickets found");
         return tickets;
     }
 

@@ -1,4 +1,4 @@
-package ticketSystemEASV.bll;
+package ticketSystemEASV.bll.util;
 
 import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;

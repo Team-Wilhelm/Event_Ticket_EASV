@@ -1,10 +1,9 @@
 package ticketSystemEASV.gui.model;
 
 import ticketSystemEASV.be.Event;
-import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.EventCard;
-import ticketSystemEASV.bll.EventManager;
+import ticketSystemEASV.bll.managers.EventManager;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ public class EventModel extends Model {
     private HashMap<Integer, Event> allEvents = new HashMap<>();
     private final HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
     private TicketModel ticketModel;
+    private VoucherModel voucherModel;
 
     public EventModel() {
         //getAllEventsFromManager();
@@ -105,7 +105,8 @@ public class EventModel extends Model {
         eventManager.getEventsAssignedToEventCoordinator(user);
     }
 
-    public void setTicketModel(TicketModel ticketModel) {
+    public void setTicketModel(TicketModel ticketModel, VoucherModel voucherModel) {
         this.ticketModel = ticketModel;
+        this.voucherModel = voucherModel;
     }
 }

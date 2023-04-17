@@ -17,7 +17,7 @@ import javafx.util.StringConverter;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
-import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.TicketController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -29,6 +29,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import ticketSystemEASV.gui.model.UserModel;
+import ticketSystemEASV.gui.model.VoucherModel;
 import ticketSystemEASV.gui.tasks.DeleteTask;
 import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.tasks.TaskState;
@@ -47,6 +48,7 @@ public class AddEventController extends AddObjectController implements Initializ
     private TicketModel ticketModel;
     private EventModel eventModel;
     private UserModel userModel;
+    private VoucherModel voucherModel;
     private EventViewController eventViewController;
     private boolean isEditing = false;
     private Event eventToEdit;
@@ -159,10 +161,11 @@ public class AddEventController extends AddObjectController implements Initializ
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
     }
 
-    public void setModels(TicketModel ticketModel, EventModel eventModel, UserModel userModel) {
+    public void setModels(TicketModel ticketModel, EventModel eventModel, UserModel userModel, VoucherModel voucherModel) {
         this.ticketModel = ticketModel;
         this.eventModel = eventModel;
         this.userModel = userModel;
+        this.voucherModel = voucherModel;
         populateAssignCoordinatorComboBox();
     }
 
@@ -195,7 +198,7 @@ public class AddEventController extends AddObjectController implements Initializ
         Scene scene = new Scene(fxmlLoader.load());
         TicketController ticketController = fxmlLoader.getController();
 
-        ticketController.setTicketModel(ticketModel);
+        ticketController.setTicketModel(ticketModel, voucherModel);
         ticketController.setEvent(eventToEdit);
 
         stage.setScene(scene);

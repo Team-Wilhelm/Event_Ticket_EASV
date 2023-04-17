@@ -1,9 +1,8 @@
 package ticketSystemEASV.gui.model;
 
-import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
-import ticketSystemEASV.bll.TicketManager;
+import ticketSystemEASV.bll.managers.TicketManager;
 
 import java.util.Collection;
 import java.util.List;

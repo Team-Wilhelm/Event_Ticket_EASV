@@ -8,8 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.views.EventCard;
-import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.model.UserModel;
+import ticketSystemEASV.gui.model.VoucherModel;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 import ticketSystemEASV.gui.controller.addController.AddEventController;
 import ticketSystemEASV.gui.model.EventModel;
@@ -48,6 +49,7 @@ public class EventViewController extends MotherController implements Initializab
     private TicketModel ticketModel;
     private EventModel eventModel;
     private UserModel userModel;
+    private VoucherModel voucherModel;
     private EventCard lastFocusedEvent;
     private ConstructEventCardTask task;
 
@@ -80,7 +82,7 @@ public class EventViewController extends MotherController implements Initializab
 
     public void addEventAction(ActionEvent actionEvent) throws IOException {
         AddEventController addEventController = openNewWindow("/views/add...views/AddEventView.fxml", Modality.WINDOW_MODAL).getController();
-        addEventController.setModels(ticketModel, eventModel, userModel);
+        addEventController.setModels(ticketModel, eventModel, userModel, voucherModel);
         addEventController.setMainViewController(this);
     }
 
@@ -90,7 +92,7 @@ public class EventViewController extends MotherController implements Initializab
         else {
             FXMLLoader fxmlLoader = openNewWindow("/views/add...views/AddEventView.fxml", Modality.APPLICATION_MODAL);
             AddEventController addEventController = fxmlLoader.getController();
-            addEventController.setModels(ticketModel, eventModel, userModel);
+            addEventController.setModels(ticketModel, eventModel, userModel, voucherModel);
             addEventController.setIsEditing(lastFocusedEvent.getEvent());
             addEventController.setMainViewController(this);
         }
@@ -165,10 +167,11 @@ public class EventViewController extends MotherController implements Initializab
             lastFocusedEvent.refresh(eventModel.getEvent(lastFocusedEvent.getEvent().getId()));
     }
 
-    public void setModels(TicketModel ticketModel, EventModel eventModel, UserModel userModel) {
+    public void setModels(TicketModel ticketModel, EventModel eventModel, UserModel userModel, VoucherModel voucherModel) {
         this.ticketModel = ticketModel;
         this.eventModel = eventModel;
         this.userModel = userModel;
+        this.voucherModel = voucherModel;
         refreshItems(List.copyOf(eventModel.getAllEvents().values()));
     }
 

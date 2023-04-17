@@ -17,7 +17,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.CoordinatorCard;
-import ticketSystemEASV.bll.AlertManager;
+import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.model.UserModel;
 

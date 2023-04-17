@@ -19,6 +19,7 @@ public class Event {
 
     //Tickets
     private HashMap<UUID, Ticket> tickets;
+    private List<Voucher> vouchers;
 
     public Event(String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
         this.eventName = eventName;
@@ -30,6 +31,7 @@ public class Event {
         this.endTime = endTime;
         this.locationGuidance = locationGuidance;
         this.tickets = new HashMap<>();
+        this.vouchers = new ArrayList<>();
     }
 
     public Event(int id, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
@@ -137,5 +139,13 @@ public class Event {
 
     public HashMap<UUID, Ticket> getTickets() {
         return tickets;
+    }
+
+    public void setVouchers(List<Voucher> vouchers) {
+        this.vouchers = vouchers;
+    }
+
+    public List<Voucher> getVouchers() {
+        return vouchers;
     }
 }
