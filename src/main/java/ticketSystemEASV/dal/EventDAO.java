@@ -19,8 +19,8 @@ public class EventDAO extends DAO<Event> {
         User loggedInUser = UserModel.getLoggedInUser();
         String message="";
         String sql = "DECLARE @EventID int;" +
-                "INSERT INTO Event (startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance) " +
-                "VALUES (?,?,?,?,?,?,?,?) " +
+                "INSERT INTO Event (startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance, numTickets) " +
+                "VALUES (?,?,?,?,?,?,?,?,?) " +
                 "SET @EventID = (SELECT ID FROM Event WHERE EventName = ?)" +
                 "INSERT INTO User_Event_Link (UserID, EventId)" +
                 "VALUES (?, @EventID);";
@@ -30,8 +30,9 @@ public class EventDAO extends DAO<Event> {
             connection = dbConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql);
             fillPreparedStatement(event, statement);
-            statement.setString(9, event.getEventName());
-            statement.setString(10, loggedInUser.getId().toString());
+            statement.setInt(9, event.getNumberOfTickets());
+            statement.setString(10, event.getEventName());
+            statement.setString(11, loggedInUser.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             message = e.getMessage();
@@ -42,14 +43,15 @@ public class EventDAO extends DAO<Event> {
 
     public String updateEvent(Event event) {
         String message = "";
-        String sql = "UPDATE Event SET startDate=?, startTime=?, eventName=?, eventLocation=?, notes=?, endDate=?, endTime=?, locationGuidance=? WHERE id=?;";
+        String sql = "UPDATE Event SET startDate=?, startTime=?, eventName=?, eventLocation=?, notes=?, endDate=?, endTime=?, locationGuidance=?, numTickets=? WHERE id=?;";
 
         Connection connection = null;
         try {
             connection = dbConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql);
             fillPreparedStatement(event, statement);
-            statement.setInt(9, event.getId());
+            statement.setInt(9, event.getNumberOfTickets());
+            statement.setInt(10, event.getId());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -188,12 +190,13 @@ public class EventDAO extends DAO<Event> {
         String eventName = resultSet.getString("eventName");
         Date startDate = resultSet.getDate("startDate");
         Time startTime = resultSet.getTime("startTime");
+        int numTickets = resultSet.getInt("numTickets");
         String location = resultSet.getString("eventLocation");
         String notes = resultSet.getString("notes");
         Date endDate = resultSet.getDate("endDate");
         Time endTime = resultSet.getTime("endTime");
         String locationGuidance = resultSet.getString("locationGuidance");
-        Event event = new Event(id, eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+        Event event = new Event(id, eventName, startDate, startTime, numTickets, location, notes, endDate, endTime, locationGuidance);
         getTicketsAssignedToEvent(event);
         return event;
     }

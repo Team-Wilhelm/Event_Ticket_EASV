@@ -9,11 +9,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.User;
@@ -43,6 +45,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 public class AddEventController extends AddObjectController implements Initializable {
     private TicketModel ticketModel;
@@ -56,7 +59,7 @@ public class AddEventController extends AddObjectController implements Initializ
     @FXML
     private MFXDatePicker dateStartDate, dateEndDate;
     @FXML
-    private MFXTextField txtEventName, txtLocation, txtLocationGuidance, txtNotes;
+    private MFXTextField txtEventName, numOfTickets, txtLocation, txtLocationGuidance, txtNotes;
     @FXML
     private VBox leftVBox;
     @FXML
@@ -64,6 +67,7 @@ public class AddEventController extends AddObjectController implements Initializ
     private Task<TaskState> task;
     private final AlertManager alertManager = AlertManager.getInstance();
     private String eventName, location, locationGuidance, notes;
+    private int numberOfTickets;
     private Date startingDate, endDate;
     private Time startingTime, endTime;
     @FXML
@@ -74,6 +78,17 @@ public class AddEventController extends AddObjectController implements Initializ
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEditing = false;
+
+        UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("([1-9][0-9]*)?")) {
+                return change;
+            }
+            return null;
+        };
+
+        numOfTickets.delegateSetTextFormatter(
+                new TextFormatter<Integer>(new IntegerStringConverter(), null, integerFilter));
 
         //Populating the time ComboBoxes
         comboStartTime.setValue(formatTime(Time.valueOf(LocalTime.now())));
@@ -118,6 +133,7 @@ public class AddEventController extends AddObjectController implements Initializ
         comboStartTime.setValue(formatTime(event.getStartTime()));
         txtNotes.setText(event.getNotes());
         dateStartDate.setValue(event.getStartDate().toLocalDate());
+        numOfTickets.setText(String.valueOf(event.getNumberOfTickets()));
 
         if (event.getEndDate() != null)
             dateEndDate.setValue(event.getEndDate().toLocalDate());
@@ -133,13 +149,19 @@ public class AddEventController extends AddObjectController implements Initializ
     public void saveAction(ActionEvent actionEvent) {
         eventName = txtEventName.getText();
         location = txtLocation.getText();
+        try {
+            numberOfTickets = Integer.parseInt(numOfTickets.getText());
+        }
+        catch (Exception e) {
+            numberOfTickets = 0;
+        }
         notes = txtNotes.getText();
         locationGuidance = txtLocationGuidance.getText();
 
         if (checkInput(actionEvent)) {
             ((Node) actionEvent.getSource()).getScene().getWindow().hide();
 
-            Event event = new Event(eventName, startingDate, startingTime, location, notes, endDate, endTime, locationGuidance);
+            Event event = new Event(eventName, startingDate, startingTime, numberOfTickets, location, notes, endDate, endTime, locationGuidance);
             if (isEditing) event.setId(eventToEdit.getId());
 
             task = new SaveTask(event, isEditing, eventModel);
@@ -235,11 +257,12 @@ public class AddEventController extends AddObjectController implements Initializ
         }
 
         if (eventName.isEmpty() || location.isEmpty() || comboStartTime.getValue().isEmpty()
-                || dateStartDate.getValue() == null) {
+                || dateStartDate.getValue() == null || numOfTickets.getText().isEmpty()) {
             txtEventName.setPromptText("Field cannot be empty, please enter a name");
             txtLocation.setPromptText("Field cannot be empty, please enter a location");
             comboStartTime.setPromptText("Field cannot be empty, please enter a starting time");
             dateStartDate.setPromptText("Field cannot be empty, please choose a starting date");
+            numOfTickets.setPromptText("Field cannot be empty, please enter a number of tickets");
             alertManager.getAlert(Alert.AlertType.ERROR, "Please, fill in all required fields!", actionEvent).showAndWait();
             return false;
         }
