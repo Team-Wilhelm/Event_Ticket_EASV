@@ -42,12 +42,11 @@ public class TicketDAO extends DAO<Ticket> {
                 }
             }
 
-            SQL = "INSERT INTO Ticket (eventID, customerID, ticketType, ticketQR) VALUES (?,?,?,?);";
+            SQL = "INSERT INTO Ticket (eventID, customerID, ticketQR) VALUES (?,?,?);";
             try (PreparedStatement ticketStatement = connection.prepareStatement(SQL)) {
                 ticketStatement.setInt(1, ticket.getEvent().getId());
                 ticketStatement.setInt(2, customerID);
-                ticketStatement.setString(3, ticket.getTicketType());
-                ticketStatement.setBytes(4, ticket.getTicketQR());
+                ticketStatement.setBytes(3, ticket.getTicketQR());
                 ticketStatement.execute();
             }
         } catch (SQLException e) {
@@ -61,7 +60,7 @@ public class TicketDAO extends DAO<Ticket> {
 
     public void addMultipleTickets(List<Ticket> tickets, Customer customer){
         int customerId = customer.getId();
-        String sql = "INSERT INTO Ticket (eventID, customerID, ticketType, ticketQR) VALUES (?,?,?,?);";
+        String sql = "INSERT INTO Ticket (eventID, customerID, ticketQR) VALUES (?,?,?);";
 
         Connection connection = null;
         try {
@@ -71,8 +70,7 @@ public class TicketDAO extends DAO<Ticket> {
             for (Ticket ticket : tickets) {
                 statement.setInt(1, ticket.getEvent().getId());
                 statement.setInt(2, customerId);
-                statement.setString(3, ticket.getTicketType());
-                statement.setBytes(4, ticket.getTicketQR());
+                statement.setBytes(3, ticket.getTicketQR());
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -176,7 +174,7 @@ public class TicketDAO extends DAO<Ticket> {
     }
 
     public String update(Ticket ticket) {
-        String sql = "UPDATE Ticket SET eventID=?, customerID=?, ticketType=?, ticketQR=? WHERE id=?;";
+        String sql = "UPDATE Ticket SET eventID=?, customerID=?, ticketQR=? WHERE id=?;";
         String message = "";
         Connection connection = null;
         try {
@@ -184,9 +182,8 @@ public class TicketDAO extends DAO<Ticket> {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, ticket.getEvent().getId());
             statement.setInt(2, ticket.getCustomer().getId());
-            statement.setString(3, ticket.getTicketType());
-            statement.setBytes(4, ticket.getTicketQR());
-            statement.setString(5, ticket.getId().toString());
+            statement.setBytes(3, ticket.getTicketQR());
+            statement.setString(4, ticket.getId().toString());
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -238,7 +235,6 @@ public class TicketDAO extends DAO<Ticket> {
         return new Ticket(
                 UUID.fromString(resultSet.getString("id")),
                 customerDAO.getCustomer(resultSet.getInt("customerID")),
-                resultSet.getString("ticketType"),
                 resultSet.getBytes("ticketQR")
         );
     }

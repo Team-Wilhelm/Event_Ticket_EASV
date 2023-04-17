@@ -76,7 +76,6 @@ public class TicketController extends AddObjectController implements Initializab
         MFXTableColumn<Ticket> customerID = new MFXTableColumn<>("Customer ID", true);
         MFXTableColumn<Ticket> customerName = new MFXTableColumn<>("Customer name", true);
         MFXTableColumn<Ticket> customerEmail = new MFXTableColumn<>("Customer e-mail", true);
-        MFXTableColumn<Ticket> ticketType = new MFXTableColumn<>("Ticket type", true);
 
         customerID.setRowCellFactory(customer -> {
             MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(t -> String.valueOf(t.getCustomer().getId()));
@@ -96,13 +95,7 @@ public class TicketController extends AddObjectController implements Initializab
             return row;
         });
 
-        ticketType.setRowCellFactory(type -> {
-            MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(Ticket::getTicketType);
-            row.setOnMouseClicked(this::tableViewDoubleClickAction);
-            return row;
-        });
-
-        tblTickets.getTableColumns().addAll(customerID, customerName, customerEmail, ticketType);
+        tblTickets.getTableColumns().addAll(customerID, customerName, customerEmail);
     }
 
     private void refreshTableView(){
@@ -162,7 +155,7 @@ public class TicketController extends AddObjectController implements Initializab
                 refreshTableView();
                 txtCustomerName.clear();
                 txtCustomerEmail.clear();
-                txtNumberOfTickets.clear();
+                //txtNumberOfGeneratedTickets.clear();
             }
             else {
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Ticket not saved!", event).showAndWait();
