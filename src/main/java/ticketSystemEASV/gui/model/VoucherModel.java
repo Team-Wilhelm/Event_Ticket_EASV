@@ -1,7 +1,9 @@
 package ticketSystemEASV.gui.model;
 
+import ticketSystemEASV.be.Voucher;
 import ticketSystemEASV.bll.managers.VoucherManager;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class VoucherModel extends Model {
@@ -24,5 +26,9 @@ public class VoucherModel extends Model {
     @Override
     public String delete(Object objectToDelete) {
         return null;
+    }
+
+    public void addMultiple(List<Voucher> vouchers) {
+        bll.addMultipleVouchers(vouchers);
     }
 }

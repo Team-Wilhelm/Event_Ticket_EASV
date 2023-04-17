@@ -31,6 +31,7 @@ public class Event {
         this.endTime = endTime;
         this.locationGuidance = locationGuidance;
         this.tickets = new HashMap<>();
+        this.vouchers = new ArrayList<>();
     }
 
     public Event(int id, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){

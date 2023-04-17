@@ -2,5 +2,6 @@ package ticketSystemEASV.be;
 
 public enum TicketType {
     TICKET,
-    VOUCHER
+    VOUCHER,
+    ALL
 }

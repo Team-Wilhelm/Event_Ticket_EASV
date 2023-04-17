@@ -11,6 +11,12 @@ public class Ticket implements ITicket {
     private boolean redeemed;
 
     //TODO redeem ticket
+    public Ticket() {}
+
+    public Ticket(byte[] ticketQR) {
+        this.ticketQR = ticketQR;
+    }
+
     public Ticket(Event event, Customer customer, byte[] ticketQR) {
         this.event = event;
         this.customer = customer;

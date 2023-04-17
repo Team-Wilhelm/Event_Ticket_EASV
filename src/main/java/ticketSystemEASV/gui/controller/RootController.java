@@ -14,6 +14,7 @@ import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsControl
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.UserModel;
+import ticketSystemEASV.gui.model.VoucherModel;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,6 +34,7 @@ public class RootController implements Initializable {
     private final TicketModel ticketModel;
     private UserModel userModel;
     private final EventModel eventModel;
+    private VoucherModel voucherModel;
     private Node eventsScene, coordinatorsScene, myProfileScene, currentScene;
     private EventViewController eventViewController;
     private ManageCoordinatorsController manageCoordinatorsController;
@@ -41,12 +43,14 @@ public class RootController implements Initializable {
     public RootController() {
         Callable<TicketModel> ticketModelCallable = TicketModel::new;
         Callable<EventModel> eventModelCallable = EventModel::new;
+        Callable<VoucherModel> voucherModelCallable = VoucherModel::new;
 
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
         try {
             ticketModel = executorService.submit(ticketModelCallable).get();
             eventModel = executorService.submit(eventModelCallable).get();
-            eventModel.setTicketModel(ticketModel);
+            voucherModel = executorService.submit(voucherModelCallable).get();
+            eventModel.setTicketModel(ticketModel, voucherModel);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize models");
@@ -127,7 +131,7 @@ public class RootController implements Initializable {
 
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
-        eventViewController.setModels(ticketModel, eventModel, this.userModel);
+        eventViewController.setModels(ticketModel, eventModel, this.userModel, voucherModel);
 
         if (!userModel.isAdmin()) {
             btnManageCoordinators.setVisible(false);

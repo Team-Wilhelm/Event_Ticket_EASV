@@ -1,20 +1,22 @@
 package ticketSystemEASV.dal;
 
 import ticketSystemEASV.be.Voucher;
+import ticketSystemEASV.dal.Interfaces.DAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class VoucherDAO {
+public class VoucherDAO extends DAO<Voucher> {
     private final DBConnection dbConnection = DBConnection.getInstance();
 
     public void addVoucher(Voucher voucher){
         String sql = "INSERT INTO Voucher (VoucherType, VoucherQR, EventID) VALUES (?,?, ?);";
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setString(1, voucher.getVoucherType());
-            statement.setString(2, voucher.getVoucherQR());
+            statement.setBytes(2, voucher.getVoucherQR());
             statement.setInt(3, voucher.getEvent().getId());
             statement.execute();
         } catch (SQLException e) {
@@ -23,22 +25,25 @@ public class VoucherDAO {
     }
 
     public void addMultipleVouchers(List<Voucher> vouchers){
-        UUID id = vouchers.get(0).getId();
-        String voucherType = vouchers.get(0).getVoucherType();
-        String voucherQR = vouchers.get(0).getVoucherQR();
-        boolean redeemed = vouchers.get(0).isRedeemed();
+        String sql = "INSERT INTO Voucher (VoucherType, VoucherQR, eventID) VALUES (?,?,?);";
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        /*String sql = "INSERT INTO Voucher (VoucherID, Restrictions, VoucherQR, Redeemed) VALUES (?,?,?);";
-        try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
-            statement.setInt(1, id);
-            statement.setString(2, restrictions);
-            statement.setString(3, voucherType);
-            statement.setString(4, voucherQR);
-            statement.setBoolean(5, redeemed);
-            statement.executeBatch();
+            for (Voucher voucher : vouchers) {
+                preparedStatement.setString(1, voucher.getVoucherType());
+                preparedStatement.setBytes(2, voucher.getVoucherQR());
+                preparedStatement.setInt(3, voucher.getEvent().getId());
+                preparedStatement.addBatch();
+            }
+            System.out.println("Executing batch");
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
-        }*/
+        } finally {
+            releaseConnection(connection);
+        }
     }
 
     public void deleteVoucher(Voucher voucher){

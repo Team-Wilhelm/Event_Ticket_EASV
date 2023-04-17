@@ -16,6 +16,7 @@ public class EventModel extends Model {
     private HashMap<Integer, Event> allEvents = new HashMap<>();
     private final HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
     private TicketModel ticketModel;
+    private VoucherModel voucherModel;
 
     public EventModel() {
         //getAllEventsFromManager();
@@ -104,7 +105,8 @@ public class EventModel extends Model {
         eventManager.getEventsAssignedToEventCoordinator(user);
     }
 
-    public void setTicketModel(TicketModel ticketModel) {
+    public void setTicketModel(TicketModel ticketModel, VoucherModel voucherModel) {
         this.ticketModel = ticketModel;
+        this.voucherModel = voucherModel;
     }
 }
