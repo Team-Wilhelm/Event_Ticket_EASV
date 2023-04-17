@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
-<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
-<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
 
-<HBox prefHeight="463.0" prefWidth="600.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddEventController">
+<HBox prefHeight="463.0" prefWidth="700.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.addController.AddEventController">
    <children>
       <VBox fx:id="leftVBox" prefWidth="300.0" spacing="10.0" HBox.hgrow="ALWAYS">
          <children>
             <MFXTextField fx:id="txtEventName" floatMode="BORDER" floatingText="Event name" maxWidth="1.7976931348623157E308" textLimit="30" />
             <MFXTextField fx:id="txtLocation" floatMode="BORDER" floatingText="Location" maxWidth="1.7976931348623157E308" textLimit="20" />
-            <MFXDatePicker fx:id="dateStartDate" floatMode="BORDER" floatingText="Start date" maxWidth="1.7976931348623157E308" />
-            <MFXComboBox fx:id="comboStartTime" floatMode="BORDER" floatingText="Start time" maxWidth="1.7976931348623157E308" />
-            <MFXDatePicker fx:id="dateEndDate" floatMode="BORDER" floatingText="End date (optional)" maxWidth="1.7976931348623157E308" />
-            <MFXComboBox fx:id="comboEndTime" floatMode="BORDER" floatingText="End time (optional)" maxWidth="1.7976931348623157E308" />
+            <HBox prefHeight="37.0" prefWidth="311.0" spacing="10.0">
+               <children>
+                  <MFXDatePicker fx:id="dateStartDate" floatMode="BORDER" floatingText="Start date" maxWidth="1.7976931348623157E308" prefHeight="38.0" prefWidth="160.0" />
+                  <MFXComboBox fx:id="comboStartTime" floatMode="BORDER" floatingText="Start time" maxWidth="1.7976931348623157E308" prefHeight="38.0" prefWidth="152.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="311.0" spacing="10.0">
+               <children>
+                  <MFXDatePicker fx:id="dateEndDate" floatMode="BORDER" floatingText="End date (optional)" maxWidth="1.7976931348623157E308" prefHeight="38.0" prefWidth="160.0" />
+                  <MFXComboBox fx:id="comboEndTime" floatMode="BORDER" floatingText="End time (optional)" maxWidth="1.7976931348623157E308" prefHeight="38.0" prefWidth="152.0" />
+               </children>
+            </HBox>
+            <MFXTextField fx:id="numOfTickets" floatMode="BORDER" floatingText="Number of tickets" maxWidth="1.7976931348623157E308" prefWidth="270.0" textLimit="200" />
             <MFXTextField fx:id="txtNotes" floatMode="BORDER" floatingText="Notes (optional)" maxWidth="1.7976931348623157E308" prefWidth="270.0" textLimit="200" />
             <MFXTextField fx:id="txtLocationGuidance" floatMode="BORDER" floatingText="Location guidance (optional)" maxWidth="1.7976931348623157E308" textLimit="30" />
             <MFXFilterComboBox fx:id="comboAssignCoordinator" floatMode="BORDER" floatingText="Assign coordinators" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
@@ -37,7 +40,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
       </VBox>
-      <VBox prefWidth="300.0" styleClass="eventHalf" HBox.hgrow="ALWAYS" />
+      <VBox prefHeight="463.0" prefWidth="350.0" styleClass="eventHalf" HBox.hgrow="ALWAYS" />
    </children>
    <opaqueInsets>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

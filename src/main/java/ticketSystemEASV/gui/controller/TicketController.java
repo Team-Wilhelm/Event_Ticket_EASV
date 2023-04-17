@@ -3,6 +3,7 @@ package ticketSystemEASV.gui.controller;
 import io.github.palexdev.materialfx.controls.*;
 import io.github.palexdev.materialfx.controls.cell.MFXComboBoxCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -37,7 +38,7 @@ import java.util.stream.Stream;
 
 public class TicketController extends AddObjectController implements Initializable {
     @FXML
-    private MFXTextField txtEventId, txtCustomerName, txtCustomerEmail, txtNumberOfTickets, txtNumberOfGeneratedTickets;
+    private MFXTextField txtEventId, txtCustomerName, txtCustomerEmail, txtNumberOfGeneratedTickets, txtMaxNumOfGenTickets;
     @FXML
     private MFXTableView<Ticket> tblTickets;
     @FXML
@@ -60,6 +61,12 @@ public class TicketController extends AddObjectController implements Initializab
     public void initialize(URL location, ResourceBundle resources) {
         progressSpinner.setVisible(false);
         progressLabel.setVisible(false);
+
+        Platform.runLater(() -> {
+            txtMaxNumOfGenTickets.setText(String.valueOf(event.getNumberOfTickets()));
+            txtMaxNumOfGenTickets.setEditable(false);
+            txtMaxNumOfGenTickets.setSelectable(false);
+        });
 
         setUpTableView();
         setUpComboBox();
@@ -138,10 +145,13 @@ public class TicketController extends AddObjectController implements Initializab
 
     private void refreshTableView(TicketType ticketType){
         if (ticketType == TicketType.ALL) {
-            tickets.setAll(Stream.concat(
-                    event.getTickets().values().stream(),
-                    event.getVouchers().stream()
-            ).toList());
+            Platform.runLater(() -> {
+                tickets.setAll(Stream.concat(
+                        event.getTickets().values().stream(),
+                        event.getVouchers().stream()
+                ).toList());
+            });
+
         }
         else if (ticketType == TicketType.TICKET)
             tickets.setAll(event.getTickets().values());
@@ -279,7 +289,7 @@ public class TicketController extends AddObjectController implements Initializab
                 refreshTableView(TicketType.ALL);
                 txtCustomerName.clear();
                 txtCustomerEmail.clear();
-                txtNumberOfTickets.clear();
+                //txtNumberOfTickets.clear();
             }
             else {
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Ticket not saved!", event).showAndWait();

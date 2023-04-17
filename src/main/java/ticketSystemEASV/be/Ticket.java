@@ -42,11 +42,6 @@ public class Ticket implements ITicket {
         this.ticketQR = ticketQR;
     }
 
-    public Ticket(UUID id, Customer customer, byte[] ticketQR) {
-        this.id = id;
-        this.customer = customer;
-        this.ticketQR = ticketQR;
-    }
 
     public Event getEvent() {
         return event;

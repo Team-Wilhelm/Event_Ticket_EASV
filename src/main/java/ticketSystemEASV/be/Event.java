@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Event {
     //Required information
-    private int id;
+    private int id, numberOfTickets;
     private Date startDate;
     private Time startTime;
     private String eventName, location, notes;
@@ -21,10 +21,11 @@ public class Event {
     private HashMap<UUID, Ticket> tickets;
     private List<Voucher> vouchers;
 
-    public Event(String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
+    public Event(String eventName, Date startDate, Time startTime, int numberOfTickets, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
         this.eventName = eventName;
         this.startDate = startDate;
         this.startTime = startTime;
+        this.numberOfTickets = numberOfTickets;
         this.location = location;
         this.notes = notes;
         this.endDate = endDate;
@@ -34,8 +35,8 @@ public class Event {
         this.vouchers = new ArrayList<>();
     }
 
-    public Event(int id, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
-        this(eventName, startDate, startTime, location, notes, endDate, endTime, locationGuidance);
+    public Event(int id, String eventName, Date startDate, Time startTime, int numberOfTickets, String location, String notes, Date endDate, Time endTime, String locationGuidance){
+        this(eventName, startDate, startTime, numberOfTickets, location, notes, endDate, endTime, locationGuidance);
         this.id = id;
     }
 
@@ -54,6 +55,10 @@ public class Event {
     public void setStartTime(Time startingTime) {
         this.startTime = startingTime;
     }
+
+    public int getNumberOfTickets() { return numberOfTickets; }
+
+    public void setNumberOfTickets(int numberOfTickets) { this.numberOfTickets = numberOfTickets; }
 
     public String getLocation() {
         return location;
