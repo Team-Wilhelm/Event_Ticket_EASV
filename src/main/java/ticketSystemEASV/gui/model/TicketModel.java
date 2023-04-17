@@ -5,6 +5,7 @@ import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.bll.TicketManager;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -40,12 +41,10 @@ public class TicketModel extends Model {
 
     @Override
     public String update(Object objectToUpdate, CountDownLatch latch) {
-        //TODO Perhaps to do
-        /*Ticket ticket = (Ticket) objectToUpdate;
+        Ticket ticket = (Ticket) objectToUpdate;
         String message = bll.update(ticket);
         getTicketsFromManager(latch);
-        return message;*/
-        return null;
+        return message;
     }
 
     @Override
@@ -84,5 +83,9 @@ public class TicketModel extends Model {
         } finally {
             shutdownExecutorService(executorService);
         }
+    }
+
+    public void updateTickets(Collection<Ticket> tickets) {
+        bll.updateTickets(tickets.stream().toList());
     }
 }

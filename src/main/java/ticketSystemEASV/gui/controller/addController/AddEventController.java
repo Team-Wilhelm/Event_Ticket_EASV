@@ -2,7 +2,6 @@ package ticketSystemEASV.gui.controller.addController;
 
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
-import io.github.palexdev.materialfx.controls.cell.MFXComboBoxCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -56,7 +55,6 @@ public class AddEventController extends AddObjectController implements Initializ
     private MFXDatePicker dateStartDate, dateEndDate;
     @FXML
     private MFXTextField txtEventName, txtLocation, txtLocationGuidance, txtNotes;
-    //TODO Notes as TextArea-ish
     @FXML
     private VBox leftVBox;
     @FXML
@@ -70,6 +68,7 @@ public class AddEventController extends AddObjectController implements Initializ
     private MFXFilterComboBox<User> comboAssignCoordinator;
     private ObservableList<User> allCoordinators = FXCollections.observableArrayList();
 
+    //TODO update event does not update tickets in the database
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEditing = false;
@@ -252,5 +251,4 @@ public class AddEventController extends AddObjectController implements Initializ
         }
         else eventModel.unassignCoordinatorFromEvent(user, event);
     }
-
 }

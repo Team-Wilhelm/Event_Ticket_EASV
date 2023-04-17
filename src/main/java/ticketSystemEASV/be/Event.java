@@ -2,9 +2,7 @@ package ticketSystemEASV.be;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Event {
     //Required information
@@ -19,6 +17,9 @@ public class Event {
     private Time endTime;
     private String locationGuidance;
 
+    //Tickets
+    private HashMap<UUID, Ticket> tickets;
+
     public Event(String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance) {
         this.eventName = eventName;
         this.startDate = startDate;
@@ -28,6 +29,7 @@ public class Event {
         this.endDate = endDate;
         this.endTime = endTime;
         this.locationGuidance = locationGuidance;
+        this.tickets = new HashMap<>();
     }
 
     public Event(int id, String eventName, Date startDate, Time startTime, String location, String notes, Date endDate, Time endTime, String locationGuidance){
@@ -107,4 +109,33 @@ public class Event {
         this.id = id;
     }
 
+    public void addTicket(Ticket ticket){
+        tickets.put(ticket.getId(), ticket);
+    }
+
+    public void removeTicket(Ticket ticket){
+        tickets.remove(ticket.getId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return id == event.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public void setTickets(HashMap<UUID, Ticket> tickets) {
+        this.tickets = tickets;
+        tickets.forEach((uuid, ticket) -> ticket.setEvent(this));
+    }
+
+    public HashMap<UUID, Ticket> getTickets() {
+        return tickets;
+    }
 }

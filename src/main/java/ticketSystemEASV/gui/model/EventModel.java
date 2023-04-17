@@ -1,6 +1,7 @@
 package ticketSystemEASV.gui.model;
 
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.EventManager;
@@ -15,6 +16,7 @@ public class EventModel extends Model {
     private final EventManager eventManager = new EventManager();
     private HashMap<Integer, Event> allEvents = new HashMap<>();
     private final HashMap<Event, EventCard> loadedEventCards = new HashMap<>();
+    private TicketModel ticketModel;
 
     public EventModel() {
         //getAllEventsFromManager();
@@ -39,6 +41,7 @@ public class EventModel extends Model {
     @Override
     public String update(Object objectToUpdate, CountDownLatch latch) {
         Event eventToUpdate = (Event) objectToUpdate;
+        ticketModel.updateTickets(eventToUpdate.getTickets().values());
         return eventManager.updateEvent(eventToUpdate);
     }
 
@@ -100,5 +103,9 @@ public class EventModel extends Model {
     public void unassignCoordinatorFromEvent(User user, Event event) {
         eventManager.unassignCoordinatorFromEvent(user, event);
         eventManager.getEventsAssignedToEventCoordinator(user);
+    }
+
+    public void setTicketModel(TicketModel ticketModel) {
+        this.ticketModel = ticketModel;
     }
 }

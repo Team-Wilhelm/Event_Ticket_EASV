@@ -12,15 +12,10 @@ import java.util.Objects;
 
 public class Main extends Application {
     public static long timeMilis = System.currentTimeMillis();
-    //TODO exception handling
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root;
-        if(!true) //TODO: Remove this if
-            root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/Root.fxml")));
-        else
-            root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoginView.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoginView.fxml")));
 
         primaryStage.setTitle("EASV Ticket System");
         primaryStage.setScene(new Scene(root));
@@ -30,7 +25,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        //TODO loading screen ?
         //StartUp.configure();
         launch(args);
     }
