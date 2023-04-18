@@ -27,9 +27,7 @@ import javafx.stage.Modality;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class EventViewController extends MotherController implements Initializable {
     @FXML
@@ -108,6 +106,7 @@ public class EventViewController extends MotherController implements Initializab
         eventCards.clear();
 
         HashMap<Event, EventCard> loadedCards = eventModel.getLoadedEventCards();
+
         for (Event event : (List<Event>) eventsToDisplay) {
 
             EventCard eventCard = loadedCards.get(event);
@@ -136,8 +135,14 @@ public class EventViewController extends MotherController implements Initializab
                 }
             });
             eventCards.add(eventCard);
+            sortEventCards(eventCards);
         }
     }
+
+    private void sortEventCards(List<EventCard> eventCards){
+        eventCards.sort((k1, k2) -> k2.getEvent().getStartDate().compareTo(k1.getEvent().getStartDate()));
+    }
+
 
     @Override
     public void setProgressSpinnerVisibility(boolean isVisible) {
