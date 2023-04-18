@@ -124,6 +124,10 @@
     -fx-border-radius: 3;
 }
 
+.mfx-toggle-button {
+    -mfx-main: -fx-red;
+}
+
 .menuButtons {
     -fx-border-color: transparent;
 }
@@ -131,4 +135,8 @@
 .createButton {
     -fx-background-color: -fx-yellow;
     -fx-border-color: -fx-yellow;
+}
+
+.bold *{
+    -fx-font-weight: 800;
 }

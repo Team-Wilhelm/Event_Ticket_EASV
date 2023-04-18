@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox fx:id="gridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1350.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.viewControllers.RedeemController">
+    <VBox prefHeight="600.0" prefWidth="400.0" spacing="10.0">
+        <Label text="Redeem a ticket/Voucher:" />
+      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS" >
+                <children>
+                    <Label text="Type:" />
+                    <Label text="Code:" />
+                    <Label text="Value:" />
+                    <Label text="Event:" />
+                    <Label text="Date:" />
+                    <Label text="Time:" />
+                    <Label text="Location:" />
+                    <MFXButton onAction="#redeemTicket" text="Redeem" />
+                </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS" styleClass="bold">
+                <children>
+                    <Label text="-type-" />
+                    <Label text="-UUID-" />
+                    <Label text="-value-" />
+                    <Label text="-event-" />
+                    <Label text="-date-" />
+                    <Label text="-time-" />
+                    <Label text="-location-" />
+                </children>
+            </VBox>
+         </children>
+      </HBox>
+      <padding>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+      </padding>
+    </VBox>
+   <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+        <padding>
+             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        </padding>
+      <children>
+         <HBox fx:id="camera" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0" spacing="50.0">
+            <children>
+                <MFXToggleButton fx:id="toggle" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            </children>
+         </HBox>
+      </children>
+   </VBox>
+</HBox>
