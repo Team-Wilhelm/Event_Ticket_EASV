@@ -146,6 +146,16 @@ public class TicketController extends AddObjectController implements Initializab
     private void refreshTableView(TicketType ticketType){
         if (ticketType == TicketType.ALL) {
             Platform.runLater(() -> {
+                if(event.getTickets().values().size() >= event.getNumberOfTickets()) {
+                    txtCustomerEmail.setDisable(true);
+                    txtCustomerName.setDisable(true);
+                    btnGenerateTicket.setDisable(true);
+                }else {
+                    txtCustomerEmail.setDisable(false);
+                    txtCustomerName.setDisable(false);
+                    btnGenerateTicket.setDisable(false);
+                }
+
                 tickets.setAll(Stream.concat(
                         event.getTickets().values().stream(),
                         event.getVouchers().stream()

@@ -24,32 +24,27 @@
    </rowConstraints>
    <children>
       <MFXTableView fx:id="tblTickets" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#tableViewDoubleClickAction" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS" />
+      <MFXTextField fx:id="txtNumberOfGeneratedTickets" allowEdit="false" floatMode="BORDER" floatingText="Tickets generated" maxWidth="1.7976931348623157E308" selectable="false" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXTextField>
+      <MFXTextField fx:id="txtMaxNumOfGenTickets" allowEdit="false" editable="false" floatMode="BORDER" floatingText="#" selectable="false" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></MFXTextField>
       <MFXTextField fx:id="txtEventId" allowEdit="false" floatMode="BORDER" floatingText="EventID" maxWidth="1.7976931348623157E308" prefWidth="95.0" selectable="false" textLimit="30" GridPane.columnSpan="2">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin></MFXTextField>
-      <HBox prefHeight="38.0" prefWidth="129.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-         <children>
-            <MFXTextField fx:id="txtNumberOfGeneratedTickets" allowEdit="false" floatMode="BORDER" floatingText="Tickets generated" maxWidth="1.7976931348623157E308" selectable="false" textLimit="30" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </MFXTextField>
-            <MFXTextField fx:id="txtMaxNumOfGenTickets" allowEdit="false" editable="false" floatMode="BORDER" floatingText="#" layoutX="10.0" layoutY="10.0" maxWidth="79.0" prefHeight="38.0" prefWidth="79.0" selectable="false" textLimit="30" HBox.hgrow="NEVER" />
-         </children>
-         <GridPane.margin>
-            <Insets right="15.0" />
-         </GridPane.margin>
-      </HBox>
-      <MFXTextField fx:id="txtCustomerName" floatMode="BORDER" floatingText="Customer name" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="2">
+      <MFXTextField fx:id="txtCustomerName" floatMode="BORDER" floatingText="Customer name" maxWidth="1.7976931348623157E308" prefWidth="95.0" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin></MFXTextField>
-      <MFXTextField fx:id="txtCustomerEmail" floatMode="BORDER" floatingText="Customer e-mail" maxWidth="1.7976931348623157E308" prefWidth="254.0" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="4">
+      <MFXTextField fx:id="txtCustomerEmail" floatMode="BORDER" floatingText="Customer e-mail" maxWidth="1.7976931348623157E308" prefWidth="254.0" textLimit="30" GridPane.columnSpan="2" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin></MFXTextField>
-    <MFXButton fx:id="btnGenerateTicket" onAction="#generateTicket" text="Generate ticket" GridPane.columnIndex="1" GridPane.rowIndex="5">
+    <MFXButton fx:id="btnGenerateTicket" onAction="#generateTicket" text="Generate ticket" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin></MFXButton>
@@ -62,7 +57,7 @@
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin></Label>
-      <MFXComboBox fx:id="comboTicketType" floatingText="Ticket type" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="2">
+      <MFXComboBox fx:id="comboTicketType" floatingText="Ticket type" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="15.0" />
          </GridPane.margin>
