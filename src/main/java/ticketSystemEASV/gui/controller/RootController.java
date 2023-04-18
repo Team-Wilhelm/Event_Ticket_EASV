@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
+import ticketSystemEASV.gui.controller.viewControllers.RedeemController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.UserModel;
@@ -35,10 +36,11 @@ public class RootController implements Initializable {
     private UserModel userModel;
     private final EventModel eventModel;
     private VoucherModel voucherModel;
-    private Node eventsScene, coordinatorsScene, myProfileScene, currentScene;
+    private Node eventsScene, coordinatorsScene, myProfileScene, currentScene, redeemScene;
     private EventViewController eventViewController;
     private ManageCoordinatorsController manageCoordinatorsController;
     private AddCoordinatorController addCoordinatorController;
+    private RedeemController redeemController;
 
     public RootController() {
         Callable<TicketModel> ticketModelCallable = TicketModel::new;
@@ -75,6 +77,10 @@ public class RootController implements Initializable {
             FXMLLoader coordinatorsLoader = new FXMLLoader(getClass().getResource("/views/ManageCoordinatorsView.fxml"));
             coordinatorsScene = coordinatorsLoader.load();
             manageCoordinatorsController = coordinatorsLoader.getController();
+
+            FXMLLoader redeemLoader = new FXMLLoader(getClass().getResource("/views/RedeemView.fxml"));
+            redeemScene = redeemLoader.load();
+            redeemController = redeemLoader.getController();
 
             FXMLLoader myProfileLoader = new FXMLLoader(getClass().getResource("/views/add...views/AddCoordinatorView.fxml"));
             myProfileScene = myProfileLoader.load();
@@ -125,6 +131,8 @@ public class RootController implements Initializable {
             currentScene = coordinatorsScene;
         } else if (scene == myProfileScene && currentScene != myProfileScene) {
            currentScene = myProfileScene;
+        } else if (scene == redeemScene && currentScene != redeemScene) {
+            currentScene = redeemScene;
         }
         gridPane.add(currentScene, 1, 0, 1, gridPane.getRowCount());
     }
@@ -147,4 +155,6 @@ public class RootController implements Initializable {
     public void myProfileAction(ActionEvent actionEvent) {
         switchView(myProfileScene);
     }
+
+    public void redeemAction(ActionEvent actionEvent) { switchView(redeemScene); }
 }
