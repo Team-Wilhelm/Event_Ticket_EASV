@@ -99,11 +99,6 @@ public class EventViewController extends MotherController implements Initializab
     @Override
     public void refreshItems() {
         refreshItems(List.copyOf(eventModel.getAllEvents().values()));
-
-        /*List<Event> eventsToSortByDate = (List<Event>) eventModel.getAllEvents().values();
-        Comparator<Event> dateComparator = (e1, e2) -> e1.getStartDate().compareTo(e2.getStartDate());
-        eventsToSortByDate.sort(Collections.reverseOrder(dateComparator));
-        refreshItems(List.copyOf(eventsToSortByDate));*/
     }
 
     @Override
@@ -140,23 +135,12 @@ public class EventViewController extends MotherController implements Initializab
                 }
             });
             eventCards.add(eventCard);
+            sortEventCards(eventCards);
         }
     }
 
-    //TODO why no working?
-    private HashMap<Event, EventCard> sortEventCardsByDate(HashMap<Event, EventCard> eventCardsToSort){
-        List<Map.Entry<Event, EventCard>> listOfKeys = new LinkedList<>(eventCardsToSort.entrySet());
-
-        /*Comparator<Map.Entry<Event, EventCard>> dateComparator = (e1, e2) -> e1.getKey().getStartDate().compareTo(e2.getKey().getStartDate());
-        listOfKeys.sort(dateComparator);*/
-
-        listOfKeys.sort((k1, k2) -> k1.getKey().getStartDate().compareTo(k2.getKey().getStartDate()));
-
-        HashMap<Event, EventCard> temp = new HashMap<>();
-        for (Map.Entry<Event, EventCard> key: listOfKeys){
-            temp.put(key.getKey(), key.getValue());
-        }
-        return temp;
+    private void sortEventCards(List<EventCard> eventCards){
+        eventCards.sort((k1, k2) -> k2.getEvent().getStartDate().compareTo(k1.getEvent().getStartDate()));
     }
 
 
