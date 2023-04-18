@@ -57,6 +57,9 @@ public class TicketModel extends Model {
     public List<Ticket> getAllTicketsForEvent(Event event) {
         return allTickets.stream().filter(ticket -> ticket.getEvent().getId() == event.getId()).toList();
     }
+    public List<Ticket> getAllTickets() {
+        return allTickets;
+    }
 
     public void openTicket(Ticket ticket) {
         bll.openTicket(ticket);

@@ -109,4 +109,8 @@ public class EventModel extends Model {
         this.ticketModel = ticketModel;
         this.voucherModel = voucherModel;
     }
+
+    public void seedTickets(Event event){
+        eventManager.seedTickets(event);
+    }
 }

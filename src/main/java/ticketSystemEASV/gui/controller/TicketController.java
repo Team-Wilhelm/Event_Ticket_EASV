@@ -18,21 +18,28 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.*;
 import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.controller.addController.AddObjectController;
+import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.VoucherModel;
+import ticketSystemEASV.gui.tasks.HttpPostMultipart;
 import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.tasks.TaskState;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
@@ -51,6 +58,7 @@ public class TicketController extends AddObjectController implements Initializab
     private Label progressLabel;
     @FXML
     private GridPane gridPane;
+    private EventModel eventModel;
     private TicketModel ticketModel;
     private VoucherModel voucherModel;
     private ObservableList<Ticket> tickets = FXCollections.observableArrayList();
@@ -66,14 +74,14 @@ public class TicketController extends AddObjectController implements Initializab
             txtMaxNumOfGenTickets.setText(String.valueOf(event.getNumberOfTickets()));
             txtMaxNumOfGenTickets.setEditable(false);
             txtMaxNumOfGenTickets.setSelectable(false);
+            setUpTableView();
         });
 
-        setUpTableView();
         setUpComboBox();
     }
 
     @FXML
-    private void generateTicket(ActionEvent actionEvent) {
+    private void generateTicket(ActionEvent actionEvent) throws IOException {
         if (txtCustomerName.getText().trim().isEmpty() || txtCustomerEmail.getText().trim().isEmpty()) {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please fill in all fields", actionEvent).showAndWait();
             return;
@@ -84,6 +92,24 @@ public class TicketController extends AddObjectController implements Initializab
             task = new SaveTask(ticket, false, ticketModel);
             setUpTask(task);
             executeTask(task);
+            ticketModel.getTicketsFromManager(new CountDownLatch(0));
+            var tickets = ticketModel.getAllTickets();
+            var ticketToSend = tickets.stream().filter(t -> t.getCustomer().getEmail().equals(txtCustomerEmail.getText().trim())).findFirst().get();
+
+            // TODO: Implement sending of the email here
+            /*
+            HttpPostMultipart multipart = new HttpPostMultipart("https://eventticketsystem.azurewebsites.net/api/emailapi","UTF-8");
+
+            multipart.addFormField("event", event.getEventName());
+            multipart.addFormField("ToEmail", ticket.getCustomer().getEmail());
+            multipart.addFormField("ToName", ticket.getCustomer().getName());
+            //multipart.addFilePart("file", new File() ticketToSend.getTicketQR());
+
+            String response = multipart.finish();
+            System.out.println("SERVER REPLIED:");
+            System.out.println(response);
+            */
+
         } else if (comboTicketType.getSelectionModel().getSelectedItem() == "Vouchers") {
             // txtCustomerEmail == VoucherType
             int amount = Integer.parseInt(txtCustomerName.getText().trim());
@@ -96,9 +122,10 @@ public class TicketController extends AddObjectController implements Initializab
         }
     }
 
-    public void setTicketModel(TicketModel ticketModel, VoucherModel voucherModel) {
+    public void setTicketModel(TicketModel ticketModel, VoucherModel voucherModel, EventModel eventModel) {
         this.ticketModel = ticketModel;
         this.voucherModel = voucherModel;
+        this.eventModel = eventModel;
     }
 
     public void setEvent(Event event) {
@@ -144,6 +171,8 @@ public class TicketController extends AddObjectController implements Initializab
     }
 
     private void refreshTableView(TicketType ticketType){
+        if(eventModel != null)
+            eventModel.seedTickets(event);
         if (ticketType == TicketType.ALL) {
             Platform.runLater(() -> {
                 if(event.getTickets().values().size() >= event.getNumberOfTickets()) {

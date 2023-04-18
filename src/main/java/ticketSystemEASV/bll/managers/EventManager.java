@@ -48,4 +48,7 @@ public class EventManager {
     public void unassignCoordinatorFromEvent(User user, Event event) {
         eventDAO.unassignCoordinatorFromEvent(user, event);
     }
+    public void seedTickets(Event event){
+        eventDAO.getTicketsAssignedToEvent(event);
+    }
 }

@@ -8,6 +8,7 @@ public class Ticket implements ITicket {
     private UUID id;
     private TicketType ticketType;
     private byte[] ticketQR;
+    private boolean sent;
     private boolean redeemed;
 
     //TODO redeem ticket
