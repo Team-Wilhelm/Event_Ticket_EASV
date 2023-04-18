@@ -6,6 +6,8 @@ import ticketSystemEASV.be.views.EventCard;
 import ticketSystemEASV.bll.managers.EventManager;
 import ticketSystemEASV.gui.tasks.ConstructEventCardTask;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +59,30 @@ public class EventModel extends Model {
         getAllEventsFromManager();
         return allEvents;
     }
+
+    public HashMap<Integer, Event> getAllUpcomingEvents() {
+        getAllEventsFromManager();
+        for(Event event: allEvents.values())
+        {
+            if (event.getStartDate().after(Date.valueOf(LocalDate.now()))){
+                allEvents.put(event.getId(), event);
+            }
+        }
+        return allEvents;
+    }
+
+    public HashMap<Integer, Event> getAllPastEvents() {
+        getAllEventsFromManager();
+        for(Event event: allEvents.values())
+        {
+            if (event.getStartDate().before(Date.valueOf(LocalDate.now()))){
+                allEvents.put(event.getId(), event);
+            }
+        }
+        return allEvents;
+    }
+
+
 
     public List<Event> searchEvents(String query) {
         List<Event> filteredEvents = new ArrayList<>();
