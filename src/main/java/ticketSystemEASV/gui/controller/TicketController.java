@@ -79,7 +79,7 @@ public class TicketController extends AddObjectController implements Initializab
             return;
         }
 
-        if (comboTicketType.getSelectionModel().getSelectedItem() == "Ticket") {
+        if (comboTicketType.getSelectionModel().getSelectedItem() == "Tickets") {
             Ticket ticket = new Ticket(event, new Customer(txtCustomerName.getText().trim(), txtCustomerEmail.getText().trim()));
             task = new SaveTask(ticket, false, ticketModel);
             setUpTask(task);
@@ -204,6 +204,7 @@ public class TicketController extends AddObjectController implements Initializab
             txtCustomerEmail.setManaged(true);
             txtCustomerEmail.clear();
 
+            btnGenerateTicket.setText("Generate Tickets");
             btnGenerateTicket.setVisible(true);
             btnGenerateTicket.setManaged(true);
         } else if (type.equals("Vouchers")) {
