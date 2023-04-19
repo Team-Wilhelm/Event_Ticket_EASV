@@ -34,7 +34,7 @@
             <Insets top="15.0" />
          </GridPane.margin>
       </ImageView>
-      <MFXButton fx:id="btnManageCoordinators" maxWidth="1.7976931348623157E308" onAction="#manageCoordinatorsAction" styleClass="menuButtons" text="Coordinators" GridPane.rowIndex="3">
+      <MFXButton fx:id="btnManageCoordinators" contentDisplay="TOP" maxWidth="1.7976931348623157E308" onAction="#manageCoordinatorsAction" styleClass="menuButtons" text="Coordinators" GridPane.rowIndex="4">
          <graphic>
             <ImageView fx:id="imgManageCoordinators" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -46,7 +46,7 @@
             <Insets bottom="5.0" top="5.0" />
          </GridPane.margin>
       </MFXButton>
-      <MFXButton fx:id="btnEvents" maxWidth="1.7976931348623157E308" onAction="#myEventsAction" styleClass="menuButtons" text="My Events" GridPane.rowIndex="2">
+      <MFXButton fx:id="btnEvents" contentDisplay="TOP" maxWidth="1.7976931348623157E308" onAction="#myEventsAction" styleClass="menuButtons" text="My Events" GridPane.rowIndex="2">
          <graphic>
             <ImageView fx:id="imgEvents" fitHeight="150.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -59,7 +59,7 @@
          </GridPane.margin>
       </MFXButton>
       <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS" />
-      <MFXButton fx:id="btnMyProfile" maxWidth="1.7976931348623157E308" onAction="#myProfileAction" styleClass="menuButtons" text="My profile" GridPane.rowIndex="6">
+      <MFXButton fx:id="btnMyProfile" contentDisplay="TOP" maxWidth="1.7976931348623157E308" onAction="#myProfileAction" styleClass="menuButtons" text="My profile" GridPane.rowIndex="6">
          <graphic>
             <ImageView fx:id="imgMyProfile" fitHeight="150.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -72,14 +72,17 @@
          </GridPane.margin>
       </MFXButton>
       <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
-      <MFXButton fx:id="btnManageCoordinators1" layoutX="20.0" layoutY="306.0" maxWidth="1.7976931348623157E308" onAction="#redeemAction" styleClass="menuButtons" text="Redeem" GridPane.rowIndex="4">
+      <MFXButton fx:id="btnRedeem" contentDisplay="TOP" maxWidth="1.7976931348623157E308" onAction="#redeemAction" styleClass="menuButtons" text="Redeem" GridPane.rowIndex="3">
          <graphic>
-            <ImageView fx:id="imgManageCoordinators1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgRedeem" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/icons/users-bold.png" />
                </image>
             </ImageView>
          </graphic>
+         <GridPane.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </GridPane.margin>
       </MFXButton>
    </children>
    <padding>
