@@ -90,4 +90,5 @@ public class TicketManager {
         }
         ticketDAO.updateTickets(tickets);
     }
+    public void redeemTicket(Ticket ticket) { ticketDAO.redeemTicket(ticket); }
 }

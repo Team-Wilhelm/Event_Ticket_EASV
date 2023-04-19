@@ -156,5 +156,8 @@ public class RootController implements Initializable {
         switchView(myProfileScene);
     }
 
-    public void redeemAction(ActionEvent actionEvent) { switchView(redeemScene); }
+    public void redeemAction(ActionEvent actionEvent) {
+        switchView(redeemScene);
+        redeemController.setModels(ticketModel);
+    }
 }

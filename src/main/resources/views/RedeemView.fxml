@@ -14,7 +14,6 @@
                 <children>
                     <Label text="Type:" />
                     <Label text="Code:" />
-                    <Label text="Value:" />
                     <Label text="Event:" />
                     <Label text="Date:" />
                     <Label text="Time:" />
@@ -24,13 +23,12 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS" styleClass="bold">
                 <children>
-                    <Label text="-type-" />
-                    <Label text="-UUID-" />
-                    <Label text="-value-" />
-                    <Label text="-event-" />
-                    <Label text="-date-" />
-                    <Label text="-time-" />
-                    <Label text="-location-" />
+                    <Label text="-type-" fx:id="ticketType" />
+                    <Label text="-UUID-" fx:id="ticketId" />
+                    <Label text="-event-" fx:id="ticketEvent" />
+                    <Label text="-date-" fx:id="ticketDate" />
+                    <Label text="-time-" fx:id="ticketTime" />
+                    <Label text="-location-" fx:id="ticketLocation" />
                 </children>
             </VBox>
          </children>

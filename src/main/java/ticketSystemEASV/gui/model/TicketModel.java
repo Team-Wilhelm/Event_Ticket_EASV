@@ -90,4 +90,8 @@ public class TicketModel extends Model {
     public void updateTickets(Collection<Ticket> tickets) {
         bll.updateTickets(tickets.stream().toList());
     }
+
+    public void redeemTicket(Ticket ticket) {
+        bll.redeemTicket(ticket);
+    }
 }

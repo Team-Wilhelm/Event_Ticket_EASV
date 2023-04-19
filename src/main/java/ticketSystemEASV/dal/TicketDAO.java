@@ -254,4 +254,19 @@ public class TicketDAO extends DAO<Ticket> {
             releaseConnection(connection);
         }
     }
+    public void redeemTicket(Ticket ticket) {
+        String sql = "UPDATE Ticket SET Redeemed=? WHERE id=?;";
+        Connection connection = null;
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setBoolean(1, true);
+            statement.setString(2, ticket.getId().toString());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            releaseConnection(connection);
+        }
+    }
 }
