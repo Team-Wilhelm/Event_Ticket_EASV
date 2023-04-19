@@ -220,7 +220,7 @@ public class AddEventController extends AddObjectController implements Initializ
         Scene scene = new Scene(fxmlLoader.load());
         TicketController ticketController = fxmlLoader.getController();
 
-        ticketController.setTicketModel(ticketModel, voucherModel);
+        ticketController.setTicketModel(ticketModel, voucherModel, eventModel);
         ticketController.setEvent(eventToEdit);
 
         stage.setScene(scene);
