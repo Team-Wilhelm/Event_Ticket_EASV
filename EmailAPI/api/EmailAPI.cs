@@ -20,19 +20,6 @@ namespace EventTicketSystem.API
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            /*RSACryptoServiceProvider RSAalg = new RSACryptoServiceProvider();
-            var privateKey = Environment.GetEnvironmentVariable("Key");
-
-            var sr = new System.IO.StringReader(privateKey);
-            var xs = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
-            var privKey = (RSAParameters)xs.Deserialize(sr);
-
-            RSAalg.ImportParameters(privKey);
-
-            var plainTextData = "foobar";
-            var enc = RSAalg.Encrypt(System.Text.Encoding.UTF8.GetBytes(plainTextData), false);
-            */
-
             var apiKey = "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";
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()

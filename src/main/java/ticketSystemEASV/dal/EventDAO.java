@@ -18,26 +18,42 @@ public class EventDAO extends DAO<Event> {
     public String addEvent(Event event) {
         User loggedInUser = UserModel.getLoggedInUser();
         String message="";
-        String sql = "DECLARE @EventID int;" +
-                "INSERT INTO Event (startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance, numTickets) " +
-                "VALUES (?,?,?,?,?,?,?,?,?) " +
-                "SET @EventID = (SELECT ID FROM Event WHERE EventName = ?)" +
-                "INSERT INTO User_Event_Link (UserID, EventId)" +
-                "VALUES (?, @EventID);";
+        String sql = "INSERT INTO Event (startDate, startTime, eventName, eventLocation, notes, endDate, endTime, locationGuidance, numTickets) " +
+                "VALUES (?,?,?,?,?,?,?,?,?);";
 
         Connection connection = null;
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             fillPreparedStatement(event, statement);
             statement.setInt(9, event.getNumberOfTickets());
-            statement.setString(10, event.getEventName());
-            statement.setString(11, loggedInUser.getId().toString());
             statement.execute();
+
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next())
+                event.setId(rs.getInt(1));
+
         } catch (SQLException e) {
-            message = e.getMessage();
             e.printStackTrace();
+            message = e.getMessage();
         }
+        sql = "INSERT INTO User_Event_Link (UserID, EventId)" +
+                "VALUES (?, ?);";
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            if(loggedInUser != null)
+                statement.setString(1, loggedInUser.getId().toString());
+            else
+                statement.setString(1, "CAC56612-E4C8-4D21-918D-AAB2F7EB6E2A");
+            statement.setInt(2, event.getId());
+
+            statement.execute();
+        } catch (SQLException ex) {
+            message = ex.getMessage();
+            ex.printStackTrace();
+        }
+
         return message;
     }
 
@@ -70,6 +86,7 @@ public class EventDAO extends DAO<Event> {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, eventToDelete.getId());
             statement.execute();
+            eventToDelete.setId(0);
         } catch (SQLException e) {
             e.printStackTrace();
             message = e.getMessage();

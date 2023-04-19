@@ -44,11 +44,19 @@ public class TicketDAO extends DAO<Ticket> {
             }
 
             SQL = "INSERT INTO Ticket (eventID, customerID, ticketQR) VALUES (?,?,?);";
-            try (PreparedStatement ticketStatement = connection.prepareStatement(SQL)) {
+            try (PreparedStatement ticketStatement = connection.prepareStatement(SQL)){
                 ticketStatement.setInt(1, ticket.getEvent().getId());
                 ticketStatement.setInt(2, customerID);
                 ticketStatement.setBytes(3, ticket.getTicketQR());
                 ticketStatement.execute();
+
+                rs = ticketStatement.getGeneratedKeys();
+
+                System.out.println(rs.getString("eventID"));
+                if (rs.next()) {
+                    System.out.println(rs.getString("eventID"));
+                    ticket.setId(UUID.fromString(rs.getString("ID")));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,6 +100,7 @@ public class TicketDAO extends DAO<Ticket> {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, ticket.getId().toString());
             statement.execute();
+            ticket.setId(null);
         } catch (SQLException e) {
             e.printStackTrace();
             message = "Could not delete ticket from database";

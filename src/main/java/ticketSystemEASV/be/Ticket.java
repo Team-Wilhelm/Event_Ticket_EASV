@@ -76,6 +76,9 @@ public class Ticket implements ITicket {
         this.ticketQR = ticketQR;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
     public UUID getId() {
         return id;
     }

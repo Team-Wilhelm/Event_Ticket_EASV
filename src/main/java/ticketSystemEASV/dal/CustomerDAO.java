@@ -5,6 +5,7 @@ import ticketSystemEASV.dal.Interfaces.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomerDAO extends DAO<Customer> {
@@ -16,10 +17,16 @@ public class CustomerDAO extends DAO<Customer> {
         Connection connection = null;
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, customer.getName());
             statement.setString(2, customer.getEmail());
             statement.execute();
+
+            ResultSet rs = statement.getGeneratedKeys();
+            if(rs.next()){
+                customer.setId(rs.getInt(1));
+            }
+
             dbConnection.releaseConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -33,6 +40,7 @@ public class CustomerDAO extends DAO<Customer> {
         try (PreparedStatement statement = dbConnection.getConnection().prepareStatement(sql)) {
             statement.setInt(1, customer.getId());
             statement.execute();
+            customer.setId(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
