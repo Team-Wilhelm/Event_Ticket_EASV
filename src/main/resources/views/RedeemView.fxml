@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="gridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1350.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.viewControllers.RedeemController">
+<HBox fx:id="gridPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1350.0" styleClass="backGround" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.viewControllers.RedeemController">
     <VBox prefHeight="600.0" prefWidth="400.0" spacing="10.0">
         <Label text="Redeem a ticket/Voucher:" />
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS" >
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                 <children>
                     <Label text="Type:" />
                     <Label text="Code:" />
@@ -21,14 +24,14 @@
                     <MFXButton onAction="#redeemTicket" text="Redeem" />
                 </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS" styleClass="bold">
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" styleClass="bold" HBox.hgrow="ALWAYS">
                 <children>
-                    <Label text="-type-" fx:id="ticketType" />
-                    <Label text="-UUID-" fx:id="ticketId" />
-                    <Label text="-event-" fx:id="ticketEvent" />
-                    <Label text="-date-" fx:id="ticketDate" />
-                    <Label text="-time-" fx:id="ticketTime" />
-                    <Label text="-location-" fx:id="ticketLocation" />
+                    <Label fx:id="ticketType" text="-type-" />
+                    <Label fx:id="ticketId" text="-UUID-" />
+                    <Label fx:id="ticketEvent" text="-event-" />
+                    <Label fx:id="ticketDate" text="-date-" />
+                    <Label fx:id="ticketTime" text="-time-" />
+                    <Label fx:id="ticketLocation" text="-location-" />
                 </children>
             </VBox>
          </children>

@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.controller;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,12 +27,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RootController implements Initializable {
+
     @FXML
     private GridPane gridPane;
     @FXML
-    private Button btnManageCoordinators, btnEvents, btnMyProfile;
+    private Button btnManageCoordinators, btnEvents, btnMyProfile, btnRedeem;
     @FXML
-    private ImageView imgManageCoordinators, imgEvents, imgLogo, imgMyProfile;
+    private ImageView imgManageCoordinators, imgEvents, imgLogo, imgMyProfile, imgRedeem;
     private final TicketModel ticketModel;
     private UserModel userModel;
     private final EventModel eventModel;
@@ -102,13 +104,14 @@ public class RootController implements Initializable {
     }
 
     private void setUpMenuButtons() {
-        btnManageCoordinators.setText("");
+        /*btnManageCoordinators.setText("");
         btnEvents.setText("");
-        btnMyProfile.setText("");
+        btnMyProfile.setText("");*/
 
         gridPane.getRowConstraints().get(2).prefHeightProperty().bind(btnEvents.heightProperty().add(10));
-        gridPane.getRowConstraints().get(3).prefHeightProperty().bind(btnManageCoordinators.heightProperty().add(10));
+        gridPane.getRowConstraints().get(4).prefHeightProperty().bind(btnManageCoordinators.heightProperty().add(10));
         gridPane.getRowConstraints().get(5).prefHeightProperty().bind(btnMyProfile.heightProperty().add(10));
+        gridPane.getRowConstraints().get(3).prefHeightProperty().bind(btnRedeem.heightProperty().add(10));
 
 
         //imgLogo.fitWidthProperty().bind(btnEvents.widthProperty().divide(2));
