@@ -44,18 +44,16 @@ public class TicketDAO extends DAO<Ticket> {
             }
 
             SQL = "INSERT INTO Ticket (eventID, customerID, ticketQR) VALUES (?,?,?);";
-            try (PreparedStatement ticketStatement = connection.prepareStatement(SQL)){
+            try (PreparedStatement ticketStatement = connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
                 ticketStatement.setInt(1, ticket.getEvent().getId());
                 ticketStatement.setInt(2, customerID);
                 ticketStatement.setBytes(3, ticket.getTicketQR());
                 ticketStatement.execute();
 
-                rs = ticketStatement.getGeneratedKeys();
+                ResultSet generatedKeys = ticketStatement.getGeneratedKeys();
 
-                System.out.println(rs.getString("eventID"));
                 if (rs.next()) {
-                    System.out.println(rs.getString("eventID"));
-                    ticket.setId(UUID.fromString(rs.getString("ID")));
+                    ticket.setId(UUID.fromString(generatedKeys.getString(1)));
                 }
             }
         } catch (SQLException e) {

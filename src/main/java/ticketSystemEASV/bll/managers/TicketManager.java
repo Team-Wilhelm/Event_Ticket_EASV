@@ -68,7 +68,8 @@ public class TicketManager {
         if (Desktop.isDesktopSupported()) {
             try {
                 ticketGenerator.generateTicket(ticket);
-                File ticketPDF = new File("src/main/resources/tickets/" + ticket.getId() + ".pdf");
+                String home = System.getProperty("user.home");
+                File ticketPDF = new File(home + "/Downloads/" + ticket.getId() + ".pdf");
                 Desktop.getDesktop().open(ticketPDF);
             } catch (IOException ex) {
                 // no application registered for PDFs

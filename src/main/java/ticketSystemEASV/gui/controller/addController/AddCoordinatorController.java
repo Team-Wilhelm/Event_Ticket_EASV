@@ -228,7 +228,6 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     }
 
     private boolean checkInput(ActionEvent actionEvent) {
-        //TODO disable save button while input is invalid
         if (userModel.getAllUsers().values().stream().anyMatch(user -> user.getUsername().equals(username)
         && !username.equals(coordinatorToEdit.getUsername()))) {
             alertManager.getAlert(Alert.AlertType.ERROR, "Username already exists!", actionEvent).showAndWait();

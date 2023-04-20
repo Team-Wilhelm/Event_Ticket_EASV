@@ -38,7 +38,8 @@ public class TicketGenerator {
             //TODO choose a font
 
             // Open a new PDF document
-            PdfWriter writer = new PdfWriter("src/main/resources/tickets/" + ticket.getId() + ".pdf");
+            String home = System.getProperty("user.home");
+            PdfWriter writer = new PdfWriter(home + "/Downloads/" + ticket.getId() + ".pdf");
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
 

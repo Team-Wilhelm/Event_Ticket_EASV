@@ -1,11 +1,8 @@
 package ticketSystemEASV.gui.controller;
 
 import io.github.palexdev.materialfx.controls.*;
-import io.github.palexdev.materialfx.controls.cell.MFXComboBoxCell;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,12 +10,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import ticketSystemEASV.be.*;
@@ -27,16 +24,10 @@ import ticketSystemEASV.gui.controller.addController.AddObjectController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
 import ticketSystemEASV.gui.model.VoucherModel;
-import ticketSystemEASV.gui.tasks.HttpPostMultipart;
 import ticketSystemEASV.gui.tasks.SaveTask;
 import ticketSystemEASV.gui.tasks.TaskState;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -209,12 +200,14 @@ public class TicketController extends AddObjectController implements Initializab
     private void switchScene(String type) {
         txtCustomerName.clear();
         txtCustomerEmail.clear();
+        txtCustomerName.textProperty().removeListener(searchListener);
         if (type.equals("All")) {
             //txtCustomerName.setTextFormatter(null);
             refreshTableView(TicketType.ALL);
 
             txtNumberOfGeneratedTickets.setFloatingText("Generated tickets and vouchers");
             txtCustomerName.setFloatingText("Search...");
+            txtCustomerName.textProperty().addListener(searchListener);
 
             txtCustomerEmail.setVisible(false);
             txtCustomerEmail.setManaged(false);
@@ -335,5 +328,27 @@ public class TicketController extends AddObjectController implements Initializab
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Ticket not saved!", event).showAndWait();
             }
         });
+    }
+
+    private ChangeListener<String> searchListener = new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> observable,
+                            String oldValue, String newValue) {
+            if (!newValue.isEmpty())
+                searchTickets(newValue);
+            else
+                refreshTableView(TicketType.ALL);
+        }
+    };
+
+    private void searchTickets(String query) {
+            List<Ticket> filteredTickets = new ArrayList<>();
+            for (Ticket ticket : tickets) {
+                if (ticket.getCustomer().getEmail().toLowerCase().trim().contains(txtCustomerName.getText().toLowerCase().trim())
+                || ticket.getCustomer().getName().toLowerCase().trim().contains(txtCustomerName.getText().toLowerCase().trim()))
+                    filteredTickets.add(ticket);
+            }
+            tickets.setAll(filteredTickets);
+            tblTickets.setItems(tickets);
     }
 }
