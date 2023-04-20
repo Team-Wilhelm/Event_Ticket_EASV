@@ -48,6 +48,7 @@ public class LoginViewController implements Initializable {
         if(userModel.logIn(emailInput.getText(), passwordInput.getText())) {
             userModel.setLoggedInUser(userModel.getUserByEmail(emailInput.getText()));
             ((RootController) fxmlLoader.getController()).setUserModel(userModel);
+            System.out.println("Login time: " + (System.currentTimeMillis() - timeMilis) + "ms");
 
             Stage stage = (Stage) emailInput.getScene().getWindow();
             stage.setScene(new Scene(root));

@@ -2,7 +2,7 @@ package ticketSystemEASV.be;
 
 import java.util.UUID;
 
-public class Ticket implements ITicket {
+public class Ticket {
     private Event event;
     private Customer customer;
     private UUID id;
@@ -11,7 +11,6 @@ public class Ticket implements ITicket {
     private boolean sent;
     private boolean redeemed;
 
-    //TODO redeem ticket
     public Ticket() {}
 
     public Ticket(byte[] ticketQR) {
