@@ -1,13 +1,20 @@
 package tests;
 
-import org.junit.Test;
+//import org.junit.Test;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.dal.EventDAO;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
 import java.sql.Date;
 
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+//import static org.junit.Assert.assertTrue;
 
 public class EventTests {
     private EventDAO eventDAO = new EventDAO();

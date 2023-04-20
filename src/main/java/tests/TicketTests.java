@@ -1,16 +1,21 @@
 package tests;
 
-import org.junit.Test;
+//import org.junit.Test;
 import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.dal.EventDAO;
 import ticketSystemEASV.dal.TicketDAO;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import java.sql.Date;
 import java.sql.Time;
 
-import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TicketTests {
     private TicketDAO ticketDAO = new TicketDAO();

@@ -1,10 +1,16 @@
 package tests;
 
-import org.junit.Test;
+//import org.junit.Test;
 import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.dal.CustomerDAO;
+//import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class CustomerTests {
     private final CustomerDAO customerDAO = new CustomerDAO();
