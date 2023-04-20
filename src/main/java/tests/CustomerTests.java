@@ -19,6 +19,7 @@ public class CustomerTests {
         var customer = new Customer("Test", "test@test.dk");
         customerDAO.addCustomer(customer);
         assertTrue(customer.getId() > 0);
+        customerDAO.deleteCustomer(customer);
     }
     @Test
     public void deleteCustomer() {
@@ -33,6 +34,6 @@ public class CustomerTests {
         customerDAO.addCustomer(customer);
         var customer2 = customerDAO.getCustomer(customer.getId());
         assertTrue(customer2.getId() == customer.getId());
+        customerDAO.deleteCustomer(customer);
     }
-
 }
