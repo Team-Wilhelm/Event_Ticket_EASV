@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
 import ticketSystemEASV.bll.util.AlertManager;
@@ -17,7 +18,12 @@ import javafx.fxml.Initializable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static javafx.scene.input.KeyCode.ENTER;
 
@@ -44,20 +50,48 @@ public class LoginViewController implements Initializable {
     }
 
     public void loginUser(Event event) throws IOException {
-        long timeMilis = System.currentTimeMillis();
-        if(userModel.logIn(emailInput.getText(), passwordInput.getText())) {
-            userModel.setLoggedInUser(userModel.getUserByEmail(emailInput.getText()));
-            ((RootController) fxmlLoader.getController()).setUserModel(userModel);
-            System.out.println("Login time: " + (System.currentTimeMillis() - timeMilis) + "ms");
+        Stage loadingStage = new Stage();
+        loadingStage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoadingScreen.fxml")))));
+        loadingStage.setResizable(false);
+        loadingStage.centerOnScreen();
+        loadingStage.setTitle("Loading");
+        loadingStage.initModality(Modality.APPLICATION_MODAL);
+        loadingStage.show();
 
-            Stage stage = (Stage) emailInput.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.centerOnScreen();
-            stage.show();
+        boolean login = false;
+        Future<Boolean> future = null;
+        try {
+            ExecutorService executorService = Executors.newFixedThreadPool(1);
+            future = executorService.submit(logInCallable);
+            executorService.shutdown();
+            login = future.get();
+        } catch (Exception e) {
+            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Could not log in.", event).show();
         }
-        else
-            AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Invalid username or password.", event);
+
+        if(future != null && future.isDone()) {
+            if (login) {
+                ((RootController) fxmlLoader.getController()).setUserModel(userModel);
+                Stage stage = (Stage) emailInput.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.centerOnScreen();
+                loadingStage.close();
+                stage.show();
+            }
+            else {
+                AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Invalid username or password.", event).show();
+                loadingStage.close();
+            }
+        }
     }
+
+    private Callable<Boolean> logInCallable = () -> {
+            if (userModel.logIn(emailInput.getText(), passwordInput.getText())) {
+                userModel.setLoggedInUser(userModel.getUserByEmail(emailInput.getText()));
+                return true;
+            } else
+                return false;
+    };
 
     private void setEnterKeyAction() {
         Scene scene = emailInput.getScene();

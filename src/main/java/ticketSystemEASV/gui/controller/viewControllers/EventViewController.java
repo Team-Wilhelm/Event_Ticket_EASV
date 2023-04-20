@@ -53,7 +53,6 @@ public class EventViewController extends MotherController implements Initializab
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //TODO add calendar to gridpane(1,2)
         Bindings.bindContent(eventFlowPane.getChildren(), eventCards);
 
         searchBar.textProperty().addListener((observable, oldValue, newValue) ->
@@ -64,17 +63,6 @@ public class EventViewController extends MotherController implements Initializab
 
         progressSpinner.setVisible(false);
         progressLabel.setVisible(false);
-
-       /* Platform.runLater(() -> {
-            MFXDatePicker datePicker = new MFXDatePicker();
-            gridPane.add(datePicker, 1, 2);
-
-            Node calendar = datePicker.getClip();
-            System.out.println(calendar);
-
-            //gridPane.getChildren().remove(datePicker);
-            //gridPane.add(calendar, 1, 2);
-        });*/
     }
 
 

@@ -33,7 +33,6 @@ public class DBConnection implements IDBConnection {
     }
 
     public Connection getConnection() throws SQLException {
-        long start = System.currentTimeMillis();
         Connection connection;
 
         if (connectionPool.isEmpty()) {

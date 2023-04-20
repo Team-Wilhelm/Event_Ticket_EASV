@@ -51,8 +51,6 @@ public class RedeemController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("RedeemController initialized");
-
         Webcam webcam = Webcam.getDefault();
         webcam.setViewSize(new java.awt.Dimension(WEBCAM_WIDTH, WEBCAM_HEIGHT));
         panel = new WebcamPanel(webcam);
