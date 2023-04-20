@@ -4,10 +4,12 @@ import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
+import java.awt.event.WindowAdapter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -22,7 +24,11 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import ticketSystemEASV.gui.model.TicketModel;
+import ticketSystemEASV.gui.tasks.QRCodeScanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -41,6 +47,7 @@ public class RedeemController implements Initializable {
     public Label ticketType, ticketValue, ticketEvent, ticketDate, ticketTime, ticketId, ticketLocation;
     private WebcamPanel panel;
     private TicketModel ticketModel;
+    private Thread qrCodeScannerThread;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,56 +69,18 @@ public class RedeemController implements Initializable {
         toggle.setOnAction(actionEvent -> {
             if (toggle.isSelected()) {
                 panel.start();
+                qrCodeScannerThread.start();
             } else {
                 panel.stop();
+                qrCodeScannerThread.interrupt();
             }
         });
 
         Platform.runLater(() -> {
-            new Thread(() -> {
-                while (true) {
-                    try {
-                        BufferedImage image = webcam.getImage();
-                        Result result = readQRCode(image);
-                        if (result != null) {
-                            System.out.println("QR Code Text: " + result.getText());
-                            var ticket = ticketModel.getAllTickets().stream().filter(t -> t.getId().toString().toLowerCase().equals(result.getText().toLowerCase())).findFirst().get();
-                            if(ticket != null){
-                                ticketId.setText(ticket.getId().toString());
-                                ticketType.setText(ticket.getTicketType().toString());
-                                if(ticket.getEvent() != null) {
-                                    ticketEvent.setText(ticket.getEvent().getEventName());
-                                    ticketDate.setText(ticket.getEvent().getStartDate().toString());
-                                    ticketTime.setText(ticket.getEvent().getStartTime().toString());
-                                    ticketLocation.setText(ticket.getEvent().getLocation());
-                                }
-                            }
-                        }
-                    } catch (IOException e) {
+            qrCodeScannerThread = new Thread(new QRCodeScanner(webcam, ticketModel, ticketType, ticketValue, ticketEvent, ticketDate, ticketTime, ticketId, ticketLocation));
 
-                    }catch (IllegalArgumentException e){
-
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
+            qrCodeScannerThread.setDaemon(true);
         });
-    }
-    private Result readQRCode(BufferedImage image) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", baos);
-        ByteArrayInputStream bis = new ByteArrayInputStream(baos.toByteArray());
-        BufferedImage bufferedImage = ImageIO.read(bis);
-        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(bufferedImage)));
-        Result result = null;
-        try {
-            result = new MultiFormatReader().decode(binaryBitmap);
-        } catch (Exception e) {
-            // No QR code found in the image
-        }
-        return result;
     }
     public void setModels(TicketModel ticketModel) {
         this.ticketModel = ticketModel;
@@ -123,3 +92,4 @@ public class RedeemController implements Initializable {
         ticketModel.getTicketsFromManager(new CountDownLatch(0));
     }
 }
+
