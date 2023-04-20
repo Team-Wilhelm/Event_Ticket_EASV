@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -28,6 +29,7 @@ import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import ticketSystemEASV.be.Event;
+import ticketSystemEASV.be.LoadingScreen;
 import ticketSystemEASV.be.Role;
 import ticketSystemEASV.be.User;
 import ticketSystemEASV.bll.util.AlertManager;
@@ -44,6 +46,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -70,7 +73,7 @@ public class AddCoordinatorController extends AddObjectController implements Ini
     private Task<TaskState> task;
     private String coordinatorName, username, password;
     private final AlertManager alertManager = AlertManager.getInstance();
-    private Stage stage;
+    private Parent loginScreen;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -254,10 +257,14 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         btnLogOut.setId("btnLogOut");
 
         btnLogOut.setOnAction(event -> {
+            LoadingScreen.getInstance().showLoadingScreen();
             Stage stage = (Stage) btnLogOut.getScene().getWindow();
             try {
-               stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/views/LoginView.fxml"))));
-               stage.centerOnScreen();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/LoginView.fxml"));
+                loginScreen = loader.load();
+                stage.setScene(new Scene(loginScreen));
+                stage.centerOnScreen();
+                LoadingScreen.getInstance().hideLoadingScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }

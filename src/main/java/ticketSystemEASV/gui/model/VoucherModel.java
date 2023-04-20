@@ -1,5 +1,6 @@
 package ticketSystemEASV.gui.model;
 
+import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Voucher;
 import ticketSystemEASV.bll.managers.VoucherManager;
 
@@ -28,7 +29,13 @@ public class VoucherModel extends Model {
         return null;
     }
 
-    public void addMultiple(List<Voucher> vouchers) {
-        bll.addMultipleVouchers(vouchers);
+    public String addMultiple(List<Voucher> vouchers) {
+        String message =  bll.addMultipleVouchers(vouchers);
+        getAllVouchersForEvent(vouchers.get(0).getEvent());
+        return message;
+    }
+
+    public List<Voucher> getAllVouchersForEvent(Event event) {
+        return bll.getAllVouchersForEvent(event);
     }
 }

@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ticketSystemEASV.Main;
+import ticketSystemEASV.be.LoadingScreen;
 import ticketSystemEASV.bll.util.AlertManager;
 import ticketSystemEASV.gui.model.UserModel;
 import javafx.fxml.Initializable;
@@ -50,13 +51,10 @@ public class LoginViewController implements Initializable {
     }
 
     public void loginUser(Event event) throws IOException {
-        Stage loadingStage = new Stage();
-        loadingStage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoadingScreen.fxml")))));
-        loadingStage.setResizable(false);
-        loadingStage.centerOnScreen();
-        loadingStage.setTitle("Loading");
-        loadingStage.initModality(Modality.APPLICATION_MODAL);
-        loadingStage.show();
+        Stage stage = (Stage) emailInput.getScene().getWindow();
+        Stage loadingStage = LoadingScreen.getInstance().getLoadingStage();
+        loadingStage.initOwner(stage);
+        LoadingScreen.getInstance().showLoadingScreen();
 
         boolean login = false;
         Future<Boolean> future = null;
@@ -72,15 +70,14 @@ public class LoginViewController implements Initializable {
         if(future != null && future.isDone()) {
             if (login) {
                 ((RootController) fxmlLoader.getController()).setUserModel(userModel);
-                Stage stage = (Stage) emailInput.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.centerOnScreen();
-                loadingStage.close();
+                LoadingScreen.getInstance().hideLoadingScreen();
                 stage.show();
             }
             else {
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Invalid username or password.", event).show();
-                loadingStage.close();
+                LoadingScreen.getInstance().hideLoadingScreen();
             }
         }
     }

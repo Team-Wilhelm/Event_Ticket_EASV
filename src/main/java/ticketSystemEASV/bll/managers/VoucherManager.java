@@ -1,5 +1,6 @@
 package ticketSystemEASV.bll.managers;
 
+import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Voucher;
 import ticketSystemEASV.dal.VoucherDAO;
 
@@ -28,7 +29,11 @@ public class VoucherManager {
         voucherDAO.deleteVoucher(voucherToDelete);
     }
 
-    public void addMultipleVouchers(List<Voucher> vouchers) {
-        voucherDAO.addMultipleVouchers(vouchers);
+    public String addMultipleVouchers(List<Voucher> vouchers) {
+        return voucherDAO.addMultipleVouchers(vouchers);
+    }
+
+    public List<Voucher> getAllVouchersForEvent(Event event) {
+        return voucherDAO.getAllVouchersForEvent(event);
     }
 }

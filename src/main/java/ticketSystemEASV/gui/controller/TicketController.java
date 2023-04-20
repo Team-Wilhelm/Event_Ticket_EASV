@@ -67,25 +67,23 @@ public class TicketController extends AddObjectController implements Initializab
             txtMaxNumOfGenTickets.setSelectable(false);
             setUpTableView();
         });
-
         setUpComboBox();
     }
 
     @FXML
-    private void generateTicket(ActionEvent actionEvent) throws IOException {
+    private void generateTicket(ActionEvent actionEvent) {
         if (txtCustomerName.getText().trim().isEmpty() || txtCustomerEmail.getText().trim().isEmpty()) {
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Please fill in all fields", actionEvent).showAndWait();
             return;
         }
 
-        if (comboTicketType.getSelectionModel().getSelectedItem() == "Tickets") {
+        if (TicketType.valueOf((String) comboTicketType.getSelectionModel().getSelectedItem()) == TicketType.TICKET) {
             Ticket ticket = new Ticket(event, new Customer(txtCustomerName.getText().trim(), txtCustomerEmail.getText().trim()));
             task = new SaveTask(ticket, false, ticketModel);
             setUpTask(task);
             executeTask(task);
-            ticketModel.getTicketsFromManager(new CountDownLatch(0));
-            var tickets = ticketModel.getAllTickets();
-            var ticketToSend = tickets.stream().filter(t -> t.getCustomer().getEmail().equals(txtCustomerEmail.getText().trim())).findFirst().get();
+            //ticketModel.getTicketsFromManager(new CountDownLatch(0));
+            //var ticketToSend = tickets.stream().filter(t -> t.getCustomer().getEmail().equals(txtCustomerEmail.getText().trim())).findFirst().get();
 
             // TODO: Implement sending of the email here
             /*
@@ -101,15 +99,37 @@ public class TicketController extends AddObjectController implements Initializab
             System.out.println(response);
             */
 
-        } else if (comboTicketType.getSelectionModel().getSelectedItem() == "Vouchers") {
+        } else if (TicketType.valueOf((String) comboTicketType.getSelectionModel().getSelectedItem()) == TicketType.VOUCHER) {
             // txtCustomerEmail == VoucherType
             int amount = Integer.parseInt(txtCustomerName.getText().trim());
             List<Voucher> vouchers = new ArrayList<>(amount);
             for (int i = 0; i < amount; i++) {
                 vouchers.add(new Voucher(event, txtCustomerEmail.getText().trim()));
             }
-            System.out.println(vouchers);
-            voucherModel.addMultiple(vouchers);
+
+            Task<TaskState> task = new Task<>() {
+                @Override
+                protected TaskState call() {
+                    if (isCancelled()) {
+                        updateMessage("Saving was not successful");
+                        return TaskState.NOT_SUCCESSFUL;
+                    } else {
+                        updateMessage("Saving...");
+                        String message = voucherModel.addMultiple(vouchers);
+
+                        if (message.isEmpty()) {
+                            updateMessage("Saved successfully");
+                            return TaskState.SUCCESSFUL;
+                        } else {
+                            updateMessage("Saving was not successful");
+                            return TaskState.NOT_SUCCESSFUL;
+                        }
+                    }
+                }
+            };
+
+            setUpTask(task);
+            executeTask(task);
         }
     }
 
@@ -129,19 +149,21 @@ public class TicketController extends AddObjectController implements Initializab
         Bindings.bindContentBidirectional(tblTickets.getItems(), tickets);
         txtNumberOfGeneratedTickets.textProperty().bind(Bindings.size(tblTickets.getItems()).asString());
 
-        MFXTableColumn<Ticket> customerID = new MFXTableColumn<>("Customer ID", true);
-        MFXTableColumn<Ticket> customerName = new MFXTableColumn<>("Customer name", true);
+        MFXTableColumn<Ticket> customerID = new MFXTableColumn<>("Customer ID/Voucher ID", true);
+        MFXTableColumn<Ticket> customerName = new MFXTableColumn<>("Customer name/Voucher type", true);
         MFXTableColumn<Ticket> customerEmail = new MFXTableColumn<>("Customer e-mail", true);
         MFXTableColumn<Ticket> ticketType = new MFXTableColumn<>("Ticket type", true);
 
         customerID.setRowCellFactory(customer -> {
-            MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(t -> t.getCustomer()!= null ? String.valueOf(t.getCustomer().getId()) : "-");
+            MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(t ->
+                    t.getCustomer()!= null ? String.valueOf(t.getCustomer().getId()) : String.valueOf(t.getId()));
             row.setOnMouseClicked(this::tableViewDoubleClickAction);
             return row;
         });
 
         customerName.setRowCellFactory(customer -> {
-            MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(t -> t.getCustomer()!= null ? t.getCustomer().getName() : "-");
+            MFXTableRowCell<Ticket, String> row = new MFXTableRowCell<>(t ->
+                    t.getCustomer()!= null ? t.getCustomer().getName() : ((Voucher) t).getVoucherType());
             row.setOnMouseClicked(this::tableViewDoubleClickAction);
             return row;
         });
@@ -176,6 +198,7 @@ public class TicketController extends AddObjectController implements Initializab
                     btnGenerateTicket.setDisable(false);
                 }
 
+                System.out.println();
                 tickets.setAll(Stream.concat(
                         event.getTickets().values().stream(),
                         event.getVouchers().stream()
@@ -190,84 +213,59 @@ public class TicketController extends AddObjectController implements Initializab
     }
 
     private void setUpComboBox() {
-        comboTicketType.getItems().setAll("All", "Tickets", "Vouchers");
-        comboTicketType.selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            switchScene(newValue.toString());
+        for (TicketType type : TicketType.values())
+            comboTicketType.getItems().add(type.toString());
+
+        comboTicketType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue observable, String oldValue, String newValue) {
+                switchScene(TicketType.valueOf(newValue));
+            }
         });
+
         comboTicketType.getSelectionModel().selectFirst();
     }
 
-    private void switchScene(String type) {
+    private void switchScene(TicketType type) {
         txtCustomerName.clear();
         txtCustomerEmail.clear();
         txtCustomerName.textProperty().removeListener(searchListener);
-        if (type.equals("All")) {
-            //txtCustomerName.setTextFormatter(null);
-            refreshTableView(TicketType.ALL);
-
-            txtNumberOfGeneratedTickets.setFloatingText("Generated tickets and vouchers");
-            txtCustomerName.setFloatingText("Search...");
-            txtCustomerName.textProperty().addListener(searchListener);
-
-            txtCustomerEmail.setVisible(false);
-            txtCustomerEmail.setManaged(false);
-
-            btnGenerateTicket.setVisible(false);
-            btnGenerateTicket.setManaged(false);
-        } else if (type.equals("Tickets")) {
-            refreshTableView(TicketType.TICKET);
-            //txtCustomerName.setTextFormatter(null);
-
-            txtNumberOfGeneratedTickets.setFloatingText("Number of generated tickets");
-            txtCustomerName.setFloatingText("Customer name");
-
-            txtCustomerEmail.setFloatingText("Customer e-mail");
-            txtCustomerEmail.setVisible(true);
-            txtCustomerEmail.setManaged(true);
-            txtCustomerEmail.clear();
-
-            btnGenerateTicket.setText("Generate Tickets");
-            btnGenerateTicket.setVisible(true);
-            btnGenerateTicket.setManaged(true);
-        } else if (type.equals("Vouchers")) {
-            refreshTableView(TicketType.VOUCHER);
-            //txtCustomerName.setTextFormatter(new TextFormatter<>(numberFilter));
-
-            txtNumberOfGeneratedTickets.setFloatingText("Number of generated vouchers");
-            txtCustomerName.setFloatingText("Number of vouchers");
-
-            txtCustomerEmail.setFloatingText("Voucher type");
-            txtCustomerEmail.setVisible(true);
-            txtCustomerEmail.setManaged(true);
-
-            btnGenerateTicket.setVisible(true);
-            btnGenerateTicket.setManaged(true);
-            btnGenerateTicket.setText("Generate vouchers");
-        }
-    }
-
-    private UnaryOperator<TextFormatter.Change> numberFilter = change -> {
-        String text = change.getText();
-
-        if (text.matches("\\d?")) { // this is the important line
-            return change;
-        }
-
-        return null;
-    };
-
-    private ChangeListener<String> numberListener = new ChangeListener<String>() {
-        @Override
-        public void changed(ObservableValue<? extends String> observable,
-                            String oldValue, String newValue) {
-            System.out.println("Text changed from " + oldValue + " to " + newValue);
-            // Check if the new value matches the Integer pattern
-            if (!newValue.matches("\\d*")) {
-                // if the new value does not match the Integer pattern, revert to the old value
-                txtCustomerName.setText(newValue.replaceAll("[^\\d]", ""));
+        switch (type) {
+            case ALL -> {
+                refreshTableView(TicketType.ALL);
+                txtNumberOfGeneratedTickets.setFloatingText("Generated tickets and vouchers");
+                txtCustomerName.setFloatingText("Search...");
+                txtCustomerName.textProperty().addListener(searchListener);
+                txtCustomerEmail.setVisible(false);
+                txtCustomerEmail.setManaged(false);
+                btnGenerateTicket.setVisible(false);
+                btnGenerateTicket.setManaged(false);
+            }
+            case TICKET -> {
+                refreshTableView(TicketType.TICKET);
+                txtNumberOfGeneratedTickets.setFloatingText("Number of generated tickets");
+                txtCustomerName.setFloatingText("Customer name");
+                txtCustomerEmail.setFloatingText("Customer e-mail");
+                txtCustomerEmail.setVisible(true);
+                txtCustomerEmail.setManaged(true);
+                txtCustomerEmail.clear();
+                btnGenerateTicket.setText("Generate Tickets");
+                btnGenerateTicket.setVisible(true);
+                btnGenerateTicket.setManaged(true);
+            }
+            case VOUCHER -> {
+                refreshTableView(TicketType.VOUCHER);
+                txtNumberOfGeneratedTickets.setFloatingText("Number of generated vouchers");
+                txtCustomerName.setFloatingText("Number of vouchers");
+                txtCustomerEmail.setFloatingText("Voucher type");
+                txtCustomerEmail.setVisible(true);
+                txtCustomerEmail.setManaged(true);
+                btnGenerateTicket.setVisible(true);
+                btnGenerateTicket.setManaged(true);
+                btnGenerateTicket.setText("Generate vouchers");
             }
         }
-    };
+    }
 
     @FXML
     private void tableViewDoubleClickAction(MouseEvent event) {
@@ -319,10 +317,11 @@ public class TicketController extends AddObjectController implements Initializab
             );
 
             if (task.getValue() == TaskState.SUCCESSFUL) {
-                refreshTableView(TicketType.ALL);
+                refreshTableView((TicketType.valueOf((String) comboTicketType.getSelectionModel().getSelectedItem())));
                 txtCustomerName.clear();
                 txtCustomerEmail.clear();
                 //txtNumberOfTickets.clear();
+                System.out.println("Ticket saved!");
             }
             else {
                 AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Ticket not saved!", event).showAndWait();
@@ -330,22 +329,18 @@ public class TicketController extends AddObjectController implements Initializab
         });
     }
 
-    private ChangeListener<String> searchListener = new ChangeListener<String>() {
-        @Override
-        public void changed(ObservableValue<? extends String> observable,
-                            String oldValue, String newValue) {
-            if (!newValue.isEmpty())
-                searchTickets(newValue);
-            else
-                refreshTableView(TicketType.ALL);
-        }
+    private ChangeListener<String> searchListener = (observable, oldValue, newValue) -> {
+        if (!newValue.isEmpty())
+            searchTickets(newValue);
+        else
+            refreshTableView(TicketType.ALL);
     };
 
     private void searchTickets(String query) {
             List<Ticket> filteredTickets = new ArrayList<>();
             for (Ticket ticket : tickets) {
-                if (ticket.getCustomer().getEmail().toLowerCase().trim().contains(txtCustomerName.getText().toLowerCase().trim())
-                || ticket.getCustomer().getName().toLowerCase().trim().contains(txtCustomerName.getText().toLowerCase().trim()))
+                if (ticket.getCustomer().getEmail().toLowerCase().trim().contains(query.toLowerCase().trim())
+                || ticket.getCustomer().getName().toLowerCase().trim().contains(query.toLowerCase().trim()))
                     filteredTickets.add(ticket);
             }
             tickets.setAll(filteredTickets);

@@ -36,6 +36,7 @@ public class Voucher extends Ticket {
         super();
         this.voucherType = voucherType;
         this.event = event;
+        this.ticketType = TicketType.VOUCHER;
 
         try {
             generateQRCode(150);
@@ -46,6 +47,17 @@ public class Voucher extends Ticket {
 
     public Voucher(Event event, String voucherType, byte[] QRcode) {
         super(event, null, QRcode);
+        this.voucherType = voucherType;
+        this.ticketType = TicketType.VOUCHER;
+    }
+
+    public Voucher(Event event, String voucherType, UUID id, byte[] QRcode, boolean redeemed) {
+        super(event, null);
+        this.id = id;
+        this.voucherType = voucherType;
+        this.voucherQR = QRcode;
+        this.redeemed = redeemed;
+        this.ticketType = TicketType.VOUCHER;
     }
 
     public UUID getId() {

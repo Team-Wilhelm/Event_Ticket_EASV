@@ -37,21 +37,25 @@ public class EventModel extends Model {
     @Override
     public String add(Object objectToAdd, CountDownLatch latch) {
         Event eventToSave = (Event) objectToAdd;
-        return eventManager.saveEvent(eventToSave);
+        String message = eventManager.saveEvent(eventToSave);
+        getAllEventsFromManager();
+        return message;
     }
 
     @Override
     public String update(Object objectToUpdate, CountDownLatch latch) {
         Event eventToUpdate = (Event) objectToUpdate;
         ticketModel.updateTickets(eventToUpdate.getTickets().values());
-        return eventManager.updateEvent(eventToUpdate);
+        String message = eventManager.updateEvent(eventToUpdate);
+        getAllEventsFromManager();
+        return message;
     }
 
     @Override
     public String delete(Object objectToDelete) {
         Event eventToDelete = (Event) objectToDelete;
         String message = eventManager.deleteEvent(eventToDelete);
-        eventManager.deleteEvent(eventToDelete);
+        getAllEventsFromManager();
         return message;
     }
 
@@ -83,7 +87,6 @@ public class EventModel extends Model {
     }
 
 
-
     public List<Event> searchEvents(String query) {
         List<Event> filteredEvents = new ArrayList<>();
         allEvents.values().stream().filter(event -> event.getEventName().toLowerCase().contains(query.toLowerCase())
@@ -100,19 +103,9 @@ public class EventModel extends Model {
     public void getAllEventsFromManager() {
         getEventsAssignedToEventCoordinator();
         allEvents = UserModel.getLoggedInUser().getAssignedEvents();
-
-        /*Callable<HashMap<Integer, Event>> setAllEventsRunnable = ()
-                -> (HashMap<Integer, Event>) eventManager.getAllEvents();
-
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
-        try {
-            Future<HashMap<Integer, Event>> future = executorService.submit(setAllEventsRunnable);
-            allEvents = future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        shutdownExecutorService(executorService);*/
+        allEvents.values().forEach(e -> e.setVouchers(voucherModel.getAllVouchersForEvent(e)));
     }
+
     public void getEventsAssignedToEventCoordinator(){
         eventManager.getEventsAssignedToEventCoordinator();
     }

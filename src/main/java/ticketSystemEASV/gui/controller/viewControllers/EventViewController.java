@@ -24,6 +24,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
+import ticketSystemEASV.gui.tasks.TaskState;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,7 +50,6 @@ public class EventViewController extends MotherController implements Initializab
     private UserModel userModel;
     private VoucherModel voucherModel;
     private EventCard lastFocusedEvent;
-    private ConstructEventCardTask task;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -139,7 +139,7 @@ public class EventViewController extends MotherController implements Initializab
     }
 
     @Override
-    public void bindSpinnerToTask(Task task) {
+    public void bindSpinnerToTask(Task<TaskState> task) {
         progressSpinner.progressProperty().bind(task.progressProperty());
         progressLabel.textProperty().bind(task.messageProperty());
     }

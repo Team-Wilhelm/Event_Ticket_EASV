@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import ticketSystemEASV.be.LoadingScreen;
 import ticketSystemEASV.gui.controller.addController.AddCoordinatorController;
 import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.viewControllers.ManageCoordinatorsController;
@@ -45,6 +46,7 @@ public class RootController implements Initializable {
     private RedeemController redeemController;
 
     public RootController() {
+        LoadingScreen.getInstance();
         Callable<TicketModel> ticketModelCallable = TicketModel::new;
         Callable<EventModel> eventModelCallable = EventModel::new;
         Callable<VoucherModel> voucherModelCallable = VoucherModel::new;

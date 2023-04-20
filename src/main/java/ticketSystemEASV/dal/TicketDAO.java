@@ -52,9 +52,10 @@ public class TicketDAO extends DAO<Ticket> {
 
                 ResultSet generatedKeys = ticketStatement.getGeneratedKeys();
 
-                if (rs.next()) {
+                if (generatedKeys.next()) {
                     ticket.setId(UUID.fromString(generatedKeys.getString(1)));
                 }
+                ticket.getEvent().addTicket(ticket);
             }
         } catch (SQLException e) {
             e.printStackTrace();
