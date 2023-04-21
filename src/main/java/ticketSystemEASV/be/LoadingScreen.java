@@ -15,10 +15,12 @@ public class LoadingScreen {
 
     private LoadingScreen() throws IOException {
         loadingStage = new Stage();
-        loadingStage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoadingScreen.fxml")))));
+        Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/views/LoadingScreen.fxml"))));
+        System.out.println(scene);
+        loadingStage.setScene(scene);
         loadingStage.setResizable(false);
         loadingStage.centerOnScreen();
-        loadingStage.setTitle("Loading");
+        loadingStage.setTitle("Loading...");
         loadingStage.initModality(Modality.APPLICATION_MODAL);
     }
 

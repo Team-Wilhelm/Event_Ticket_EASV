@@ -1,7 +1,6 @@
 package ticketSystemEASV.gui.controller.addController;
 
-import io.github.palexdev.materialfx.controls.MFXComboBox;
-import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -24,8 +23,6 @@ import ticketSystemEASV.gui.controller.viewControllers.EventViewController;
 import ticketSystemEASV.gui.controller.TicketController;
 import ticketSystemEASV.gui.model.EventModel;
 import ticketSystemEASV.gui.model.TicketModel;
-import io.github.palexdev.materialfx.controls.MFXDatePicker;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -64,6 +61,8 @@ public class AddEventController extends AddObjectController implements Initializ
     private VBox leftVBox;
     @FXML
     private MFXComboBox<String> comboStartTime, comboEndTime;
+    @FXML
+    MFXButton btnTickets;
     private Task<TaskState> task;
     private final AlertManager alertManager = AlertManager.getInstance();
     private String eventName, location, locationGuidance, notes;
@@ -78,6 +77,8 @@ public class AddEventController extends AddObjectController implements Initializ
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEditing = false;
+        comboAssignCoordinator.setDisable(true);
+        btnTickets.setDisable(true);
 
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {
             String newText = change.getControlNewText();
@@ -126,6 +127,9 @@ public class AddEventController extends AddObjectController implements Initializ
     @Override
     public void setIsEditing(Object object) {
         isEditing = true;
+        comboAssignCoordinator.setDisable(false);
+        btnTickets.setDisable(false);
+
         Event event = (Event) object;
         eventToEdit = event;
         txtEventName.setText(event.getEventName());

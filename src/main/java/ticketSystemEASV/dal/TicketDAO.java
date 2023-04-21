@@ -3,12 +3,10 @@ package ticketSystemEASV.dal;
 import ticketSystemEASV.be.Customer;
 import ticketSystemEASV.be.Event;
 import ticketSystemEASV.be.Ticket;
-import ticketSystemEASV.be.TicketType;
 import ticketSystemEASV.dal.Interfaces.DAO;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TicketDAO extends DAO<Ticket> {
     private final DBConnection dbConnection = DBConnection.getInstance();
@@ -38,7 +36,8 @@ public class TicketDAO extends DAO<Ticket> {
                     if (rs.next()) {
                         customerID = rs.getInt(1);
                     } else {
-                        throw new SQLException("Creating customer failed, no ID obtained.");
+                        message = ("Creating customer failed, no ID obtained.");
+                        return message;
                     }
                 }
             }
@@ -58,7 +57,6 @@ public class TicketDAO extends DAO<Ticket> {
             rs = ticketStatement.executeQuery();
             if (rs.next()) {
                 ticket.setId(UUID.fromString(rs.getString("id")));
-                System.out.println("Ticket added to database with id: " + ticket.getId());
             }
             ticket.getEvent().addTicket(ticket);
         } catch (SQLException e) {
