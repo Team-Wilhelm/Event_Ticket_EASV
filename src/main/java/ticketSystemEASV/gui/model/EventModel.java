@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class EventModel extends Model {
@@ -35,11 +36,14 @@ public class EventModel extends Model {
 
 
     @Override
-    public String add(Object objectToAdd, CountDownLatch latch) {
+    public CompletableFuture<String> add(Object objectToAdd) {
         Event eventToSave = (Event) objectToAdd;
         String message = eventManager.saveEvent(eventToSave);
-        getAllEventsFromManager();
-        return message;
+        CompletableFuture<Map<Integer, Event>> future = CompletableFuture.supplyAsync(() -> eventManager.getAllEvents());
+        return future.thenApplyAsync(events -> {
+            allEvents = (HashMap<Integer, Event>) events;
+            return message;
+        });
     }
 
     @Override

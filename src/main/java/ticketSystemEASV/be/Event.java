@@ -11,7 +11,6 @@ public class Event {
     private Time startTime;
     private String eventName, location, notes;
 
-
     //Optional information
     private Date endDate;
     private Time endTime;

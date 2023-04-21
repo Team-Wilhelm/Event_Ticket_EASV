@@ -57,11 +57,14 @@ public class UserModel extends Model {
     }
 
     @Override
-    public String add(Object objectToAdd, CountDownLatch latch) {
+    public CompletableFuture<String> add(Object objectToAdd) {
         User user = (User) objectToAdd;
         String message = userManager.signUp(user);
-        setAllEventCoordinatorsFromManager(latch);
-        return message;
+        CompletableFuture<Map<UUID,User>> future = CompletableFuture.supplyAsync(() -> userManager.getAllEventCoordinators());
+        return future.thenApplyAsync(users -> {
+            allUsers = (HashMap<UUID, User>) users;
+            return message;
+        });
     }
 
     @Override

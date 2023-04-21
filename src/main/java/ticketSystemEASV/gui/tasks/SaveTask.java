@@ -1,9 +1,12 @@
 package ticketSystemEASV.gui.tasks;
 
 import javafx.concurrent.Task;
+import ticketSystemEASV.be.Ticket;
 import ticketSystemEASV.gui.model.IModel;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 public class SaveTask extends Task<TaskState> {
     private final Object objectToSave;
@@ -23,13 +26,16 @@ public class SaveTask extends Task<TaskState> {
             updateMessage("Saving was not successful");
             return TaskState.NOT_SUCCESSFUL;
         }
+
         else {
             updateMessage("Saving...");
             String message;
             if (isEditing)
                 message = IModel.update(objectToSave, latch);
-            else
-                message = IModel.add(objectToSave, latch);
+            else {
+                CompletableFuture<String> future = IModel.add(objectToSave);
+                message = future.join();
+            }
 
             if (message.isEmpty()) {
                 updateMessage("Saved successfully");

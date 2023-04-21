@@ -44,19 +44,23 @@ public class TicketDAO extends DAO<Ticket> {
             }
 
             SQL = "INSERT INTO Ticket (eventID, customerID, ticketQR) VALUES (?,?,?);";
-            try (PreparedStatement ticketStatement = connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
-                ticketStatement.setInt(1, ticket.getEvent().getId());
-                ticketStatement.setInt(2, customerID);
-                ticketStatement.setBytes(3, ticket.getTicketQR());
-                ticketStatement.execute();
+            PreparedStatement ticketStatement = connection.prepareStatement(SQL);
+            ticketStatement.setInt(1, ticket.getEvent().getId());
+            ticketStatement.setInt(2, customerID);
+            ticketStatement.setBytes(3, ticket.getTicketQR());
+            ticketStatement.executeUpdate();
 
-                ResultSet generatedKeys = ticketStatement.getGeneratedKeys();
-
-                if (generatedKeys.next()) {
-                    ticket.setId(UUID.fromString(generatedKeys.getString(1)));
-                }
-                ticket.getEvent().addTicket(ticket);
+            SQL = "SELECT id FROM Ticket WHERE eventID = ? AND customerID = ? AND ticketQR = ?";
+            ticketStatement = connection.prepareStatement(SQL);
+            ticketStatement.setInt(1, ticket.getEvent().getId());
+            ticketStatement.setInt(2, customerID);
+            ticketStatement.setBytes(3, ticket.getTicketQR());
+            rs = ticketStatement.executeQuery();
+            if (rs.next()) {
+                ticket.setId(UUID.fromString(rs.getString("id")));
+                System.out.println("Ticket added to database with id: " + ticket.getId());
             }
+            ticket.getEvent().addTicket(ticket);
         } catch (SQLException e) {
             e.printStackTrace();
             message = "Could not add ticket to database";

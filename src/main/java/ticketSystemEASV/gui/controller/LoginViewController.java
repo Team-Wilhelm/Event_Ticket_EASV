@@ -52,8 +52,6 @@ public class LoginViewController implements Initializable {
 
     public void loginUser(Event event) throws IOException {
         Stage stage = (Stage) emailInput.getScene().getWindow();
-        Stage loadingStage = LoadingScreen.getInstance().getLoadingStage();
-        loadingStage.initOwner(stage);
         LoadingScreen.getInstance().showLoadingScreen();
 
         boolean login = false;

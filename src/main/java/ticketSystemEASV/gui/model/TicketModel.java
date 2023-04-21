@@ -31,11 +31,14 @@ public class TicketModel extends Model {
 
 
     @Override
-    public String add(Object objectToAdd, CountDownLatch latch) {
+    public CompletableFuture<String> add(Object objectToAdd) {
         Ticket ticket = (Ticket) objectToAdd;
         String message = bll.addTicket(ticket);
-        getTicketsFromManager(latch);
-        return message;
+        CompletableFuture<List<Ticket>> future = CompletableFuture.supplyAsync(() -> bll.getAllTickets());
+        return future.thenApplyAsync(tickets -> {
+            allTickets = tickets;
+            return message;
+        });
     }
 
     @Override
@@ -81,6 +84,7 @@ public class TicketModel extends Model {
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
+            e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
             shutdownExecutorService(executorService);

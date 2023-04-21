@@ -2,13 +2,14 @@ package ticketSystemEASV.gui.model;
 
 import javafx.concurrent.Task;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class Model implements IModel {
     @Override
-    public abstract String add(Object objectToAdd, CountDownLatch latch);
+    public abstract CompletableFuture<String> add(Object objectToAdd);
     @Override
     public abstract String update(Object objectToUpdate, CountDownLatch latch);
     @Override

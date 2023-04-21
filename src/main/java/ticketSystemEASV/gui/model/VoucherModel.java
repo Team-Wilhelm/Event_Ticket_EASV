@@ -5,6 +5,7 @@ import ticketSystemEASV.be.Voucher;
 import ticketSystemEASV.bll.managers.VoucherManager;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
 public class VoucherModel extends Model {
@@ -15,7 +16,7 @@ public class VoucherModel extends Model {
     }
 
     @Override
-    public String add(Object objectToAdd, CountDownLatch latch) {
+    public CompletableFuture<String> add(Object objectToAdd) {
         return null;
     }
 

@@ -100,8 +100,16 @@ public abstract class AddObjectController {
         });
 
         task.setOnFailed(event -> {
-            controller.setProgressSpinnerVisibility(false);
-            controller.unbindSpinnerFromTask();
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            controller.setProgressSpinnerVisibility(false);
+                            controller.unbindLabelFromTask();
+                        }
+                    },
+                    3000
+            );
             AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Something went wrong!", actionEvent).showAndWait();
         });
     }

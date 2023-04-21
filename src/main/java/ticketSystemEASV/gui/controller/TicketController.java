@@ -82,6 +82,7 @@ public class TicketController extends AddObjectController implements Initializab
             task = new SaveTask(ticket, false, ticketModel);
             setUpTask(task);
             executeTask(task);
+
             //ticketModel.getTicketsFromManager(new CountDownLatch(0));
             //var ticketToSend = tickets.stream().filter(t -> t.getCustomer().getEmail().equals(txtCustomerEmail.getText().trim())).findFirst().get();
 
@@ -198,7 +199,6 @@ public class TicketController extends AddObjectController implements Initializab
                     btnGenerateTicket.setDisable(false);
                 }
 
-                System.out.println();
                 tickets.setAll(Stream.concat(
                         event.getTickets().values().stream(),
                         event.getVouchers().stream()
@@ -285,7 +285,7 @@ public class TicketController extends AddObjectController implements Initializab
     }
 
     private void setUpTask(Task<TaskState> task) {
-        task.setOnRunning(event -> {
+        task.setOnRunning(e -> {
             progressSpinner.progressProperty().bind(task.progressProperty());
             progressLabel.textProperty().bind(task.messageProperty());
 
@@ -293,14 +293,22 @@ public class TicketController extends AddObjectController implements Initializab
             progressLabel.setVisible(true);
         });
 
-        task.setOnFailed(event -> {
-            progressSpinner.setVisible(false);
-            progressLabel.setVisible(false);
-            progressSpinner.progressProperty().unbind();
-            progressLabel.textProperty().unbind();
+        task.setOnFailed(e -> {
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            progressSpinner.setVisible(false);
+                            progressLabel.setVisible(false);
+                            progressLabel.textProperty().unbind();
+                            progressSpinner.progressProperty().unbind();
+                        }
+                    },
+                    3000
+            );
         });
 
-        task.setOnSucceeded(event -> {
+        task.setOnSucceeded(e -> {
             progressSpinner.progressProperty().unbind();
             progressSpinner.progressProperty().set(100);
             // after 3 seconds, the progress bar will be hidden
@@ -321,10 +329,9 @@ public class TicketController extends AddObjectController implements Initializab
                 txtCustomerName.clear();
                 txtCustomerEmail.clear();
                 //txtNumberOfTickets.clear();
-                System.out.println("Ticket saved!");
             }
             else {
-                AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Ticket not saved!", event).showAndWait();
+                AlertManager.getInstance().getAlert(Alert.AlertType.ERROR, "Ticket not saved!", e).showAndWait();
             }
         });
     }
@@ -339,6 +346,12 @@ public class TicketController extends AddObjectController implements Initializab
     private void searchTickets(String query) {
             List<Ticket> filteredTickets = new ArrayList<>();
             for (Ticket ticket : tickets) {
+                if (ticket instanceof Voucher) {
+                    if (((Voucher) ticket).getVoucherType().toLowerCase().trim().contains(query.toLowerCase().trim()))
+                        filteredTickets.add(ticket);
+                    continue;
+                }
+
                 if (ticket.getCustomer().getEmail().toLowerCase().trim().contains(query.toLowerCase().trim())
                 || ticket.getCustomer().getName().toLowerCase().trim().contains(query.toLowerCase().trim()))
                     filteredTickets.add(ticket);
