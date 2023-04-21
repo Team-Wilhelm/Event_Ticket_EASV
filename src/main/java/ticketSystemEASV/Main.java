@@ -21,7 +21,6 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("/images/icons/chicken.jpg"))));
         primaryStage.show();
-        System.out.println("Time to start: " + (System.currentTimeMillis() - timeMilis));
     }
 
     public static void main(String[] args) {

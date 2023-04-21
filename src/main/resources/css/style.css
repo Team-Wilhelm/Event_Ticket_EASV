@@ -19,7 +19,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 1);
 }
 
-/*TODO: Make pretty*/
 .event-view:focused .event-view-bottom {
     -fx-background-color: lightgray
 }

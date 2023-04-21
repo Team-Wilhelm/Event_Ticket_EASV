@@ -73,7 +73,6 @@ public class AddEventController extends AddObjectController implements Initializ
     private MFXFilterComboBox<User> comboAssignCoordinator;
     private ObservableList<User> allCoordinators = FXCollections.observableArrayList();
 
-    //TODO update event does not update tickets in the database
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEditing = false;

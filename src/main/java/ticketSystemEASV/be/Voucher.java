@@ -129,7 +129,6 @@ public class Voucher extends Ticket {
         hintMap.put(EncodeHintType.MARGIN, 1);
 
         //The BitMatrix class represents the 2D matrix of bits
-        //TODO hashing ?
         BitMatrix matrix = new MultiFormatWriter().encode(
                 new String((voucherType
                         + " " + redeemed
