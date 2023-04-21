@@ -87,7 +87,7 @@ public abstract class AddObjectController {
         }
     }
 
-    protected void executeTask(Task<TaskState> task){
+    protected void executeTask(Task<?> task){
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(task);
         shutdownExecutorService(executorService);

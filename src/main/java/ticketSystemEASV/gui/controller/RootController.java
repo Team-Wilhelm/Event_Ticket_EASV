@@ -28,7 +28,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RootController implements Initializable {
-
     @FXML
     private GridPane gridPane;
     @FXML
@@ -46,7 +45,6 @@ public class RootController implements Initializable {
     private RedeemController redeemController;
 
     public RootController() {
-        LoadingScreen.getInstance();
         Callable<TicketModel> ticketModelCallable = TicketModel::new;
         Callable<EventModel> eventModelCallable = EventModel::new;
         Callable<VoucherModel> voucherModelCallable = VoucherModel::new;

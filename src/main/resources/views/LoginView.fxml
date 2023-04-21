@@ -3,16 +3,21 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.LoginViewController">
+<BorderPane minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="/css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ticketSystemEASV.gui.controller.LoginViewController">
    <center>
       <HBox>
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
+                  <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <VBox alignment="CENTER" prefHeight="123.0" prefWidth="219.0" spacing="10.0">
@@ -22,6 +27,18 @@
                               <MFXButton onAction="#loginUser" prefWidth="200.0" text="Log In" />
                            </children></VBox>
                      </children>
+                  </HBox>
+                  <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <Label fx:id="progressLabel" text="Progress message">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" />
+                     </padding>
                   </HBox>
                </children>
             </VBox>

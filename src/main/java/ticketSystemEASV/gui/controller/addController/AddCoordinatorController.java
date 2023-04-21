@@ -257,14 +257,14 @@ public class AddCoordinatorController extends AddObjectController implements Ini
         btnLogOut.setId("btnLogOut");
 
         btnLogOut.setOnAction(event -> {
-            LoadingScreen.getInstance().showLoadingScreen();
+            progressLabel.setText("Logging out...");
+            progressLabel.setVisible(true);
             Stage stage = (Stage) btnLogOut.getScene().getWindow();
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/LoginView.fxml"));
                 loginScreen = loader.load();
                 stage.setScene(new Scene(loginScreen));
                 stage.centerOnScreen();
-                LoadingScreen.getInstance().hideLoadingScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
