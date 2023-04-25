@@ -20,7 +20,7 @@ namespace EventTicketSystem.API
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            var apiKey = "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";
+            var apiKey = "<Your-Sendgrid-Key>";
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
